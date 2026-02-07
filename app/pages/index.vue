@@ -1,6 +1,6 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800">
-    <div class="container mx-auto px-4 py-8">
+  <div class="min-h-screen bg-linear-to-br from-purple-600 via-purple-700 to-indigo-800">
+    <UContainer class="py-8">
       <!-- Header -->
       <header class="text-center text-white mb-12">
         <h1 class="text-4xl md:text-5xl font-bold mb-3">
@@ -12,97 +12,59 @@
       </header>
 
       <!-- Main Content -->
-      <main class="space-y-6 max-w-5xl mx-auto">
+      <main class="space-y-6">
         <!-- Step 1: WiFi Configuration -->
-        <div class="relative" :class="{ 'opacity-100': currentStep >= 1, 'opacity-70': currentStep < 1 }">
-          <div class="absolute -left-4 top-4 w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-lg shadow-lg z-10">
-            1
-          </div>
-          <WifiForm 
-            v-model="wifiConfig"
-            @valid="wifiValid = $event"
-          />
-        </div>
+        <WifiForm v-model="wifiConfig" @valid="wifiValid = $event" />
 
         <!-- Step 2: Baseplate Configuration -->
-        <div v-if="wifiValid" class="relative" :class="{ 'opacity-100': currentStep >= 2, 'opacity-70': currentStep < 2 }">
-          <div class="absolute -left-4 top-4 w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-lg shadow-lg z-10">
-            2
-          </div>
-          <BaseplateConfig
-            v-model="baseplateConfig"
-            :qr-size="qrSize"
-            :max-scale="maxScale"
-          />
-        </div>
+        <BaseplateConfig v-if="wifiValid" v-model="baseplateConfig" :qr-size="qrSize" :max-scale="maxScale" />
 
         <!-- Step 3: Color Selection -->
-        <div v-if="wifiValid && qrMatrix" class="relative" :class="{ 'opacity-100': currentStep >= 3, 'opacity-70': currentStep < 3 }">
-          <div class="absolute -left-4 top-4 w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-lg shadow-lg z-10">
-            3
-          </div>
-          <ColorPicker
-            v-model:foreground="foregroundColor"
-            v-model:background="backgroundColor"
-          />
-        </div>
+        <ColorPicker v-if="wifiValid && qrMatrix" v-model:foreground="foregroundColor"
+          v-model:background="backgroundColor" />
 
         <!-- Step 4: Generate Button -->
         <div v-if="wifiValid && qrMatrix">
-          <UButton
-            block
-            size="xl"
-            color="green"
-            :loading="generating"
-            :disabled="generating"
-            @click="generateLayout"
-          >
+          <button
+            class="w-full px-6 py-4 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white font-semibold text-lg rounded-xl shadow-lg transition-colors flex items-center justify-center gap-2"
+            :disabled="generating" @click="generateLayout">
             <template v-if="!generating">
               🎯 Generate LEGO Instructions
             </template>
             <template v-else>
-              ⏳ Generating...
+              <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                </path>
+              </svg>
+              Generating...
             </template>
-          </UButton>
+          </button>
         </div>
 
         <!-- Step 5: Results -->
         <div v-if="legoLayout" class="space-y-6">
-          <BrickArrangement
-            :grid="legoLayout.grid"
-            :qr-size="qrSize"
-            :scale="currentScale"
-            :max-scale="maxScale"
-            :foreground="foregroundColor"
-            :background="backgroundColor"
-            :baseplate-width="baseplateConfig.width"
-            :baseplate-height="baseplateConfig.height"
-            @update:scale="handleScaleChange"
-          />
+          <BrickArrangement :grid="legoLayout.grid" :qr-size="qrSize" :scale="currentScale" :max-scale="maxScale"
+            :foreground="foregroundColor" :background="backgroundColor" :baseplate-width="baseplateConfig.width"
+            :baseplate-height="baseplateConfig.height" @update:scale="handleScaleChange" />
 
-          <BrickList
-            :brick-count="brickCount"
-            :optimized-brick-count="optimizedBrickCount"
-            :foreground="foregroundColor"
-            :background="backgroundColor"
-          />
+          <BrickList :brick-count="brickCount" :optimized-brick-count="optimizedBrickCount"
+            :foreground="foregroundColor" :background="backgroundColor" />
         </div>
       </main>
 
       <!-- Footer -->
       <footer class="text-center text-white mt-12 py-8 opacity-90">
         <p>
-          Built with Nuxt.js 3 • Open Source on 
-          <a 
-            href="https://github.com/robokozo/lego-wifi-qr-builder" 
-            target="_blank"
-            class="underline hover:opacity-80 transition-opacity"
-          >
+          Built with Nuxt.js 3 • Open Source on
+          <a href="https://github.com/robokozo/lego-wifi-qr-builder" target="_blank"
+            class="underline hover:opacity-80 transition-opacity">
             GitHub
           </a>
         </p>
       </footer>
-    </div>
+    </UContainer>
   </div>
 </template>
 
@@ -196,9 +158,9 @@ watch([baseplateConfig, qrSize], () => {
 // Methods
 const generateLayout = () => {
   if (!qrMatrix.value) return
-  
+
   generating.value = true
-  
+
   // Use setTimeout to allow UI to update
   setTimeout(() => {
     try {

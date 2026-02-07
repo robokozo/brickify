@@ -1,34 +1,32 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2025-07-15',
+  compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
-  
+
   // Configure for SPA mode
   ssr: false,
-  
+
   // Configure for GitHub Pages deployment
   app: {
-    baseURL: '/lego-wifi-qr-builder/',
-    buildAssetsDir: 'assets',
+    baseURL: "/lego-wifi-qr-builder/",
+    buildAssetsDir: "assets",
   },
-  
+
   // Ensure proper routing for SPA
   router: {
     options: {
-      hashMode: false
-    }
+      hashMode: false,
+    },
   },
 
   // Add Nuxt UI module
-  modules: ['@nuxt/ui'],
+  modules: ["@nuxt/ui"],
 
-  // Tailwind CSS configuration (via Nuxt UI)
-  ui: {
-    global: true,
+  // Color mode configuration (Nuxt UI 3+)
+  colorMode: {
+    preference: "light",
   },
 
-  // Color mode configuration
-  colorMode: {
-    preference: 'light'
-  }
-})
+  // Nuxt UI 3+ configuration
+  css: ["~/assets/css/main.css"],
+});
