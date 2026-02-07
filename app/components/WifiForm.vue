@@ -1,3 +1,44 @@
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue'
+import type { WiFiConfig } from '~/composables/useQRCode'
+
+const props = defineProps<{
+  modelValue: WiFiConfig
+}>()
+
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: WiFiConfig): void
+  (e: 'valid', value: boolean): void
+}>()
+
+const securityOptions = [
+  { value: 'WPA', label: 'WPA/WPA2' },
+  { value: 'WEP', label: 'WEP' },
+  { value: 'nopass', label: 'No Password' }
+]
+
+const localConfig = ref<WiFiConfig>({ ...props.modelValue })
+
+watch(() => props.modelValue, (newValue) => {
+  localConfig.value = { ...newValue }
+}, { deep: true })
+
+const isValid = computed(() => {
+  const { ssid, password, security } = localConfig.value
+  if (!ssid.trim()) return false
+  if (security !== 'nopass' && !password.trim()) return false
+  return true
+})
+
+watch(isValid, (valid) => {
+  emit('valid', valid)
+}, { immediate: true })
+
+const emitUpdate = () => {
+  emit('update:modelValue', { ...localConfig.value })
+}
+</script>
+
 <template>
   <div class="bg-white rounded-xl shadow-lg overflow-hidden">
     <div class="px-6 py-4 border-b border-gray-200">
@@ -48,44 +89,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import type { WiFiConfig } from '~/composables/useQRCode'
-
-const props = defineProps<{
-  modelValue: WiFiConfig
-}>()
-
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: WiFiConfig): void
-  (e: 'valid', value: boolean): void
-}>()
-
-const securityOptions = [
-  { value: 'WPA', label: 'WPA/WPA2' },
-  { value: 'WEP', label: 'WEP' },
-  { value: 'nopass', label: 'No Password' }
-]
-
-const localConfig = ref<WiFiConfig>({ ...props.modelValue })
-
-watch(() => props.modelValue, (newValue) => {
-  localConfig.value = { ...newValue }
-}, { deep: true })
-
-const isValid = computed(() => {
-  const { ssid, password, security } = localConfig.value
-  if (!ssid.trim()) return false
-  if (security !== 'nopass' && !password.trim()) return false
-  return true
-})
-
-watch(isValid, (valid) => {
-  emit('valid', valid)
-}, { immediate: true })
-
-const emitUpdate = () => {
-  emit('update:modelValue', { ...localConfig.value })
-}
-</script>

@@ -1,205 +1,213 @@
-<template>
-  <div class="brick-arrangement">
-    <h2 class="section-title">🧱 Brick Arrangement</h2>
-
-    <div class="controls">
-      <div class="scale-selector">
-        <label for="scale">Scale Factor:</label>
-        <select
-          id="scale"
-          v-model.number="selectedScale"
-          class="form-input"
-          @change="$emit('update:scale', selectedScale)"
-        >
-          <option
-            v-for="s in availableScales"
-            :key="s"
-            :value="s"
-          >
-            {{ s }}x ({{ qrSize * s }} × {{ qrSize * s }} studs)
-          </option>
-        </select>
-      </div>
-
-      <div v-if="!fitsOnBaseplate" class="warning-message">
-        ⚠️ Warning: This scale ({{ totalSize }}×{{ totalSize }}) exceeds your baseplate dimensions ({{ baseplateWidth }}×{{ baseplateHeight }})
-      </div>
-    </div>
-
-    <div class="grid-container">
-      <div 
-        class="grid"
-        :style="{
-          gridTemplateColumns: `repeat(${totalSize}, 1fr)`,
-          maxWidth: `${Math.min(totalSize * cellSize, 600)}px`,
-          maxHeight: `${Math.min(totalSize * cellSize, 600)}px`,
-        }"
-      >
-        <template v-for="(row, y) in grid" :key="`row-${y}`">
-          <div
-            v-for="(cell, x) in row"
-            :key="`cell-${y}-${x}`"
-            class="cell"
-            :class="{ 'cell-dark': cell, 'cell-light': !cell }"
-            :style="{
-              background: cell ? foreground : background,
-            }"
-            :title="`Row ${y + 1}, Col ${x + 1}`"
-          />
-        </template>
-      </div>
-    </div>
-
-    <div class="grid-info">
-      <p><strong>Grid Size:</strong> {{ totalSize }} × {{ totalSize }} studs</p>
-      <p><strong>Each brick:</strong> 1×1 plate/tile</p>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
+import type { Brick } from '~/composables/useLegoConverter'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   grid: boolean[][]
   qrSize: number
-  scale: number
-  maxScale: number
   foreground: string
   background: string
   baseplateWidth: number
   baseplateHeight: number
-}>()
-
-const emit = defineEmits<{
-  (e: 'update:scale', value: number): void
-}>()
-
-const selectedScale = ref(props.scale)
-
-const availableScales = computed(() => {
-  const scales = []
-  for (let i = 1; i <= Math.min(props.maxScale, 4); i++) {
-    scales.push(i)
-  }
-  return scales
+  bricks?: Brick[]
+  foregroundPieceType?: 'Plate' | 'Tile'
+  backgroundPieceType?: 'Plate' | 'Tile'
+  useBaseplate?: boolean
+  baseplateColor?: string
+}>(), {
+  foregroundPieceType: 'Plate',
+  backgroundPieceType: 'Tile',
+  useBaseplate: false,
+  baseplateColor: '#FFFFFF'
 })
 
-const totalSize = computed(() => props.qrSize * selectedScale.value)
+const totalSize = computed(() => props.grid.length)
 
 const fitsOnBaseplate = computed(() => {
-  return totalSize.value <= props.baseplateWidth && 
-         totalSize.value <= props.baseplateHeight
+  return totalSize.value <= props.baseplateWidth &&
+    totalSize.value <= props.baseplateHeight
 })
 
-const cellSize = computed(() => {
-  // Dynamically adjust cell size based on total grid size
-  if (totalSize.value <= 32) return 16
-  if (totalSize.value <= 48) return 12
-  if (totalSize.value <= 64) return 8
-  return 6
+const showForegroundStuds = computed(() => props.foregroundPieceType === 'Plate')
+const showBackgroundStuds = computed(() => props.backgroundPieceType === 'Plate')
+
+// Alignment options
+type Alignment = 'tl' | 't' | 'tr' | 'l' | 'c' | 'r' | 'bl' | 'b' | 'br'
+const alignment = ref<Alignment>('c')
+
+const alignmentLabels: Record<Alignment, string> = {
+  tl: '↖', t: '↑', tr: '↗',
+  l: '←', c: '•', r: '→',
+  bl: '↙', b: '↓', br: '↘'
+}
+
+// Calculate position based on alignment
+const availableSpaceX = computed(() => props.baseplateWidth - totalSize.value)
+const availableSpaceY = computed(() => props.baseplateHeight - totalSize.value)
+const canFit = computed(() => availableSpaceX.value >= 0 && availableSpaceY.value >= 0)
+
+const offsetX = computed(() => {
+  if (availableSpaceX.value < 0) return 0
+  const align = alignment.value
+  if (align === 'tl' || align === 'l' || align === 'bl') return 0
+  if (align === 'tr' || align === 'r' || align === 'br') return availableSpaceX.value
+  return Math.floor(availableSpaceX.value / 2) // center
+})
+
+const offsetY = computed(() => {
+  if (availableSpaceY.value < 0) return 0
+  const align = alignment.value
+  if (align === 'tl' || align === 't' || align === 'tr') return 0
+  if (align === 'bl' || align === 'b' || align === 'br') return availableSpaceY.value
+  return Math.floor(availableSpaceY.value / 2) // center
+})
+
+// Starting stud coordinates (1-based for display)
+const startX = computed(() => offsetX.value + 1)
+const startY = computed(() => offsetY.value + 1)
+
+// Baseplate display sizing
+const maxDisplaySize = 500
+const studSize = computed(() => Math.floor(maxDisplaySize / props.baseplateWidth))
+const baseplateDisplaySize = computed(() => studSize.value * props.baseplateWidth)
+
+// Baseplate color for visualization
+const displayBaseplateColor = computed(() => props.useBaseplate ? props.background : props.baseplateColor)
+
+// Ruler markers - show every 5 studs, with major marks at 10
+const markerInterval = 5
+const rulerMarkers = computed(() => {
+  const markers: number[] = []
+  for (let i = markerInterval; i <= props.baseplateWidth; i += markerInterval) {
+    markers.push(i)
+  }
+  return markers
 })
 </script>
 
-<style scoped>
-.brick-arrangement {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
+<template>
+  <div class="bg-white p-6 rounded-lg shadow-md">
+    <h2 class="m-0 mb-6 text-gray-800 text-2xl font-semibold">🧱 Brick Arrangement</h2>
 
-.section-title {
-  margin: 0 0 1.5rem 0;
-  color: #2c3e50;
-  font-size: 1.5rem;
-  font-weight: 600;
-}
+    <div v-if="!fitsOnBaseplate"
+      class="p-3 mb-4 bg-amber-100 border-l-4 border-amber-500 rounded text-amber-800 text-sm">
+      ⚠️ Warning: QR code ({{ totalSize }}×{{ totalSize }}) exceeds your baseplate dimensions ({{ baseplateWidth }}×{{
+        baseplateHeight }})
+    </div>
 
-.controls {
-  margin-bottom: 1.5rem;
-}
+    <!-- Baseplate visualization with QR positioned on it -->
+    <div class="flex justify-center mb-6 overflow-auto p-4 bg-gray-100 rounded-md">
+      <div class="relative">
+        <!-- Top ruler -->
+        <div class="relative mb-1"
+          :style="{ height: '16px', marginLeft: '20px', marginRight: '20px', width: `${baseplateDisplaySize}px` }">
+          <div v-for="marker in rulerMarkers" :key="'top-' + marker"
+            class="absolute text-xs text-gray-500 font-mono text-center" :class="marker % 10 === 0 ? 'font-bold' : ''"
+            :style="{ left: `${marker * studSize - 8}px`, width: '16px' }">
+            {{ marker }}
+          </div>
+        </div>
 
-.scale-selector {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
+        <div class="flex">
+          <!-- Left ruler -->
+          <div class="relative mr-1" :style="{ width: '20px', height: `${baseplateDisplaySize}px` }">
+            <div v-for="marker in rulerMarkers" :key="'left-' + marker"
+              class="absolute text-xs text-gray-500 font-mono text-right pr-1"
+              :class="marker % 10 === 0 ? 'font-bold' : ''"
+              :style="{ top: `${marker * studSize - 8}px`, width: '20px' }">
+              {{ marker }}
+            </div>
+          </div>
 
-.scale-selector label {
-  color: #34495e;
-  font-weight: 500;
-}
+          <!-- Baseplate -->
+          <div class="relative" :style="{
+            width: `${baseplateDisplaySize}px`,
+            height: `${baseplateDisplaySize}px`,
+            background: displayBaseplateColor
+          }">
+            <!-- Baseplate stud grid -->
+            <div class="absolute inset-0 grid" :style="{
+              gridTemplateColumns: `repeat(${baseplateWidth}, 1fr)`,
+              gridTemplateRows: `repeat(${baseplateHeight}, 1fr)`
+            }">
+              <div v-for="i in baseplateWidth * baseplateHeight" :key="i" class="flex items-center justify-center">
+                <div class="rounded-full bg-black/10" :style="{
+                  width: `${studSize * 0.6}px`,
+                  height: `${studSize * 0.6}px`
+                }" />
+              </div>
+            </div>
 
-.form-input {
-  padding: 0.5rem 0.75rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 6px;
-  font-size: 1rem;
-  background: white;
-  cursor: pointer;
-}
+            <!-- QR code positioned on baseplate -->
+            <div v-if="bricks && bricks.length > 0" class="absolute" :style="{
+              left: `${offsetX * studSize}px`,
+              top: `${offsetY * studSize}px`,
+              width: `${totalSize * studSize}px`,
+              height: `${totalSize * studSize}px`
+            }">
+              <BrickQRDisplayWithToggle :bricks="bricks" :grid-size="totalSize" :foreground="foreground"
+                :background="background" :max-size="totalSize * studSize" :show-foreground-studs="showForegroundStuds"
+                :show-background-studs="showBackgroundStuds" :use-baseplate="useBaseplate" />
+            </div>
 
-.form-input:focus {
-  outline: none;
-  border-color: #3498db;
-}
+            <!-- Alignment indicator border -->
+            <div v-if="canFit" class="absolute pointer-events-none" :style="{
+              left: `${offsetX * studSize - 2}px`,
+              top: `${offsetY * studSize - 2}px`,
+              width: `${totalSize * studSize + 4}px`,
+              height: `${totalSize * studSize + 4}px`,
+              border: '2px dashed rgba(59, 130, 246, 0.5)'
+            }" />
+          </div>
 
-.warning-message {
-  padding: 0.75rem;
-  background: #fff3cd;
-  border-left: 4px solid #ffc107;
-  border-radius: 4px;
-  color: #856404;
-  font-size: 0.95rem;
-}
+          <!-- Right ruler -->
+          <div class="relative ml-1" :style="{ width: '20px', height: `${baseplateDisplaySize}px` }">
+            <div v-for="marker in rulerMarkers" :key="'right-' + marker"
+              class="absolute text-xs text-gray-500 font-mono text-left pl-1"
+              :class="marker % 10 === 0 ? 'font-bold' : ''"
+              :style="{ top: `${marker * studSize - 8}px`, width: '20px' }">
+              {{ marker }}
+            </div>
+          </div>
+        </div>
 
-.grid-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 1.5rem;
-  overflow: auto;
-  padding: 1rem;
-  background: #f8f9fa;
-  border-radius: 6px;
-}
+        <!-- Bottom ruler -->
+        <div class="relative mt-1"
+          :style="{ height: '16px', marginLeft: '20px', marginRight: '20px', width: `${baseplateDisplaySize}px` }">
+          <div v-for="marker in rulerMarkers" :key="'bottom-' + marker"
+            class="absolute text-xs text-gray-500 font-mono text-center" :class="marker % 10 === 0 ? 'font-bold' : ''"
+            :style="{ left: `${marker * studSize - 8}px`, width: '16px' }">
+            {{ marker }}
+          </div>
+        </div>
+      </div>
+    </div>
 
-.grid {
-  display: grid;
-  gap: 1px;
-  background: #999;
-  border: 2px solid #666;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
+    <div class="flex flex-wrap gap-6 items-center">
+      <!-- Alignment selector -->
+      <div class="shrink-0">
+        <label class="block mb-2 text-gray-700 font-medium text-sm">Alignment</label>
+        <div class="grid grid-cols-3 gap-1 bg-gray-200 p-1 rounded-lg">
+          <button v-for="pos in (['tl', 't', 'tr', 'l', 'c', 'r', 'bl', 'b', 'br'] as Alignment[])" :key="pos"
+            @click="alignment = pos"
+            class="w-8 h-8 rounded flex items-center justify-center text-sm font-bold transition-colors"
+            :class="alignment === pos ? 'bg-blue-500 text-white' : 'bg-white text-gray-600 hover:bg-gray-100'">
+            {{ alignmentLabels[pos] }}
+          </button>
+        </div>
+      </div>
 
-.cell {
-  aspect-ratio: 1;
-  min-width: 4px;
-  min-height: 4px;
-  transition: transform 0.1s;
-}
-
-.cell:hover {
-  transform: scale(1.1);
-  z-index: 1;
-  box-shadow: 0 0 0 2px #3498db;
-}
-
-.grid-info {
-  padding: 1rem;
-  background: #e8f4f8;
-  border-left: 4px solid #3498db;
-  border-radius: 4px;
-}
-
-.grid-info p {
-  margin: 0.5rem 0;
-  color: #2c3e50;
-  font-size: 0.95rem;
-}
-
-.grid-info strong {
-  color: #1a5490;
-}
-</style>
+      <!-- Info -->
+      <div class="flex-1 p-4 bg-blue-50 border-l-4 border-blue-500 rounded space-y-1">
+        <p class="my-0 text-gray-800 text-sm"><strong class="text-blue-800">Baseplate:</strong> {{ baseplateWidth }}×{{
+          baseplateHeight }} studs</p>
+        <p class="my-0 text-gray-800 text-sm"><strong class="text-blue-800">QR Size:</strong> {{ totalSize }}×{{
+          totalSize }} studs</p>
+        <p v-if="canFit" class="my-0 text-gray-800 text-sm">
+          <strong class="text-blue-800">Start at:</strong>
+          Column {{ startX }}, Row {{ startY }}
+        </p>
+      </div>
+    </div>
+  </div>
+</template>
