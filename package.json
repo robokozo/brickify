@@ -1,0 +1,20 @@
+{
+  "name": "lego-wifi-qr-builder",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@nuxt/ui": "^4.4.0",
+    "@types/qrcode": "^1.5.6",
+    "nuxt": "^4.3.0",
+    "qrcode": "^1.5.4",
+    "vue": "^3.5.27",
+    "vue-router": "^4.6.4"
+  }
+}
