@@ -10,10 +10,32 @@ export interface LegoLayout {
   totalHeight: number
 }
 
+export interface Brick {
+  width: number
+  height: number
+  x: number
+  y: number
+  isForeground: boolean
+}
+
+export interface BrickTypeCount {
+  size: string
+  count: number
+}
+
 export interface BrickCount {
   foreground: number
   background: number
   total: number
+}
+
+export interface OptimizedBrickCount {
+  foreground: BrickTypeCount[]
+  background: BrickTypeCount[]
+  foregroundTotal: number
+  backgroundTotal: number
+  total: number
+  savingsPercent: number
 }
 
 export const useLegoConverter = () => {
