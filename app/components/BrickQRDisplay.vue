@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { Brick } from '~/composables/useLegoConverter'
+import type { Brick } from '~/composables/useBrickConverter'
 
 const props = withDefaults(defineProps<{
   bricks: Brick[]

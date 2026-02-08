@@ -1,10 +1,12 @@
+// Moved from useLegoConverter.ts to avoid trademark issues
+
 export interface BaseplateConfig {
   width: number;
   height: number;
 }
 
-export interface LegoLayout {
-  grid: boolean[][];
+export interface BrickLayout {
+  grid: Array<Array<boolean>>;
   scale: number;
   totalWidth: number;
   totalHeight: number;
@@ -31,13 +33,13 @@ export interface BrickCount {
 }
 
 export interface OptimizedBrickCount {
-  foreground: BrickTypeCount[];
-  background: BrickTypeCount[];
+  foreground: Array<BrickTypeCount>;
+  background: Array<BrickTypeCount>;
   foregroundTotal: number;
   backgroundTotal: number;
   total: number;
   savingsPercent: number;
-  bricks: Brick[]; // Add actual brick placements
+  bricks: Array<Brick>;
 }
 
 export interface BrickSize {
@@ -45,13 +47,13 @@ export interface BrickSize {
   height: number;
 }
 
-export const useLegoConverter = () => {
+export const useBrickConverter = () => {
   // Fixed baseplate size - 48x48 is required for QR codes
   const baseplateSize = 48;
 
   // All available brick/plate sizes (normalized: larger dimension first)
-  // Includes all standard rectangular LEGO plates and tiles
-  const allBrickSizes: BrickSize[] = [
+  // Includes all standard rectangular brick plates and tiles
+  const allBrickSizes: Array<BrickSize> = [
     // Large plates/tiles
     { width: 8, height: 16 },
     { width: 6, height: 12 },
@@ -87,7 +89,7 @@ export const useLegoConverter = () => {
   ];
 
   // Default brick sizes for a reasonable starting point
-  const defaultBrickSizes: BrickSize[] = [
+  const defaultBrickSizes: Array<BrickSize> = [
     { width: 2, height: 8 },
     { width: 2, height: 6 },
     { width: 2, height: 4 },
@@ -100,8 +102,8 @@ export const useLegoConverter = () => {
 
   // Convert user-selected sizes to algorithm format (sorted by area, largest first)
   const getBrickSizesForOptimization = (
-    selectedSizes: BrickSize[],
-  ): BrickSize[] => {
+    selectedSizes: Array<BrickSize>,
+  ): Array<BrickSize> => {
     // Always include 1x1
     const sizes = [...selectedSizes, { width: 1, height: 1 }];
 
@@ -137,18 +139,18 @@ export const useLegoConverter = () => {
     return Math.max(1, Math.min(maxScaleWidth, maxScaleHeight));
   };
 
-  const convertToLegoLayout = (
-    qrMatrix: boolean[][],
+  const convertToBrickLayout = (
+    qrMatrix: Array<Array<boolean>>,
     scale: number = 1,
-  ): LegoLayout => {
+  ): BrickLayout => {
     const qrSize = qrMatrix.length;
     const totalSize = qrSize * scale;
 
     // Create scaled grid
-    const grid: boolean[][] = [];
+    const grid: Array<Array<boolean>> = [];
 
     for (let y = 0; y < totalSize; y++) {
-      const row: boolean[] = [];
+      const row: Array<boolean> = [];
       for (let x = 0; x < totalSize; x++) {
         // Map scaled coordinates back to original QR coordinates
         const qrX = Math.floor(x / scale);
@@ -166,13 +168,13 @@ export const useLegoConverter = () => {
     };
   };
 
-  const calculateBrickCount = (layout: LegoLayout): BrickCount => {
+  const calculateBrickCount = (layout: BrickLayout): BrickCount => {
     let foreground = 0;
     let background = 0;
 
     for (const row of layout.grid) {
       for (const cell of row) {
-        if (cell) {
+        if (cell === true) {
           foreground++;
         } else {
           background++;
@@ -189,8 +191,8 @@ export const useLegoConverter = () => {
 
   // Check if a brick can be placed at the given position
   const canPlaceBrick = (
-    grid: boolean[][],
-    used: boolean[][],
+    grid: Array<Array<boolean>>,
+    used: Array<Array<boolean>>,
     x: number,
     y: number,
     width: number,
@@ -220,7 +222,7 @@ export const useLegoConverter = () => {
 
   // Mark cells as used by a brick
   const markBrickUsed = (
-    used: boolean[][],
+    used: Array<Array<boolean>>,
     x: number,
     y: number,
     width: number,
@@ -229,16 +231,16 @@ export const useLegoConverter = () => {
     for (let dy = 0; dy < height; dy++) {
       for (let dx = 0; dx < width; dx++) {
         const row = used[y + dy];
-        if (row) row[x + dx] = true;
+        if (row !== null && row !== undefined) row[x + dx] = true;
       }
     }
   };
 
   // Optimize brick layout using greedy algorithm
   const optimizeBrickLayout = (
-    layout: LegoLayout,
-    foregroundSizes: BrickSize[] = [],
-    backgroundSizes: BrickSize[] = [],
+    layout: BrickLayout,
+    foregroundSizes: Array<BrickSize> = [],
+    backgroundSizes: Array<BrickSize> = [],
   ): OptimizedBrickCount => {
     const { grid } = layout;
     const height = grid.length;
@@ -249,7 +251,7 @@ export const useLegoConverter = () => {
     const backgroundBrickSizes = getBrickSizesForOptimization(backgroundSizes);
 
     // Track which cells have been covered
-    const used: boolean[][] = Array(height)
+    const used: Array<Array<boolean>> = Array(height)
       .fill(null)
       .map(() => Array(width).fill(false));
 
@@ -258,7 +260,7 @@ export const useLegoConverter = () => {
     const backgroundBricks: Map<string, number> = new Map();
 
     // Store actual brick placements
-    const bricks: Brick[] = [];
+    const bricks: Array<Brick> = [];
 
     // Greedy algorithm: try to place largest bricks first
     for (let y = 0; y < height; y++) {
@@ -299,13 +301,13 @@ export const useLegoConverter = () => {
             }
           }
 
-          if (placed) break;
+          if (placed === true) break;
         }
       }
     }
 
     // Convert maps to sorted arrays
-    const foregroundList: BrickTypeCount[] = Array.from(
+    const foregroundList: Array<BrickTypeCount> = Array.from(
       foregroundBricks.entries(),
     )
       .map(([size, count]) => {
@@ -320,7 +322,7 @@ export const useLegoConverter = () => {
         return b.width - a.width;
       });
 
-    const backgroundList: BrickTypeCount[] = Array.from(
+    const backgroundList: Array<BrickTypeCount> = Array.from(
       backgroundBricks.entries(),
     )
       .map(([size, count]) => {
@@ -385,7 +387,7 @@ export const useLegoConverter = () => {
     allBrickSizes,
     defaultBrickSizes,
     getMaxScale,
-    convertToLegoLayout,
+    convertToBrickLayout,
     calculateBrickCount,
     optimizeBrickLayout,
     validateFit,

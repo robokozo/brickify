@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import type { BrickCount, OptimizedBrickCount, BrickTypeCount } from '~/composables/useLegoConverter'
+import type { BrickCount, OptimizedBrickCount, BrickTypeCount } from '~/composables/useBrickConverter'
 
 const props = withDefaults(defineProps<{
   brickCount: BrickCount
@@ -137,7 +137,7 @@ Shopping Tips:
   `.trim()
 
   const printWindow = window.open('', '_blank')
-  if (printWindow) {
+  if (printWindow !== null && printWindow !== undefined) {
     printWindow.document.write(`
       <html>
         <head>

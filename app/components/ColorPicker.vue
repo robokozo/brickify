@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import type { ColorSuggestion } from '~/composables/useContrastChecker'
-import type { BrickSize } from '~/composables/useLegoConverter'
+import type { BrickSize } from '~/composables/useBrickConverter'
 
 const props = withDefaults(defineProps<{
   foreground: string

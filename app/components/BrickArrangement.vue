@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import type { Brick } from '~/composables/useLegoConverter'
+import type { Brick } from '~/composables/useBrickConverter'
 
 const props = withDefaults(defineProps<{
   grid: boolean[][]
@@ -77,7 +77,7 @@ const displayBaseplateColor = computed(() => props.useBaseplate ? props.backgrou
 // Ruler markers - show every 5 studs, with major marks at 10
 const markerInterval = 5
 const rulerMarkers = computed(() => {
-  const markers: number[] = []
+  const markers: Array<number> = []
   for (let i = markerInterval; i <= props.baseplateWidth; i += markerInterval) {
     markers.push(i)
   }

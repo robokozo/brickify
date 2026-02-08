@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { BrickSize } from '~/composables/useLegoConverter'
+import type { BrickSize } from '~/composables/useBrickConverter'
 
-const { allBrickSizes } = useLegoConverter()
+const { allBrickSizes } = useBrickConverter()
 
 const props = withDefaults(defineProps<{
   modelValue: BrickSize[]

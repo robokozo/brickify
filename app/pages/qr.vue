@@ -26,8 +26,8 @@
         v-model:use-baseplate="useBaseplate" v-model:baseplate-size="baseplateSize"
         v-model:baseplate-color="baseplateColor" />
       <!-- Results (shown when QR is generated) -->
-      <div v-if="qrMatrix && legoLayout" class="space-y-6">
-        <BrickArrangement :grid="legoLayout.grid" :qr-size="qrSize" :foreground="foregroundColor"
+      <div v-if="qrMatrix && brickLayout" class="space-y-6">
+        <BrickArrangement :grid="brickLayout.grid" :qr-size="qrSize" :foreground="foregroundColor"
           :background="backgroundColor" :baseplate-width="baseplateSize" :baseplate-height="baseplateSize"
           :bricks="optimizedBrickCount?.bricks" :foreground-piece-type="foregroundPieceType"
           :background-piece-type="backgroundPieceType" :use-baseplate="useBaseplate"
@@ -43,10 +43,10 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import type { WiFiConfig } from '~/composables/useQRCode'
-import type { LegoLayout, BrickCount, OptimizedBrickCount, BrickSize } from '~/composables/useLegoConverter'
+import type { BrickLayout, BrickCount, OptimizedBrickCount, BrickSize } from '~/composables/useBrickConverter'
 
 const { generateWiFiString, generateQRMatrix, getQRCodeSize } = useQRCode()
-const { convertToLegoLayout, calculateBrickCount, optimizeBrickLayout, defaultBrickSizes } = useLegoConverter()
+const { convertToBrickLayout, calculateBrickCount, optimizeBrickLayout, defaultBrickSizes } = useBrickConverter()
 
 const wifiConfig = ref<WiFiConfig>({
   ssid: '',
@@ -66,9 +66,9 @@ const useBaseplate = ref(false)
 const wifiValid = ref(false)
 const qrMatrix = ref<boolean[][] | null>(null)
 const qrSize = computed(() => qrMatrix.value ? getQRCodeSize(qrMatrix.value) : 0)
-const legoLayout = computed<LegoLayout | null>(() => qrMatrix.value ? convertToLegoLayout(qrMatrix.value, 1) : null)
-const brickCount = computed<BrickCount>(() => legoLayout.value ? calculateBrickCount(legoLayout.value) : { foreground: 0, background: 0, total: 0 })
-const optimizedBrickCount = computed<OptimizedBrickCount | null>(() => legoLayout.value ? optimizeBrickLayout(legoLayout.value, foregroundBrickSizes.value, backgroundBrickSizes.value) : null)
+const brickLayout = computed<BrickLayout | null>(() => qrMatrix.value ? convertToBrickLayout(qrMatrix.value, 1) : null)
+const brickCount = computed<BrickCount>(() => brickLayout.value ? calculateBrickCount(brickLayout.value) : { foreground: 0, background: 0, total: 0 })
+const optimizedBrickCount = computed<OptimizedBrickCount | null>(() => brickLayout.value ? optimizeBrickLayout(brickLayout.value, foregroundBrickSizes.value, backgroundBrickSizes.value) : null)
 const generateQR = async () => {
   if (!wifiValid.value) return
   try {

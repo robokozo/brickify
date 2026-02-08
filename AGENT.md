@@ -1,3 +1,8 @@
+# Boolean Checks and Naming
+
+- Do not allow truthy/falsy checks (e.g., if (value)). All checks must be explicit (e.g., if (value !== null), if (value === true), if (value.length > 0)).
+- If a variable represents a boolean value, its name should be prefixed with `is` or `has` (e.g., `isActive`, `hasChildren`).
+
 # Interfaces vs Types
 
 - Strictly prefer `interface` for defining object shapes (data models, props, state) due to better performance and clearer error messages.
