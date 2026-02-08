@@ -8,7 +8,7 @@ export default defineNuxtConfig({
 
   // Configure for GitHub Pages deployment
   app: {
-    baseURL: "/lego-wifi-qr-builder/",
+    baseURL: "/bricks-wifi-qr-builder/",
     buildAssetsDir: "assets",
   },
 
