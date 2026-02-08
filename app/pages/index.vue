@@ -1,137 +1,18 @@
-<script setup lang="ts">
-import { ref, computed } from 'vue'
-import type { WiFiConfig } from '~/composables/useQRCode'
-import type { LegoLayout, BrickCount, OptimizedBrickCount, BrickSize } from '~/composables/useLegoConverter'
-
-// Page metadata
-useHead({
-  title: 'Brick WiFi QR Code Builder',
-  meta: [
-    { name: 'description', content: 'Generate brick building instructions for WiFi QR codes. Configure your WiFi network, choose colors, and get a complete parts list and building guide.' },
-    { name: 'viewport', content: 'width=device-width, initial-scale=1' }
-  ]
-})
-
-// Composables
-const { generateWiFiString, generateQRMatrix, getQRCodeSize } = useQRCode()
-const { convertToLegoLayout, calculateBrickCount, optimizeBrickLayout, defaultBrickSizes } = useLegoConverter()
-
-// State
-const wifiConfig = ref<WiFiConfig>({
-  ssid: '',
-  password: '',
-  security: 'WPA',
-  hidden: false
-})
-
-// Baseplate size - 48x48 is the standard size for QR codes
-const baseplateSize = ref(48)
-const baseplateColor = ref('#FFFFFF') // Default to background color
-
-const foregroundColor = ref('#000000')
-const backgroundColor = ref('#FFFFFF')
-
-// Default to common brick sizes selected (not all - that would be overwhelming)
-const foregroundBrickSizes = ref<BrickSize[]>([...defaultBrickSizes])
-const backgroundBrickSizes = ref<BrickSize[]>([...defaultBrickSizes])
-
-// Piece type selection (Plate = studs, Tile = smooth)
-const foregroundPieceType = ref<'Plate' | 'Tile'>('Plate')
-const backgroundPieceType = ref<'Plate' | 'Tile'>('Tile')
-
-// Whether to use a baseplate for the background
-const useBaseplate = ref(false)
-
-const wifiValid = ref(false)
-const qrMatrix = ref<boolean[][] | null>(null)
-
-// Computed - reactively generate layout when qrMatrix or availableBrickSizes changes
-const qrSize = computed(() => {
-  return qrMatrix.value ? getQRCodeSize(qrMatrix.value) : 0
-})
-
-const legoLayout = computed<LegoLayout | null>(() => {
-  if (!qrMatrix.value) return null
-  return convertToLegoLayout(qrMatrix.value, 1)
-})
-
-const brickCount = computed<BrickCount>(() => {
-  if (!legoLayout.value) return { foreground: 0, background: 0, total: 0 }
-  return calculateBrickCount(legoLayout.value)
-})
-
-const optimizedBrickCount = computed<OptimizedBrickCount | null>(() => {
-  if (!legoLayout.value) return null
-  return optimizeBrickLayout(legoLayout.value, foregroundBrickSizes.value, backgroundBrickSizes.value)
-})
-
-// Methods
-const generateQR = async () => {
-  if (!wifiValid.value) return
-  try {
-    const wifiString = generateWiFiString(wifiConfig.value)
-    qrMatrix.value = await generateQRMatrix(wifiString, 'H')
-  } catch (error) {
-    console.error('Error generating QR code:', error)
-    qrMatrix.value = null
-  }
-}
-</script>
-
 <template>
-  <div class="min-h-screen bg-linear-to-br from-purple-600 via-purple-700 to-indigo-800">
-    <UContainer class="py-8">
-      <!-- Header -->
-      <header class="text-center text-white mb-12">
-        <h1 class="text-4xl md:text-5xl font-bold mb-3">
-          🧱 Brick WiFi QR Code Builder
-        </h1>
-        <p class="text-lg md:text-xl opacity-95">
-          Generate brick building instructions for WiFi QR codes
-        </p>
-      </header>
-
-      <!-- Main Content -->
-      <main class="space-y-6">
-        <!-- Step 1: WiFi Configuration -->
-        <WifiForm v-model="wifiConfig" @valid="wifiValid = $event" />
-
-        <!-- Step 2: Generate QR Code Button -->
-        <div v-if="wifiValid && !qrMatrix">
-          <button
-            class="w-full px-6 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg rounded-xl shadow-lg transition-colors flex items-center justify-center gap-2"
-            @click="generateQR">
-            📱 Generate QR Code
-          </button>
-        </div>
-
-        <!-- Step 3: Setup (only shown after QR is generated) -->
-        <ColorPicker v-if="qrMatrix" v-model:foreground="foregroundColor" v-model:background="backgroundColor"
-          v-model:foreground-piece-type="foregroundPieceType" v-model:background-piece-type="backgroundPieceType"
-          v-model:foreground-brick-sizes="foregroundBrickSizes" v-model:background-brick-sizes="backgroundBrickSizes"
-          v-model:use-baseplate="useBaseplate" v-model:baseplate-size="baseplateSize"
-          v-model:baseplate-color="baseplateColor" />
-
-        <!-- Results (shown when QR is generated) -->
-        <div v-if="qrMatrix && legoLayout" class="space-y-6">
-          <BrickArrangement :grid="legoLayout.grid" :qr-size="qrSize" :foreground="foregroundColor"
-            :background="backgroundColor" :baseplate-width="baseplateSize" :baseplate-height="baseplateSize"
-            :bricks="optimizedBrickCount?.bricks" :foreground-piece-type="foregroundPieceType"
-            :background-piece-type="backgroundPieceType" :use-baseplate="useBaseplate"
-            :baseplate-color="baseplateColor" />
-
-          <BrickList :brick-count="brickCount" :optimized-brick-count="optimizedBrickCount"
-            :foreground="foregroundColor" :background="backgroundColor" :foreground-piece-type="foregroundPieceType"
-            :background-piece-type="backgroundPieceType" :use-baseplate="useBaseplate" />
-        </div>
-      </main>
-
-      <!-- Footer -->
-      <footer class="text-center text-white mt-12 py-8 opacity-90">
-        <p>
-          Built with Nuxt.js 3
-        </p>
-      </footer>
-    </UContainer>
-  </div>
+  <UContainer class="py-16">
+    <header class="text-center mb-12">
+      <h1 class="text-5xl font-bold mb-4 text-blue-900">Brick Mosaic & QR Builder</h1>
+      <p class="text-lg text-gray-700 mb-8">
+        Create custom building instructions for mosaics and QR codes using bricks. Choose your mode below.
+      </p>
+      <div class="flex flex-wrap justify-center gap-6 mt-8">
+        <NuxtLink to="/qr" class="px-8 py-6 bg-blue-600 hover:bg-blue-700 text-white text-2xl font-semibold rounded-xl shadow-lg transition-colors flex items-center gap-3">
+          <span>QR Code Builder</span>
+        </NuxtLink>
+        <NuxtLink to="/mosaic" class="px-8 py-6 bg-purple-600 hover:bg-purple-700 text-white text-2xl font-semibold rounded-xl shadow-lg transition-colors flex items-center gap-3">
+          <span>Mosaic Builder</span>
+        </NuxtLink>
+      </div>
+    </header>
+  </UContainer>
 </template>

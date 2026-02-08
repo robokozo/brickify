@@ -1,76 +1,53 @@
-# 🧱 LEGO WiFi QR Code Builder
+# 🧱 Brickify
 
-Generate LEGO building instructions for creating WiFi QR codes! This application helps you convert your WiFi credentials into a scannable QR code made entirely from LEGO bricks.
+Generate custom building instructions for QR codes and mosaics using bricks! Brickify helps you convert WiFi credentials or images into scannable QR codes and mosaics made from standard brick parts.
 
-![LEGO WiFi QR Code Builder](https://img.shields.io/badge/Nuxt.js-3-00DC82?logo=nuxt.js)
+![Nuxt.js](https://img.shields.io/badge/Nuxt.js-3-00DC82?logo=nuxt.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-3178C6?logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-38B2AC?logo=tailwind-css)
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
 
 ## ✨ Features
 
-### 🎯 **NEW: Intelligent Brick Optimization**
-- **Automatic optimization** using standard LEGO brick sizes
-- **53% fewer pieces** compared to 1×1-only builds (typical savings)
-- Supports 2×8, 2×6, 2×4, 2×3, 2×2, 1×4, 1×3, 1×2, and 1×1 bricks
-- **Greedy algorithm** prioritizes larger bricks for stability
-- Detailed breakdown showing quantity needed per brick size
-- **Real-time savings calculation** displayed in parts list
-
-### 🔐 WiFi QR Code Generation
-- Input form for WiFi credentials (SSID, Password, Security Type)
-- Support for WPA/WPA2, WEP, and open networks
-- Hidden network option
-- Automatic QR code generation with high error correction (Level H)
-
-### 📐 Baseplate Configuration
-- Choose from common baseplate sizes (16×16, 32×32, 48×48 studs)
-- Custom dimensions support
-- Automatic scale calculation to fit your baseplate
-- Real-time validation
-
-### 🎨 Color Selection with Contrast Guidance
-- Color picker for foreground and background bricks
-- Real-time contrast ratio calculation
-- WCAG accessibility ratings (AAA, AA)
-- Pre-configured high-contrast color combinations
-- Visual preview of your color choices
-
-### 🧩 Brick Layout & Arrangement
-- Visual grid display of the complete build
-- Interactive scaling options (1×, 2×, 3×, 4×)
-- Hover effects to identify individual bricks
-- Coordinate labels for easy building
-- Automatic fit validation
-
-### 📋 Optimized Parts List
-- **Detailed breakdown by brick size** (NEW!)
-- **Percentage savings** vs 1×1-only build
-- Separate counts for foreground and background colors
-- Shopping tips and recommendations
-- Print and copy functionality with optimized format
-- Visual color previews for each brick type
-
-### 🎯 User Experience
-- **Modern Nuxt UI components** with Tailwind CSS
-- Clean, step-by-step workflow
-- Responsive design (mobile and desktop)
-- Real-time updates
-- No page reloads required (SPA)
-- Beautiful gradient UI
+- **QR code builder**: encode your WiFi network, get a parts list and instructions
+- **Mosaic builder**: turn any image into a brick mosaic (coming soon)
+- Optimized for real brick parts and colors
+- Deployable to GitHub Pages
+- Modern Nuxt UI components with Tailwind CSS
 
 ## 🚀 Live Demo
 
-Visit the live application: [https://robokozo.github.io/lego-wifi-qr-builder/](https://robokozo.github.io/lego-wifi-qr-builder/)
+Visit the live application: [https://robokozo.github.io/brickify/](https://robokozo.github.io/brickify/)
 
-## 🛠️ Technology Stack
+## 🌐 Deployment
 
-- **Framework**: Nuxt.js 3 (SPA mode)
-- **Language**: TypeScript
-- **UI Library**: Nuxt UI (Tailwind CSS + Headless UI)
-- **QR Generation**: qrcode library
-- **Deployment**: GitHub Pages
-- **CI/CD**: GitHub Actions
+### GitHub Pages Deployment
+
+This project is configured for automatic deployment to GitHub Pages.
+
+1. **Enable GitHub Pages**
+   - Go to your repository settings
+   - Navigate to "Pages" section
+   - Source: Select "GitHub Actions"
+
+2. **Push to main branch**
+   ```bash
+   git push origin main
+   ```
+
+The GitHub Actions workflow will automatically build and deploy your site to:
+
+`https://robokozo.github.io/brickify/`
+
+### Manual Deployment
+
+To deploy manually:
+
+```bash
+npm run generate
+```
+
+Then upload the contents of `.output/public/` to your hosting provider.
 
 ## 📦 Installation
 
@@ -104,96 +81,6 @@ Visit the live application: [https://robokozo.github.io/lego-wifi-qr-builder/](h
    ```
    
    The static files will be generated in `.output/public/`
-
-## 🌐 Deployment
-
-### GitHub Pages Deployment
-
-This project is configured for automatic deployment to GitHub Pages.
-
-1. **Enable GitHub Pages**
-   - Go to your repository settings
-   - Navigate to "Pages" section
-   - Source: Select "GitHub Actions"
-
-2. **Push to main branch**
-   ```bash
-   git push origin main
-   ```
-
-The GitHub Actions workflow will automatically build and deploy your site.
-
-### Manual Deployment
-
-To deploy manually:
-
-```bash
-npm run generate
-```
-
-Then upload the contents of `.output/public/` to your hosting provider.
-
-## 📖 Usage Guide
-
-### Step 1: Enter WiFi Credentials
-1. Enter your network name (SSID)
-2. Select security type (WPA/WPA2, WEP, or None)
-3. Enter password (if applicable)
-4. Check "Hidden Network" if needed
-
-### Step 2: Configure Baseplate
-1. Select a preset baseplate size or choose "Custom"
-2. For custom, enter width and height in studs
-3. Review the maximum scale that fits your baseplate
-
-### Step 3: Choose Colors
-1. Select foreground color (dark modules) using color picker
-2. Select background color (light modules)
-3. Review the contrast ratio
-4. Aim for "Good" or "Excellent" ratings
-5. Try suggested color combinations for best results
-
-### Step 4: Generate Instructions
-1. Click "Generate LEGO Instructions"
-2. Choose your preferred scale factor
-3. Review the brick arrangement grid
-
-### Step 5: Build Your QR Code
-1. Review the parts list
-2. Print or copy the parts list
-3. Order the required bricks
-4. Follow the grid to build your QR code
-5. Test scanning with a smartphone!
-
-## 🎨 Project Structure
-
-```
-lego-wifi-qr-builder/
-├── .github/
-│   └── workflows/
-│       └── deploy.yml          # GitHub Pages deployment
-├── app/
-│   └── app.vue                 # Root application component
-├── components/
-│   ├── WifiForm.vue            # WiFi credential input
-│   ├── BaseplateConfig.vue     # Baseplate dimension selector
-│   ├── ColorPicker.vue         # Color selection with contrast
-│   ├── BrickArrangement.vue    # Visual grid display
-│   └── BrickList.vue           # Parts list
-├── composables/
-│   ├── useQRCode.ts            # QR code generation logic
-│   ├── useLegoConverter.ts     # QR to LEGO conversion
-│   └── useContrastChecker.ts   # Contrast ratio calculation
-├── pages/
-│   └── index.vue               # Main application page
-├── public/
-│   ├── .nojekyll               # GitHub Pages configuration
-│   └── favicon.ico
-├── nuxt.config.ts              # Nuxt configuration (SPA mode)
-├── tsconfig.json
-├── package.json
-└── README.md
-```
 
 ## 🧪 Technical Details
 

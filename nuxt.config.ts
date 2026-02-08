@@ -8,7 +8,7 @@ export default defineNuxtConfig({
 
   // Configure for GitHub Pages deployment
   app: {
-    baseURL: "/bricks-wifi-qr-builder/",
+    baseURL: "/brickify/",
     buildAssetsDir: "assets",
   },
 
