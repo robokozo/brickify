@@ -9,8 +9,9 @@ Generate custom building instructions for QR codes and mosaics using bricks! Bri
 
 ## ✨ Features
 
-- **QR code builder**: encode your WiFi network, get a parts list and instructions
+- **QR code builder**: choose from 7 types (WiFi, URL, Text, Email, Phone, SMS, Location), get a parts list and instructions
 - **Mosaic builder**: turn any image into a brick mosaic (coming soon)
+- Strict per-type field validation
 - Optimized for real brick parts and colors
 - Deployable to GitHub Pages
 - Modern Nuxt UI components with Tailwind CSS
@@ -52,34 +53,39 @@ Then upload the contents of `.output/public/` to your hosting provider.
 ## 📦 Installation
 
 ### Prerequisites
+
 - Node.js 18.x or higher
 - npm or yarn
 
 ### Setup Instructions
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/robokozo/lego-wifi-qr-builder.git
    cd lego-wifi-qr-builder
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Run development server**
+
    ```bash
    npm run dev
    ```
-   
+
    The application will be available at `http://localhost:3000`
 
 4. **Build for production**
+
    ```bash
    npm run generate
    ```
-   
+
    The static files will be generated in `.output/public/`
 
 ## 🧪 Technical Details
@@ -89,11 +95,13 @@ Then upload the contents of `.output/public/` to your hosting provider.
 The application uses an intelligent **greedy algorithm** to optimize brick placement:
 
 #### Supported Brick Sizes
+
 - **Large bricks**: 2×8, 2×6, 2×4 plates
 - **Medium bricks**: 2×3, 2×2, 1×4, 1×3 plates
 - **Small bricks**: 1×2, 1×1 plates/tiles
 
 #### Algorithm Workflow
+
 1. **Scan** the QR grid from top-left to bottom-right
 2. **Try largest bricks first** at each position
 3. **Test both orientations** (horizontal and vertical)
@@ -102,44 +110,52 @@ The application uses an intelligent **greedy algorithm** to optimize brick place
 6. **Fallback to smaller bricks** if large ones don't fit
 
 #### Performance
+
 - **Time Complexity**: O(n × m × k) where:
   - n = grid height
-  - m = grid width  
+  - m = grid width
   - k = number of brick types (9)
 - **Space Complexity**: O(n × m) for tracking used cells
 - **Typical Savings**: 40-60% reduction in pieces
 
 #### Example Results
+
 For a 37×37 QR code (1,369 studs):
+
 - **Before**: 1,369 pieces (all 1×1)
 - **After**: 643 pieces (optimized)
 - **Breakdown**: 28× 2×4, 24× 1×4, 104× 2×2, 75× 1×2, 62× 1×1
 - **Savings**: 53% (726 fewer pieces)
 
-### QR Code Format
-WiFi QR codes follow this format:
-```
-WIFI:T:WPA;S:mynetwork;P:mypassword;H:true;;
-```
+### QR Code Types & Payload Formats
 
-Where:
-- `T` = Security type (WPA, WEP, or nopass)
-- `S` = SSID (network name)
-- `P` = Password
-- `H` = Hidden network (optional)
+| Type     | Payload format example                          |
+| -------- | ----------------------------------------------- |
+| WiFi     | `WIFI:T:WPA;S:mynetwork;P:mypassword;H:false;;` |
+| URL      | `https://example.com`                           |
+| Text     | `Hello, world!`                                 |
+| Email    | `mailto:user@example.com?subject=Hi&body=Hello` |
+| Phone    | `tel:+15550001234`                              |
+| SMS      | `smsto:+15550001234:My message`                 |
+| Location | `geo:48.8584,2.2945?q=Eiffel%20Tower`           |
 
 ### Error Correction
+
 The application uses Level H (High) error correction, which allows for:
+
 - Up to 30% of the QR code to be damaged/obscured
 - Best for physical builds where some bricks might be misaligned
 
 ### Contrast Calculation
+
 Uses the WCAG 2.1 contrast ratio formula:
+
 - **Excellent**: 7:1 or higher (WCAG AAA)
 - **Good**: 4.5:1 or higher (WCAG AA)
 - **Poor**: Below 4.5:1 (may be difficult to scan)
 
 ### Scaling
+
 - 1× scale: Each QR pixel = 1×1 stud
 - 2× scale: Each QR pixel = 2×2 studs
 - 3× scale: Each QR pixel = 3×3 studs
@@ -158,6 +174,7 @@ Contributions are welcome! Here's how you can help:
 5. Open a Pull Request
 
 ### Development Guidelines
+
 - Follow the existing code style
 - Add comments for complex logic
 - Test your changes thoroughly
@@ -194,6 +211,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## 🐛 Troubleshooting
 
 ### QR Code Won't Scan
+
 - Check contrast ratio (should be "Good" or "Excellent")
 - Ensure all bricks are properly aligned
 - Try increasing the scale factor
@@ -201,6 +219,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Make sure camera is perpendicular to the build
 
 ### Build Doesn't Fit Baseplate
+
 - Choose a larger baseplate
 - Reduce the scale factor
 - Use a shorter SSID or password if possible

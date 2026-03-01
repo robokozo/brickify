@@ -16,6 +16,7 @@ export interface Brick {
   x: number;
   y: number;
   isForeground: boolean;
+  colorHex?: string | null;
 }
 
 export interface BrickTypeCount {

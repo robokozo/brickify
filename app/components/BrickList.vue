@@ -10,10 +10,12 @@ const props = withDefaults(defineProps<{
   foregroundPieceType?: 'Plate' | 'Tile'
   backgroundPieceType?: 'Plate' | 'Tile'
   useBaseplate?: boolean
+  qrTypeLabel?: string
 }>(), {
   foregroundPieceType: 'Plate',
   backgroundPieceType: 'Tile',
-  useBaseplate: false
+  useBaseplate: false,
+  qrTypeLabel: 'QR Code',
 })
 
 // LEGO part number mappings from brickarchitect.com
@@ -113,8 +115,8 @@ const printPartsList = () => {
     : `BACKGROUND (Light modules) - Color: ${props.background}\n${props.optimizedBrickCount.background.map(b => `- ${getPartDisplay(b.width, b.height, props.backgroundPieceType)}: ${b.count} pieces`).join('\n')}\nSubtotal: ${props.optimizedBrickCount.backgroundTotal} pieces`
 
   const printContent = `
-Brick WiFi QR Code - Optimized Parts List
-=========================================
+Brick ${props.qrTypeLabel} - Optimized Parts List
+${'='.repeat((`Brick ${props.qrTypeLabel} - Optimized Parts List`).length)}
 
 FOREGROUND (Dark modules) - Color: ${props.foreground}
 ${foregroundList}
@@ -141,7 +143,7 @@ Shopping Tips:
     printWindow.document.write(`
       <html>
         <head>
-          <title>Brick WiFi QR Code - Parts List</title>
+          <title>Brick ${props.qrTypeLabel} - Parts List</title>
           <style>
             body { 
               font-family: Arial, sans-serif; 
@@ -188,7 +190,7 @@ const copyPartsList = async () => {
       return `${b.count}× ${b.width}×${b.height}${partNum ? ` (${partNum})` : ''}`
     }).join(', ')}\nTotal: ${props.optimizedBrickCount.backgroundTotal} pieces`
 
-  const text = `Brick WiFi QR Code - Optimized Parts List
+  const text = `Brick ${props.qrTypeLabel} - Optimized Parts List
 
 Foreground (${props.foreground}): ${foregroundList}
 Total: ${props.optimizedBrickCount.foregroundTotal} pieces

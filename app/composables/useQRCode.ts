@@ -1,52 +1,16 @@
 import QRCode from "qrcode";
 
-export interface WiFiConfig {
-  ssid: string;
-  password: string;
-  security: "WPA" | "WEP" | "nopass";
-  hidden: boolean;
-}
-
 export const useQRCode = () => {
-  const generateWiFiString = (config: WiFiConfig): string => {
-    const { ssid, password, security, hidden } = config;
-
-    // Escape special characters in SSID and password
-    const escapeString = (str: string): string => {
-      return str
-        .replace(/\\/g, "\\\\")
-        .replace(/;/g, "\\;")
-        .replace(/,/g, "\\,")
-        .replace(/:/g, "\\:")
-        .replace(/"/g, '\\"');
-    };
-
-    const escapedSSID = escapeString(ssid);
-    const escapedPassword = security !== "nopass" ? escapeString(password) : "";
-
-    // Format: WIFI:T:WPA;S:mynetwork;P:mypassword;H:true;;
-    let wifiString = `WIFI:T:${security};S:${escapedSSID};`;
-
-    if (security !== "nopass") {
-      wifiString += `P:${escapedPassword};`;
-    }
-
-    if (hidden === true) {
-      wifiString += "H:true;";
-    }
-
-    wifiString += ";";
-
-    return wifiString;
-  };
-
-  const generateQRMatrix = async (
-    wifiString: string,
-    errorCorrectionLevel: "L" | "M" | "Q" | "H" = "H",
-  ): Promise<boolean[][]> => {
+  const generateQRMatrix = async ({
+    payload,
+    errorCorrectionLevel = "H",
+  }: {
+    payload: string;
+    errorCorrectionLevel?: "L" | "M" | "Q" | "H";
+  }): Promise<boolean[][]> => {
     try {
       // Generate QR code with high error correction
-      const qrData = await QRCode.create(wifiString, {
+      const qrData = await QRCode.create(payload, {
         errorCorrectionLevel,
       });
 
@@ -75,7 +39,6 @@ export const useQRCode = () => {
   };
 
   return {
-    generateWiFiString,
     generateQRMatrix,
     getQRCodeSize,
   };

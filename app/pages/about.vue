@@ -1,14 +1,16 @@
 <template>
   <div class="container mx-auto py-12">
-    <h1 class="text-3xl font-bold mb-6">About LEGO QR & Mosaic Builder</h1>
+    <h1 class="text-3xl font-bold mb-6">About Brickify</h1>
     <p class="text-lg text-gray-700 mb-4">
-      This site lets you generate LEGO building instructions for WiFi QR codes and (soon) image mosaics. It is open
-      source and designed for LEGO fans and makers.
+      Brickify lets you generate brick building instructions for any QR code — WiFi credentials, URLs, plain text,
+      emails, phone numbers, SMS messages, and geographic locations. It is open source and designed for brick fans and
+      makers.
     </p>
     <ul class="list-disc list-inside text-gray-600 mb-6">
-      <li>WiFi QR code builder: encode your network, get a parts list and instructions</li>
-      <li>Mosaic builder: turn any image into a LEGO mosaic (coming soon)</li>
-      <li>Optimized for real LEGO parts and colors</li>
+      <li>QR code builder: choose a type, fill in the details, and get a parts list and building instructions</li>
+      <li>Supports 7 QR code types: WiFi, URL, Text, Email, Phone, SMS, and Location</li>
+      <li>Mosaic builder: turn any image into a brick mosaic (coming soon)</li>
+      <li>Optimized for real brick parts and colors</li>
       <li>Deployable to GitHub Pages</li>
     </ul>
     <div class="bg-gray-100 border border-gray-300 rounded-lg p-6 text-gray-700">

@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import type { WiFiConfig } from '~/composables/useQRCode'
+import type { WifiConfig } from '~/composables/useQrPayloads'
 
 const props = defineProps<{
-  modelValue: WiFiConfig
+  modelValue: WifiConfig
 }>()
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: WiFiConfig): void
+  (e: 'update:modelValue', value: WifiConfig): void
   (e: 'valid', value: boolean): void
 }>()
 
@@ -17,7 +17,7 @@ const securityOptions = [
   { value: 'nopass', label: 'No Password' }
 ]
 
-const localConfig = ref<WiFiConfig>({ ...props.modelValue })
+const localConfig = ref<WifiConfig>({ ...props.modelValue })
 
 watch(() => props.modelValue, (newValue) => {
   localConfig.value = { ...newValue }
