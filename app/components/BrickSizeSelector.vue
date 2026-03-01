@@ -4,8 +4,9 @@ import type { BrickSize } from '~/composables/useBrickConverter'
 
 const { allBrickSizes } = useBrickConverter()
 
+const modelValue = defineModel<BrickSize[]>({ required: true })
+
 const props = withDefaults(defineProps<{
-  modelValue: BrickSize[]
   label?: string
   color?: string
   disabled?: boolean
@@ -17,39 +18,35 @@ const props = withDefaults(defineProps<{
   showStuds: true
 })
 
-const emit = defineEmits<{
-  'update:modelValue': [value: BrickSize[]]
-}>()
-
 // Filter out 1×1 from the selectable options (it's always included)
 const selectableBrickSizes = computed(() =>
   allBrickSizes.filter(s => !(s.width === 1 && s.height === 1))
 )
 
 const isSelected = (size: BrickSize) => {
-  return props.modelValue.some(s => s.width === size.width && s.height === size.height)
+  return modelValue.value.some(s => s.width === size.width && s.height === size.height)
 }
 
 const toggleSize = (size: BrickSize) => {
   if (props.disabled) return
   if (isSelected(size)) {
-    emit('update:modelValue', props.modelValue.filter(s => !(s.width === size.width && s.height === size.height)))
+    modelValue.value = modelValue.value.filter(s => !(s.width === size.width && s.height === size.height))
   } else {
-    emit('update:modelValue', [...props.modelValue, size])
+    modelValue.value = [...modelValue.value, size]
   }
 }
 
 const selectAll = () => {
   if (props.disabled) return
-  emit('update:modelValue', [...selectableBrickSizes.value])
+  modelValue.value = [...selectableBrickSizes.value]
 }
 
 const selectNone = () => {
   if (props.disabled) return
-  emit('update:modelValue', [])
+  modelValue.value = []
 }
 
-const selectedCount = computed(() => props.modelValue.length)
+const selectedCount = computed(() => modelValue.value.length)
 
 const summaryText = computed(() => {
   if (selectedCount.value === 0) return 'None selected'

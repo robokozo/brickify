@@ -3,15 +3,9 @@ import { computed } from 'vue'
 import { QR_TYPE_LIST } from '~/composables/useQrPayloads'
 import type { QrContentType } from '~/composables/useQrPayloads'
 
-const props = defineProps<{
-  modelValue: QrContentType
-}>()
+const modelValue = defineModel<QrContentType>({ required: true })
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: QrContentType): void
-}>()
-
-const isSelected = computed(() => (type: QrContentType) => props.modelValue === type)
+const isSelected = computed(() => (type: QrContentType) => modelValue.value === type)
 </script>
 
 <template>
@@ -26,7 +20,7 @@ const isSelected = computed(() => (type: QrContentType) => props.modelValue === 
           isSelected(info.type)
             ? 'border-blue-500 bg-blue-50 text-blue-900'
             : 'border-gray-200 bg-white text-gray-700 hover:border-blue-300 hover:bg-blue-50',
-        ]" @click="emit('update:modelValue', info.type)">
+        ]" @click="modelValue = info.type">
           <span class="text-2xl">{{ info.icon }}</span>
           <span class="font-semibold text-sm">{{ info.label }}</span>
           <span class="text-xs text-gray-500 text-center leading-tight">{{ info.description }}</span>

@@ -1,30 +1,21 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { computed, watch } from 'vue'
 import type { WifiConfig } from '~/composables/useQrPayloads'
 
-const props = defineProps<{
-  modelValue: WifiConfig
-}>()
+const model = defineModel<WifiConfig>({ required: true })
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: WifiConfig): void
   (e: 'valid', value: boolean): void
 }>()
 
 const securityOptions = [
   { value: 'WPA', label: 'WPA/WPA2' },
   { value: 'WEP', label: 'WEP' },
-  { value: 'nopass', label: 'No Password' }
+  { value: 'nopass', label: 'No Password' },
 ]
 
-const localConfig = ref<WifiConfig>({ ...props.modelValue })
-
-watch(() => props.modelValue, (newValue) => {
-  localConfig.value = { ...newValue }
-}, { deep: true })
-
 const isValid = computed(() => {
-  const { ssid, password, security } = localConfig.value
+  const { ssid, password, security } = model.value
   if (!ssid.trim()) return false
   if (security !== 'nopass' && !password.trim()) return false
   return true
@@ -33,10 +24,6 @@ const isValid = computed(() => {
 watch(isValid, (valid) => {
   emit('valid', valid)
 }, { immediate: true })
-
-const emitUpdate = () => {
-  emit('update:modelValue', { ...localConfig.value })
-}
 </script>
 
 <template>
@@ -50,36 +37,33 @@ const emitUpdate = () => {
         <label class="block text-sm font-medium text-gray-700 mb-1">
           Network Name (SSID) <span class="text-red-500">*</span>
         </label>
-        <input v-model="localConfig.ssid" type="text" placeholder="My WiFi Network"
-          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
-          @input="emitUpdate" />
+        <input v-model="model.ssid" type="text" placeholder="My WiFi Network"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900" />
       </div>
 
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">
           Security Type <span class="text-red-500">*</span>
         </label>
-        <select v-model="localConfig.security"
-          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white"
-          @change="emitUpdate">
+        <select v-model="model.security"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white">
           <option v-for="option in securityOptions" :key="option.value" :value="option.value">
             {{ option.label }}
           </option>
         </select>
       </div>
 
-      <div v-if="localConfig.security !== 'nopass'">
+      <div v-if="model.security !== 'nopass'">
         <label class="block text-sm font-medium text-gray-700 mb-1">
           Password <span class="text-red-500">*</span>
         </label>
-        <input v-model="localConfig.password" type="text" placeholder="Your WiFi password"
-          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
-          @input="emitUpdate" />
+        <input v-model="model.password" type="text" placeholder="Your WiFi password"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900" />
       </div>
 
       <div class="flex items-center gap-2">
-        <input id="hidden-network" v-model="localConfig.hidden" type="checkbox"
-          class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500" @change="emitUpdate" />
+        <input id="hidden-network" v-model="model.hidden" type="checkbox"
+          class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
         <label for="hidden-network" class="text-sm font-medium text-gray-700">Hidden Network</label>
       </div>
 

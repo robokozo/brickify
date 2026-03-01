@@ -1,13 +1,6 @@
 <script setup lang="ts">
-const props = defineProps<{
-  useDithering: boolean
-  pieceType: 'Plate' | 'Tile'
-}>()
-
-const emit = defineEmits<{
-  (e: 'update:useDithering', value: boolean): void
-  (e: 'update:pieceType', value: 'Plate' | 'Tile'): void
-}>()
+const useDithering = defineModel<boolean>('useDithering', { required: true })
+const pieceType = defineModel<'Plate' | 'Tile'>('pieceType', { required: true })
 </script>
 
 <template>
@@ -23,10 +16,10 @@ const emit = defineEmits<{
         <div class="flex gap-3">
           <button v-for="type in (['Plate', 'Tile'] as const)" :key="type" type="button" :class="[
             'flex-1 py-2.5 px-4 rounded-lg border-2 text-sm font-medium transition-colors',
-            props.pieceType === type
+            pieceType === type
               ? 'border-blue-500 bg-blue-50 text-blue-900'
               : 'border-gray-200 text-gray-700 hover:border-blue-300',
-          ]" @click="emit('update:pieceType', type)">
+          ]" @click="pieceType = type">
             {{ type === 'Plate' ? '🧱 Plate (studs)' : '🟦 Tile (smooth)' }}
           </button>
         </div>
@@ -41,18 +34,18 @@ const emit = defineEmits<{
         <div class="flex gap-3">
           <button type="button" :class="[
             'flex-1 py-2.5 px-4 rounded-lg border-2 text-sm font-medium transition-colors',
-            props.useDithering === false
+            useDithering === false
               ? 'border-blue-500 bg-blue-50 text-blue-900'
               : 'border-gray-200 text-gray-700 hover:border-blue-300',
-          ]" @click="emit('update:useDithering', false)">
+          ]" @click="useDithering = false">
             📌 Nearest Color
           </button>
           <button type="button" :class="[
             'flex-1 py-2.5 px-4 rounded-lg border-2 text-sm font-medium transition-colors',
-            props.useDithering === true
+            useDithering === true
               ? 'border-blue-500 bg-blue-50 text-blue-900'
               : 'border-gray-200 text-gray-700 hover:border-blue-300',
-          ]" @click="emit('update:useDithering', true)">
+          ]" @click="useDithering = true">
             🎨 Dithering
           </button>
         </div>

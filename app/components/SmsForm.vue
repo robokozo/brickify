@@ -1,35 +1,20 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { computed, watch } from 'vue'
 import type { SmsConfig } from '~/composables/useQrPayloads'
 
-const props = defineProps<{
-  modelValue: SmsConfig
-}>()
+const model = defineModel<SmsConfig>({ required: true })
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: SmsConfig): void
   (e: 'valid', value: boolean): void
 }>()
-
-const local = ref<SmsConfig>({ ...props.modelValue })
-
-watch(
-  () => props.modelValue,
-  (newValue) => {
-    local.value = { ...newValue }
-  },
-  { deep: true },
-)
 
 const phonePattern = /^\+?[\d\s\-().]+$/
 
 const isValid = computed(
-  () => local.value.phone.trim().length > 0 && phonePattern.test(local.value.phone.trim()),
+  () => model.value.phone.trim().length > 0 && phonePattern.test(model.value.phone.trim()),
 )
 
 watch(isValid, (valid) => { emit('valid', valid) }, { immediate: true })
-
-const emitUpdate = () => { emit('update:modelValue', { ...local.value }) }
 </script>
 
 <template>
@@ -42,22 +27,20 @@ const emitUpdate = () => { emit('update:modelValue', { ...local.value }) }
         <label class="block text-sm font-medium text-gray-700 mb-1">
           Phone Number <span class="text-red-500">*</span>
         </label>
-        <input v-model="local.phone" type="tel" placeholder="+1 (555) 000-0000"
-          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
-          @input="emitUpdate" />
+        <input v-model="model.phone" type="tel" placeholder="+1 (555) 000-0000"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900" />
         <p class="mt-1 text-xs text-gray-500">Digits, spaces, +, -, ( ) allowed</p>
       </div>
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Message</label>
-        <textarea v-model="local.message" rows="3" placeholder="Optional pre-filled message"
-          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 resize-y"
-          @input="emitUpdate" />
+        <textarea v-model="model.message" rows="3" placeholder="Optional pre-filled message"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 resize-y" />
       </div>
-      <div v-if="local.phone.trim().length > 0 && !isValid"
+      <div v-if="model.phone.trim().length > 0 && !isValid"
         class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
         Invalid phone number format
       </div>
-      <div v-if="local.phone.trim().length === 0"
+      <div v-if="model.phone.trim().length === 0"
         class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
         Phone number is required
       </div>

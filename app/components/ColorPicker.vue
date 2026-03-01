@@ -1,73 +1,31 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { computed } from 'vue'
 import type { ColorSuggestion } from '~/composables/useContrastChecker'
 import type { BrickSize } from '~/composables/useBrickConverter'
 
-const props = withDefaults(defineProps<{
-  foreground: string
-  background: string
-  foregroundPieceType?: 'Plate' | 'Tile'
-  backgroundPieceType?: 'Plate' | 'Tile'
-  foregroundBrickSizes?: BrickSize[]
-  backgroundBrickSizes?: BrickSize[]
-  useBaseplate?: boolean
-  baseplateSize?: number
-  baseplateColor?: string
-}>(), {
-  foregroundPieceType: 'Plate',
-  backgroundPieceType: 'Tile',
-  foregroundBrickSizes: () => [],
-  backgroundBrickSizes: () => [],
-  useBaseplate: false,
-  baseplateSize: 48,
-  baseplateColor: '#FFFFFF'
-})
-
-const emit = defineEmits<{
-  (e: 'update:foreground', value: string): void
-  (e: 'update:background', value: string): void
-  (e: 'update:foregroundPieceType', value: 'Plate' | 'Tile'): void
-  (e: 'update:backgroundPieceType', value: 'Plate' | 'Tile'): void
-  (e: 'update:foregroundBrickSizes', value: BrickSize[]): void
-  (e: 'update:backgroundBrickSizes', value: BrickSize[]): void
-  (e: 'update:useBaseplate', value: boolean): void
-  (e: 'update:baseplateSize', value: number): void
-  (e: 'update:baseplateColor', value: string): void
-}>()
+const foreground = defineModel<string>('foreground', { required: true })
+const background = defineModel<string>('background', { required: true })
+const foregroundPieceType = defineModel<'Plate' | 'Tile'>('foregroundPieceType', { default: 'Plate' })
+const backgroundPieceType = defineModel<'Plate' | 'Tile'>('backgroundPieceType', { default: 'Tile' })
+const foregroundBrickSizes = defineModel<BrickSize[]>('foregroundBrickSizes', { default: () => [] })
+const backgroundBrickSizes = defineModel<BrickSize[]>('backgroundBrickSizes', { default: () => [] })
+const useBaseplate = defineModel<boolean>('useBaseplate', { default: false })
+const baseplateSize = defineModel<number>('baseplateSize', { default: 48 })
+const baseplateColor = defineModel<string>('baseplateColor', { default: '#FFFFFF' })
 
 const { getContrastRating, colorSuggestions } = useContrastChecker()
 
-const localForeground = ref(props.foreground)
-const localBackground = ref(props.background)
-
-watch(() => props.foreground, (newValue) => {
-  localForeground.value = newValue
-})
-
-watch(() => props.background, (newValue) => {
-  localBackground.value = newValue
-})
-
-const contrastRating = computed(() => {
-  return getContrastRating(localForeground.value, localBackground.value)
-})
-
-const emitUpdate = () => {
-  emit('update:foreground', localForeground.value)
-  emit('update:background', localBackground.value)
-}
+const contrastRating = computed(() => getContrastRating(foreground.value, background.value))
 
 const applySuggestion = (suggestion: ColorSuggestion) => {
-  localForeground.value = suggestion.foreground
-  localBackground.value = suggestion.background
-  emitUpdate()
+  foreground.value = suggestion.foreground
+  background.value = suggestion.background
 }
 
 const swapColors = () => {
-  const temp = localForeground.value
-  localForeground.value = localBackground.value
-  localBackground.value = temp
-  emitUpdate()
+  const temp = foreground.value
+  foreground.value = background.value
+  background.value = temp
 }
 
 const ratingClasses = computed(() => {
@@ -116,11 +74,11 @@ const ratingTextClass = computed(() => {
         <div>
           <label for="foreground" class="block mb-2 text-gray-700 font-medium">Foreground Color (Dark modules)</label>
           <div class="flex gap-2 items-center">
-            <input id="foreground" v-model="localForeground" type="color"
-              class="w-15 h-12 border-2 border-gray-300 rounded-md cursor-pointer" @input="emitUpdate" />
-            <input v-model="localForeground" type="text"
+            <input id="foreground" v-model="foreground" type="color"
+              class="w-15 h-12 border-2 border-gray-300 rounded-md cursor-pointer" />
+            <input v-model="foreground" type="text"
               class="flex-1 p-3 border-2 border-gray-300 rounded-md text-base font-mono focus:outline-none focus:border-blue-500"
-              placeholder="#000000" @input="emitUpdate" />
+              placeholder="#000000" />
           </div>
         </div>
 
@@ -136,11 +94,11 @@ const ratingTextClass = computed(() => {
         <div>
           <label for="background" class="block mb-2 text-gray-700 font-medium">Background Color (Light modules)</label>
           <div class="flex gap-2 items-center">
-            <input id="background" v-model="localBackground" type="color"
-              class="w-15 h-12 border-2 border-gray-300 rounded-md cursor-pointer" @input="emitUpdate" />
-            <input v-model="localBackground" type="text"
+            <input id="background" v-model="background" type="color"
+              class="w-15 h-12 border-2 border-gray-300 rounded-md cursor-pointer" />
+            <input v-model="background" type="text"
               class="flex-1 p-3 border-2 border-gray-300 rounded-md text-base font-mono focus:outline-none focus:border-blue-500"
-              placeholder="#FFFFFF" @input="emitUpdate" />
+              placeholder="#FFFFFF" />
           </div>
         </div>
       </div>
@@ -164,8 +122,7 @@ const ratingTextClass = computed(() => {
       <div class="grid grid-cols-2 gap-4 mb-6">
         <div>
           <label for="fg-piece-type" class="block mb-2 text-gray-700 font-medium">Foreground Piece Type</label>
-          <select id="fg-piece-type" :value="foregroundPieceType"
-            @change="emit('update:foregroundPieceType', ($event.target as HTMLSelectElement).value as 'Plate' | 'Tile')"
+          <select id="fg-piece-type" v-model="foregroundPieceType"
             class="w-full px-3 py-3 border-2 border-gray-300 rounded-md text-base bg-white focus:outline-none focus:border-blue-500">
             <option value="Plate">Plates (with studs)</option>
             <option value="Tile">Tiles (smooth top)</option>
@@ -173,9 +130,7 @@ const ratingTextClass = computed(() => {
         </div>
         <div>
           <label for="bg-piece-type" class="block mb-2 text-gray-700 font-medium">Background Piece Type</label>
-          <select id="bg-piece-type" :value="backgroundPieceType"
-            @change="emit('update:backgroundPieceType', ($event.target as HTMLSelectElement).value as 'Plate' | 'Tile')"
-            :disabled="useBaseplate"
+          <select id="bg-piece-type" v-model="backgroundPieceType" :disabled="useBaseplate"
             class="w-full px-3 py-3 border-2 border-gray-300 rounded-md text-base bg-white focus:outline-none focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed">
             <option value="Plate">Plates (with studs)</option>
             <option value="Tile">Tiles (smooth top)</option>
@@ -184,11 +139,9 @@ const ratingTextClass = computed(() => {
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <BrickSizeSelector :model-value="foregroundBrickSizes"
-          @update:model-value="emit('update:foregroundBrickSizes', $event)" label="Foreground" :color="foreground"
+        <BrickSizeSelector v-model="foregroundBrickSizes" label="Foreground" :color="foreground"
           :show-studs="foregroundPieceType === 'Plate'" />
-        <BrickSizeSelector :model-value="backgroundBrickSizes"
-          @update:model-value="emit('update:backgroundBrickSizes', $event)" label="Background" :color="background"
+        <BrickSizeSelector v-model="backgroundBrickSizes" label="Background" :color="background"
           :disabled="useBaseplate" :show-studs="backgroundPieceType === 'Plate'" />
       </div>
     </section>
@@ -202,8 +155,7 @@ const ratingTextClass = computed(() => {
       <div class="mb-4">
         <label
           class="flex items-center gap-3 p-4 bg-purple-50 border border-purple-200 rounded-lg cursor-pointer hover:bg-purple-100 transition-colors">
-          <input type="checkbox" :checked="useBaseplate"
-            @change="emit('update:useBaseplate', ($event.target as HTMLInputElement).checked)"
+          <input type="checkbox" v-model="useBaseplate"
             class="w-5 h-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500" />
           <div>
             <div class="font-medium text-purple-800">Use baseplate for background</div>
@@ -217,8 +169,7 @@ const ratingTextClass = computed(() => {
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label for="baseplate-size" class="block mb-2 text-gray-700 font-medium">Baseplate Size</label>
-          <select id="baseplate-size" :value="baseplateSize"
-            @change="emit('update:baseplateSize', Number(($event.target as HTMLSelectElement).value))"
+          <select id="baseplate-size" v-model.number="baseplateSize"
             class="w-full px-3 py-3 border-2 border-gray-300 rounded-md text-base bg-white focus:outline-none focus:border-blue-500">
             <option :value="48">48×48 studs</option>
           </select>
@@ -226,8 +177,7 @@ const ratingTextClass = computed(() => {
         <div v-if="!useBaseplate">
           <label for="baseplate-color" class="block mb-2 text-gray-700 font-medium">Baseplate Color</label>
           <div class="flex gap-2 items-center">
-            <input id="baseplate-color" type="color" :value="baseplateColor"
-              @input="emit('update:baseplateColor', ($event.target as HTMLInputElement).value)"
+            <input id="baseplate-color" type="color" v-model="baseplateColor"
               class="w-15 h-12 border-2 border-gray-300 rounded-md cursor-pointer" />
             <span class="text-sm text-gray-500">For preview</span>
           </div>

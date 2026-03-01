@@ -1,0 +1,2477 @@
+[
+  {
+    "rebrickableId": -1,
+    "name": "[Unknown]",
+    "hex": "#0033B2",
+    "isTransparent": false,
+    "numParts": 17,
+    "yearFrom": 2000,
+    "yearTo": 2000
+  },
+  {
+    "rebrickableId": 0,
+    "name": "Black",
+    "hex": "#05131D",
+    "isTransparent": false,
+    "numParts": 797467,
+    "yearFrom": 1957,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 1,
+    "name": "Blue",
+    "hex": "#0055BF",
+    "isTransparent": false,
+    "numParts": 200587,
+    "yearFrom": 1949,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 2,
+    "name": "Green",
+    "hex": "#237841",
+    "isTransparent": false,
+    "numParts": 87383,
+    "yearFrom": 1949,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 3,
+    "name": "Dark Turquoise",
+    "hex": "#008F9B",
+    "isTransparent": false,
+    "numParts": 22334,
+    "yearFrom": 1998,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 4,
+    "name": "Red",
+    "hex": "#C91A09",
+    "isTransparent": false,
+    "numParts": 308830,
+    "yearFrom": 1949,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 5,
+    "name": "Dark Pink",
+    "hex": "#C870A0",
+    "isTransparent": false,
+    "numParts": 14956,
+    "yearFrom": 2003,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 6,
+    "name": "Brown",
+    "hex": "#583927",
+    "isTransparent": false,
+    "numParts": 9555,
+    "yearFrom": 1974,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 7,
+    "name": "Light Gray",
+    "hex": "#9BA19D",
+    "isTransparent": false,
+    "numParts": 92804,
+    "yearFrom": 1954,
+    "yearTo": 2007
+  },
+  {
+    "rebrickableId": 8,
+    "name": "Dark Gray",
+    "hex": "#6D6E5C",
+    "isTransparent": false,
+    "numParts": 22434,
+    "yearFrom": 1978,
+    "yearTo": 2008
+  },
+  {
+    "rebrickableId": 9,
+    "name": "Light Blue",
+    "hex": "#B4D2E3",
+    "isTransparent": false,
+    "numParts": 42,
+    "yearFrom": 1995,
+    "yearTo": 2007
+  },
+  {
+    "rebrickableId": 10,
+    "name": "Bright Green",
+    "hex": "#4B9F4A",
+    "isTransparent": false,
+    "numParts": 25662,
+    "yearFrom": 1949,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 11,
+    "name": "Light Turquoise",
+    "hex": "#55A5AF",
+    "isTransparent": false,
+    "numParts": 164,
+    "yearFrom": 1998,
+    "yearTo": 2004
+  },
+  {
+    "rebrickableId": 12,
+    "name": "Salmon",
+    "hex": "#F2705E",
+    "isTransparent": false,
+    "numParts": 185,
+    "yearFrom": 1997,
+    "yearTo": 2000
+  },
+  {
+    "rebrickableId": 13,
+    "name": "Pink",
+    "hex": "#FC97AC",
+    "isTransparent": false,
+    "numParts": 477,
+    "yearFrom": 1994,
+    "yearTo": 2005
+  },
+  {
+    "rebrickableId": 14,
+    "name": "Yellow",
+    "hex": "#F2CD37",
+    "isTransparent": false,
+    "numParts": 208180,
+    "yearFrom": 1949,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 15,
+    "name": "White",
+    "hex": "#FFFFFF",
+    "isTransparent": false,
+    "numParts": 495286,
+    "yearFrom": 1949,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 17,
+    "name": "Light Green",
+    "hex": "#C2DAB8",
+    "isTransparent": false,
+    "numParts": 165,
+    "yearFrom": 1992,
+    "yearTo": 2005
+  },
+  {
+    "rebrickableId": 18,
+    "name": "Light Yellow",
+    "hex": "#FBE696",
+    "isTransparent": false,
+    "numParts": 340,
+    "yearFrom": 1994,
+    "yearTo": 2005
+  },
+  {
+    "rebrickableId": 19,
+    "name": "Tan",
+    "hex": "#E4CD9E",
+    "isTransparent": false,
+    "numParts": 182628,
+    "yearFrom": 1982,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 20,
+    "name": "Light Violet",
+    "hex": "#C9CAE2",
+    "isTransparent": false,
+    "numParts": 182,
+    "yearFrom": 1994,
+    "yearTo": 2002
+  },
+  {
+    "rebrickableId": 21,
+    "name": "Glow In Dark Opaque",
+    "hex": "#D4D5C9",
+    "isTransparent": false,
+    "numParts": 209,
+    "yearFrom": 1990,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 22,
+    "name": "Purple",
+    "hex": "#81007B",
+    "isTransparent": false,
+    "numParts": 1005,
+    "yearFrom": 1997,
+    "yearTo": 2005
+  },
+  {
+    "rebrickableId": 23,
+    "name": "Dark Blue-Violet",
+    "hex": "#2032B0",
+    "isTransparent": false,
+    "numParts": 9,
+    "yearFrom": 2004,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 25,
+    "name": "Orange",
+    "hex": "#FE8A18",
+    "isTransparent": false,
+    "numParts": 52748,
+    "yearFrom": 1997,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 26,
+    "name": "Magenta",
+    "hex": "#923978",
+    "isTransparent": false,
+    "numParts": 13029,
+    "yearFrom": 2000,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 27,
+    "name": "Lime",
+    "hex": "#BBE90B",
+    "isTransparent": false,
+    "numParts": 42771,
+    "yearFrom": 1997,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 28,
+    "name": "Dark Tan",
+    "hex": "#958A73",
+    "isTransparent": false,
+    "numParts": 67432,
+    "yearFrom": 2000,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 29,
+    "name": "Bright Pink",
+    "hex": "#E4ADC8",
+    "isTransparent": false,
+    "numParts": 17778,
+    "yearFrom": 2003,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 30,
+    "name": "Medium Lavender",
+    "hex": "#AC78BA",
+    "isTransparent": false,
+    "numParts": 9293,
+    "yearFrom": 2011,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 31,
+    "name": "Lavender",
+    "hex": "#E1D5ED",
+    "isTransparent": false,
+    "numParts": 8010,
+    "yearFrom": 2011,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 32,
+    "name": "Trans-Black IR Lens",
+    "hex": "#635F52",
+    "isTransparent": true,
+    "numParts": 0,
+    "yearFrom": null,
+    "yearTo": null
+  },
+  {
+    "rebrickableId": 33,
+    "name": "Trans-Dark Blue",
+    "hex": "#0020A0",
+    "isTransparent": true,
+    "numParts": 10614,
+    "yearFrom": 1965,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 34,
+    "name": "Trans-Green",
+    "hex": "#84B68D",
+    "isTransparent": true,
+    "numParts": 5316,
+    "yearFrom": 1969,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 35,
+    "name": "Trans-Bright Green",
+    "hex": "#D9E4A7",
+    "isTransparent": true,
+    "numParts": 3551,
+    "yearFrom": 2010,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 36,
+    "name": "Trans-Red",
+    "hex": "#C91A09",
+    "isTransparent": true,
+    "numParts": 20170,
+    "yearFrom": 1969,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 40,
+    "name": "Trans-Brown",
+    "hex": "#635F52",
+    "isTransparent": true,
+    "numParts": 8655,
+    "yearFrom": 1999,
+    "yearTo": 2025
+  },
+  {
+    "rebrickableId": 41,
+    "name": "Trans-Light Blue",
+    "hex": "#AEEFEC",
+    "isTransparent": true,
+    "numParts": 31939,
+    "yearFrom": 1985,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 42,
+    "name": "Trans-Neon Green",
+    "hex": "#F8F184",
+    "isTransparent": true,
+    "numParts": 6802,
+    "yearFrom": 1990,
+    "yearTo": 2024
+  },
+  {
+    "rebrickableId": 43,
+    "name": "Trans-Very Lt Blue",
+    "hex": "#C1DFF0",
+    "isTransparent": true,
+    "numParts": 232,
+    "yearFrom": 2003,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 45,
+    "name": "Trans-Dark Pink",
+    "hex": "#DF6695",
+    "isTransparent": true,
+    "numParts": 5638,
+    "yearFrom": 1998,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 46,
+    "name": "Trans-Yellow",
+    "hex": "#F5CD2F",
+    "isTransparent": true,
+    "numParts": 13031,
+    "yearFrom": 1969,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 47,
+    "name": "Trans-Clear",
+    "hex": "#FCFCFC",
+    "isTransparent": true,
+    "numParts": 45588,
+    "yearFrom": 1954,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 52,
+    "name": "Trans-Purple",
+    "hex": "#A5A5CB",
+    "isTransparent": true,
+    "numParts": 3030,
+    "yearFrom": 2000,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 54,
+    "name": "Trans-Neon Yellow",
+    "hex": "#DAB000",
+    "isTransparent": true,
+    "numParts": 187,
+    "yearFrom": 2001,
+    "yearTo": 2005
+  },
+  {
+    "rebrickableId": 57,
+    "name": "Trans-Neon Orange",
+    "hex": "#FF800D",
+    "isTransparent": true,
+    "numParts": 5612,
+    "yearFrom": 1993,
+    "yearTo": 2023
+  },
+  {
+    "rebrickableId": 60,
+    "name": "Chrome Antique Brass",
+    "hex": "#645A4C",
+    "isTransparent": false,
+    "numParts": 33,
+    "yearFrom": 2001,
+    "yearTo": 2005
+  },
+  {
+    "rebrickableId": 61,
+    "name": "Chrome Blue",
+    "hex": "#6C96BF",
+    "isTransparent": false,
+    "numParts": 26,
+    "yearFrom": 1998,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 62,
+    "name": "Chrome Green",
+    "hex": "#3CB371",
+    "isTransparent": false,
+    "numParts": 2,
+    "yearFrom": 1999,
+    "yearTo": 1999
+  },
+  {
+    "rebrickableId": 63,
+    "name": "Chrome Pink",
+    "hex": "#AA4D8E",
+    "isTransparent": false,
+    "numParts": 19,
+    "yearFrom": 2001,
+    "yearTo": 2018
+  },
+  {
+    "rebrickableId": 64,
+    "name": "Chrome Black",
+    "hex": "#1B2A34",
+    "isTransparent": false,
+    "numParts": 10,
+    "yearFrom": 2008,
+    "yearTo": 2020
+  },
+  {
+    "rebrickableId": 68,
+    "name": "Very Light Orange",
+    "hex": "#F3CF9B",
+    "isTransparent": false,
+    "numParts": 16,
+    "yearFrom": 2000,
+    "yearTo": 2002
+  },
+  {
+    "rebrickableId": 69,
+    "name": "Light Purple",
+    "hex": "#CD6298",
+    "isTransparent": false,
+    "numParts": 102,
+    "yearFrom": 2003,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 70,
+    "name": "Reddish Brown",
+    "hex": "#582A12",
+    "isTransparent": false,
+    "numParts": 168385,
+    "yearFrom": 2003,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 71,
+    "name": "Light Bluish Gray",
+    "hex": "#A0A5A9",
+    "isTransparent": false,
+    "numParts": 490820,
+    "yearFrom": 2002,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 72,
+    "name": "Dark Bluish Gray",
+    "hex": "#6C6E68",
+    "isTransparent": false,
+    "numParts": 356908,
+    "yearFrom": 1999,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 73,
+    "name": "Medium Blue",
+    "hex": "#5A93DB",
+    "isTransparent": false,
+    "numParts": 13243,
+    "yearFrom": 1997,
+    "yearTo": 2025
+  },
+  {
+    "rebrickableId": 74,
+    "name": "Medium Green",
+    "hex": "#73DCA1",
+    "isTransparent": false,
+    "numParts": 571,
+    "yearFrom": 1994,
+    "yearTo": 2005
+  },
+  {
+    "rebrickableId": 75,
+    "name": "Speckle Black-Copper",
+    "hex": "#05131D",
+    "isTransparent": false,
+    "numParts": 10,
+    "yearFrom": 2006,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 76,
+    "name": "Speckle DBGray-Silver",
+    "hex": "#6C6E68",
+    "isTransparent": false,
+    "numParts": 12,
+    "yearFrom": 2006,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 77,
+    "name": "Light Pink",
+    "hex": "#FECCCF",
+    "isTransparent": false,
+    "numParts": 184,
+    "yearFrom": 1991,
+    "yearTo": 1994
+  },
+  {
+    "rebrickableId": 78,
+    "name": "Light Nougat",
+    "hex": "#F6D7B3",
+    "isTransparent": false,
+    "numParts": 10856,
+    "yearFrom": 2004,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 79,
+    "name": "Milky White",
+    "hex": "#FFFFFF",
+    "isTransparent": false,
+    "numParts": 239,
+    "yearFrom": 1963,
+    "yearTo": 2008
+  },
+  {
+    "rebrickableId": 80,
+    "name": "Metallic Silver",
+    "hex": "#A5A9B4",
+    "isTransparent": false,
+    "numParts": 3858,
+    "yearFrom": 1998,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 81,
+    "name": "Metallic Green",
+    "hex": "#899B5F",
+    "isTransparent": false,
+    "numParts": 23,
+    "yearFrom": 2001,
+    "yearTo": 2001
+  },
+  {
+    "rebrickableId": 82,
+    "name": "Metallic Gold",
+    "hex": "#DBAC34",
+    "isTransparent": false,
+    "numParts": 2791,
+    "yearFrom": 1997,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 84,
+    "name": "Medium Nougat",
+    "hex": "#AA7D55",
+    "isTransparent": false,
+    "numParts": 38770,
+    "yearFrom": 2010,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 85,
+    "name": "Dark Purple",
+    "hex": "#3F3691",
+    "isTransparent": false,
+    "numParts": 16333,
+    "yearFrom": 2000,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 86,
+    "name": "Light Brown",
+    "hex": "#7C503A",
+    "isTransparent": false,
+    "numParts": 168,
+    "yearFrom": 2002,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 89,
+    "name": "Royal Blue",
+    "hex": "#4C61DB",
+    "isTransparent": false,
+    "numParts": 190,
+    "yearFrom": 2004,
+    "yearTo": 2005
+  },
+  {
+    "rebrickableId": 92,
+    "name": "Nougat",
+    "hex": "#D09168",
+    "isTransparent": false,
+    "numParts": 2819,
+    "yearFrom": 1979,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 100,
+    "name": "Light Salmon",
+    "hex": "#FEBABD",
+    "isTransparent": false,
+    "numParts": 180,
+    "yearFrom": 1997,
+    "yearTo": 2002
+  },
+  {
+    "rebrickableId": 110,
+    "name": "Violet",
+    "hex": "#4354A3",
+    "isTransparent": false,
+    "numParts": 191,
+    "yearFrom": 1992,
+    "yearTo": 2008
+  },
+  {
+    "rebrickableId": 112,
+    "name": "Medium Bluish Violet",
+    "hex": "#6874CA",
+    "isTransparent": false,
+    "numParts": 63,
+    "yearFrom": 1999,
+    "yearTo": 2005
+  },
+  {
+    "rebrickableId": 114,
+    "name": "Glitter Trans-Dark Pink",
+    "hex": "#DF6695",
+    "isTransparent": true,
+    "numParts": 234,
+    "yearFrom": 1999,
+    "yearTo": 2024
+  },
+  {
+    "rebrickableId": 115,
+    "name": "Medium Lime",
+    "hex": "#C7D23C",
+    "isTransparent": false,
+    "numParts": 192,
+    "yearFrom": 1998,
+    "yearTo": 2005
+  },
+  {
+    "rebrickableId": 117,
+    "name": "Glitter Trans-Clear",
+    "hex": "#FFFFFF",
+    "isTransparent": true,
+    "numParts": 230,
+    "yearFrom": 1999,
+    "yearTo": 2023
+  },
+  {
+    "rebrickableId": 118,
+    "name": "Aqua",
+    "hex": "#B3D7D1",
+    "isTransparent": false,
+    "numParts": 322,
+    "yearFrom": 1998,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 120,
+    "name": "Light Lime",
+    "hex": "#D9E4A7",
+    "isTransparent": false,
+    "numParts": 29,
+    "yearFrom": 1998,
+    "yearTo": 2008
+  },
+  {
+    "rebrickableId": 125,
+    "name": "Light Orange",
+    "hex": "#F9BA61",
+    "isTransparent": false,
+    "numParts": 66,
+    "yearFrom": 1998,
+    "yearTo": 2004
+  },
+  {
+    "rebrickableId": 129,
+    "name": "Glitter Trans-Purple",
+    "hex": "#A5A5CB",
+    "isTransparent": true,
+    "numParts": 169,
+    "yearFrom": 2000,
+    "yearTo": 2025
+  },
+  {
+    "rebrickableId": 132,
+    "name": "Speckle Black-Silver",
+    "hex": "#05131D",
+    "isTransparent": false,
+    "numParts": 244,
+    "yearFrom": 2005,
+    "yearTo": 2013
+  },
+  {
+    "rebrickableId": 133,
+    "name": "Speckle Black-Gold",
+    "hex": "#05131D",
+    "isTransparent": false,
+    "numParts": 5,
+    "yearFrom": 2010,
+    "yearTo": 2011
+  },
+  {
+    "rebrickableId": 134,
+    "name": "Copper",
+    "hex": "#AE7A59",
+    "isTransparent": false,
+    "numParts": 191,
+    "yearFrom": 2004,
+    "yearTo": 2008
+  },
+  {
+    "rebrickableId": 135,
+    "name": "Pearl Light Gray",
+    "hex": "#9CA3A8",
+    "isTransparent": false,
+    "numParts": 5495,
+    "yearFrom": 2000,
+    "yearTo": 2011
+  },
+  {
+    "rebrickableId": 137,
+    "name": "Pearl Sand Blue",
+    "hex": "#7988A1",
+    "isTransparent": false,
+    "numParts": 171,
+    "yearFrom": 2000,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 142,
+    "name": "Pearl Light Gold",
+    "hex": "#DCBC81",
+    "isTransparent": false,
+    "numParts": 28,
+    "yearFrom": 2000,
+    "yearTo": 2005
+  },
+  {
+    "rebrickableId": 143,
+    "name": "Trans-Medium Blue",
+    "hex": "#CFE2F7",
+    "isTransparent": true,
+    "numParts": 704,
+    "yearFrom": 2001,
+    "yearTo": 2018
+  },
+  {
+    "rebrickableId": 148,
+    "name": "Pearl Dark Gray",
+    "hex": "#575857",
+    "isTransparent": false,
+    "numParts": 532,
+    "yearFrom": 2001,
+    "yearTo": 2010
+  },
+  {
+    "rebrickableId": 150,
+    "name": "Pearl Very Light Gray",
+    "hex": "#ABADAC",
+    "isTransparent": false,
+    "numParts": 40,
+    "yearFrom": 2000,
+    "yearTo": 2004
+  },
+  {
+    "rebrickableId": 151,
+    "name": "Very Light Bluish Gray",
+    "hex": "#E6E3E0",
+    "isTransparent": false,
+    "numParts": 283,
+    "yearFrom": 1998,
+    "yearTo": 2013
+  },
+  {
+    "rebrickableId": 158,
+    "name": "Yellowish Green",
+    "hex": "#DFEEA5",
+    "isTransparent": false,
+    "numParts": 3558,
+    "yearFrom": 2012,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 178,
+    "name": "Flat Dark Gold",
+    "hex": "#B48455",
+    "isTransparent": false,
+    "numParts": 141,
+    "yearFrom": 2002,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 179,
+    "name": "Flat Silver",
+    "hex": "#898788",
+    "isTransparent": false,
+    "numParts": 22297,
+    "yearFrom": 2009,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 182,
+    "name": "Trans-Orange",
+    "hex": "#F08F1C",
+    "isTransparent": true,
+    "numParts": 15374,
+    "yearFrom": 2002,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 183,
+    "name": "Pearl White",
+    "hex": "#F2F3F2",
+    "isTransparent": false,
+    "numParts": 46,
+    "yearFrom": 2003,
+    "yearTo": 2021
+  },
+  {
+    "rebrickableId": 191,
+    "name": "Bright Light Orange",
+    "hex": "#F8BB3D",
+    "isTransparent": false,
+    "numParts": 28879,
+    "yearFrom": 2003,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 212,
+    "name": "Bright Light Blue",
+    "hex": "#9FC3E9",
+    "isTransparent": false,
+    "numParts": 8751,
+    "yearFrom": 2004,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 216,
+    "name": "Rust",
+    "hex": "#B31004",
+    "isTransparent": false,
+    "numParts": 31,
+    "yearFrom": 1989,
+    "yearTo": 2001
+  },
+  {
+    "rebrickableId": 226,
+    "name": "Bright Light Yellow",
+    "hex": "#FFF03A",
+    "isTransparent": false,
+    "numParts": 11574,
+    "yearFrom": 2004,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 230,
+    "name": "Trans-Pink",
+    "hex": "#E4ADC8",
+    "isTransparent": true,
+    "numParts": 434,
+    "yearFrom": 2003,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 232,
+    "name": "Sky Blue",
+    "hex": "#7DBFDD",
+    "isTransparent": false,
+    "numParts": 131,
+    "yearFrom": 2003,
+    "yearTo": 2007
+  },
+  {
+    "rebrickableId": 236,
+    "name": "Trans-Light Purple",
+    "hex": "#96709F",
+    "isTransparent": true,
+    "numParts": 71,
+    "yearFrom": 2000,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 272,
+    "name": "Dark Blue",
+    "hex": "#0A3463",
+    "isTransparent": false,
+    "numParts": 51195,
+    "yearFrom": 1999,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 288,
+    "name": "Dark Green",
+    "hex": "#184632",
+    "isTransparent": false,
+    "numParts": 24486,
+    "yearFrom": 1999,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 294,
+    "name": "Glow In Dark Trans",
+    "hex": "#BDC6AD",
+    "isTransparent": true,
+    "numParts": 131,
+    "yearFrom": 2005,
+    "yearTo": 2011
+  },
+  {
+    "rebrickableId": 297,
+    "name": "Pearl Gold",
+    "hex": "#AA7F2E",
+    "isTransparent": false,
+    "numParts": 50061,
+    "yearFrom": 2004,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 308,
+    "name": "Dark Brown",
+    "hex": "#352100",
+    "isTransparent": false,
+    "numParts": 23652,
+    "yearFrom": 2008,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 313,
+    "name": "Maersk Blue",
+    "hex": "#3592C3",
+    "isTransparent": false,
+    "numParts": 469,
+    "yearFrom": 1974,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 320,
+    "name": "Dark Red",
+    "hex": "#720E0F",
+    "isTransparent": false,
+    "numParts": 48446,
+    "yearFrom": 2001,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 321,
+    "name": "Dark Azure",
+    "hex": "#078BC9",
+    "isTransparent": false,
+    "numParts": 15555,
+    "yearFrom": 2011,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 322,
+    "name": "Medium Azure",
+    "hex": "#36AEBF",
+    "isTransparent": false,
+    "numParts": 27751,
+    "yearFrom": 2012,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 323,
+    "name": "Light Aqua",
+    "hex": "#ADC3C0",
+    "isTransparent": false,
+    "numParts": 10200,
+    "yearFrom": 2011,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 326,
+    "name": "Olive Green",
+    "hex": "#9B9A5A",
+    "isTransparent": false,
+    "numParts": 11267,
+    "yearFrom": 2010,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 334,
+    "name": "Chrome Gold",
+    "hex": "#BBA53D",
+    "isTransparent": false,
+    "numParts": 2177,
+    "yearFrom": 1989,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 335,
+    "name": "Sand Red",
+    "hex": "#D67572",
+    "isTransparent": false,
+    "numParts": 603,
+    "yearFrom": 2001,
+    "yearTo": 2004
+  },
+  {
+    "rebrickableId": 351,
+    "name": "Medium Dark Pink",
+    "hex": "#F785B1",
+    "isTransparent": false,
+    "numParts": 1092,
+    "yearFrom": 1994,
+    "yearTo": 2005
+  },
+  {
+    "rebrickableId": 366,
+    "name": "Earth Orange",
+    "hex": "#FA9C1C",
+    "isTransparent": false,
+    "numParts": 170,
+    "yearFrom": 1982,
+    "yearTo": 2005
+  },
+  {
+    "rebrickableId": 373,
+    "name": "Sand Purple",
+    "hex": "#845E84",
+    "isTransparent": false,
+    "numParts": 73,
+    "yearFrom": 2001,
+    "yearTo": 2003
+  },
+  {
+    "rebrickableId": 378,
+    "name": "Sand Green",
+    "hex": "#A0BCAC",
+    "isTransparent": false,
+    "numParts": 24055,
+    "yearFrom": 2000,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 379,
+    "name": "Sand Blue",
+    "hex": "#6074A1",
+    "isTransparent": false,
+    "numParts": 9956,
+    "yearFrom": 2001,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 383,
+    "name": "Chrome Silver",
+    "hex": "#E0E0E0",
+    "isTransparent": false,
+    "numParts": 1325,
+    "yearFrom": 1977,
+    "yearTo": 2025
+  },
+  {
+    "rebrickableId": 450,
+    "name": "Fabuland Brown",
+    "hex": "#B67B50",
+    "isTransparent": false,
+    "numParts": 55,
+    "yearFrom": 1979,
+    "yearTo": 1991
+  },
+  {
+    "rebrickableId": 462,
+    "name": "Medium Orange",
+    "hex": "#FFA70B",
+    "isTransparent": false,
+    "numParts": 494,
+    "yearFrom": 1996,
+    "yearTo": 2008
+  },
+  {
+    "rebrickableId": 484,
+    "name": "Dark Orange",
+    "hex": "#A95500",
+    "isTransparent": false,
+    "numParts": 26376,
+    "yearFrom": 1994,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 503,
+    "name": "Very Light Gray",
+    "hex": "#E6E3DA",
+    "isTransparent": false,
+    "numParts": 260,
+    "yearFrom": 1997,
+    "yearTo": 2004
+  },
+  {
+    "rebrickableId": 1000,
+    "name": "Glow in Dark White",
+    "hex": "#D9D9D9",
+    "isTransparent": false,
+    "numParts": 656,
+    "yearFrom": 2011,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 1001,
+    "name": "Medium Violet",
+    "hex": "#9391E4",
+    "isTransparent": false,
+    "numParts": 13,
+    "yearFrom": 2000,
+    "yearTo": 2007
+  },
+  {
+    "rebrickableId": 1002,
+    "name": "Glitter Trans-Neon Green",
+    "hex": "#C0F500",
+    "isTransparent": true,
+    "numParts": 9,
+    "yearFrom": 2015,
+    "yearTo": 2018
+  },
+  {
+    "rebrickableId": 1003,
+    "name": "Glitter Trans-Light Blue",
+    "hex": "#68BCC5",
+    "isTransparent": true,
+    "numParts": 91,
+    "yearFrom": 2015,
+    "yearTo": 2024
+  },
+  {
+    "rebrickableId": 1004,
+    "name": "Trans-Flame Yellowish Orange",
+    "hex": "#FCB76D",
+    "isTransparent": true,
+    "numParts": 214,
+    "yearFrom": 2003,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 1005,
+    "name": "Trans-Fire Yellow",
+    "hex": "#FBE890",
+    "isTransparent": true,
+    "numParts": 41,
+    "yearFrom": 2003,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 1006,
+    "name": "Trans-Light Royal Blue",
+    "hex": "#B4D4F7",
+    "isTransparent": true,
+    "numParts": 90,
+    "yearFrom": 2005,
+    "yearTo": 2005
+  },
+  {
+    "rebrickableId": 1007,
+    "name": "Reddish Lilac",
+    "hex": "#8E5597",
+    "isTransparent": false,
+    "numParts": 50,
+    "yearFrom": 2004,
+    "yearTo": 2007
+  },
+  {
+    "rebrickableId": 1008,
+    "name": "Vintage Blue",
+    "hex": "#039CBD",
+    "isTransparent": false,
+    "numParts": 24,
+    "yearFrom": 1949,
+    "yearTo": 1949
+  },
+  {
+    "rebrickableId": 1009,
+    "name": "Vintage Green",
+    "hex": "#1E601E",
+    "isTransparent": false,
+    "numParts": 32,
+    "yearFrom": 1949,
+    "yearTo": 1949
+  },
+  {
+    "rebrickableId": 1010,
+    "name": "Vintage Red",
+    "hex": "#CA1F08",
+    "isTransparent": false,
+    "numParts": 31,
+    "yearFrom": 1949,
+    "yearTo": 1949
+  },
+  {
+    "rebrickableId": 1011,
+    "name": "Vintage Yellow",
+    "hex": "#F3C305",
+    "isTransparent": false,
+    "numParts": 24,
+    "yearFrom": 1949,
+    "yearTo": 1949
+  },
+  {
+    "rebrickableId": 1012,
+    "name": "Fabuland Orange",
+    "hex": "#EF9121",
+    "isTransparent": false,
+    "numParts": 5,
+    "yearFrom": 1983,
+    "yearTo": 1987
+  },
+  {
+    "rebrickableId": 1013,
+    "name": "Modulex White",
+    "hex": "#F4F4F4",
+    "isTransparent": false,
+    "numParts": 2998,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1014,
+    "name": "Modulex Light Bluish Gray",
+    "hex": "#AFB5C7",
+    "isTransparent": false,
+    "numParts": 10,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1015,
+    "name": "Modulex Light Gray",
+    "hex": "#9C9C9C",
+    "isTransparent": false,
+    "numParts": 2249,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1016,
+    "name": "Modulex Charcoal Gray",
+    "hex": "#595D60",
+    "isTransparent": false,
+    "numParts": 2,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1017,
+    "name": "Modulex Tile Gray",
+    "hex": "#6B5A5A",
+    "isTransparent": false,
+    "numParts": 219,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1018,
+    "name": "Modulex Black",
+    "hex": "#4D4C52",
+    "isTransparent": false,
+    "numParts": 2499,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1019,
+    "name": "Modulex Tile Brown",
+    "hex": "#330000",
+    "isTransparent": false,
+    "numParts": 158,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1020,
+    "name": "Modulex Terracotta",
+    "hex": "#5C5030",
+    "isTransparent": false,
+    "numParts": 1622,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1021,
+    "name": "Modulex Brown",
+    "hex": "#907450",
+    "isTransparent": false,
+    "numParts": 2223,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1022,
+    "name": "Modulex Buff",
+    "hex": "#DEC69C",
+    "isTransparent": false,
+    "numParts": 1626,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1023,
+    "name": "Modulex Red",
+    "hex": "#B52C20",
+    "isTransparent": false,
+    "numParts": 26,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1024,
+    "name": "Modulex Pink Red",
+    "hex": "#F45C40",
+    "isTransparent": false,
+    "numParts": 7,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1025,
+    "name": "Modulex Orange",
+    "hex": "#F47B30",
+    "isTransparent": false,
+    "numParts": 26,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1026,
+    "name": "Modulex Light Orange",
+    "hex": "#F7AD63",
+    "isTransparent": false,
+    "numParts": 7,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1027,
+    "name": "Modulex Light Yellow",
+    "hex": "#FFE371",
+    "isTransparent": false,
+    "numParts": 8,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1028,
+    "name": "Modulex Ochre Yellow",
+    "hex": "#FED557",
+    "isTransparent": false,
+    "numParts": 1107,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1029,
+    "name": "Modulex Lemon",
+    "hex": "#BDC618",
+    "isTransparent": false,
+    "numParts": 23,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1030,
+    "name": "Modulex Pastel Green",
+    "hex": "#7DB538",
+    "isTransparent": false,
+    "numParts": 35,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1031,
+    "name": "Modulex Olive Green",
+    "hex": "#7C9051",
+    "isTransparent": false,
+    "numParts": 1111,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1032,
+    "name": "Modulex Aqua Green",
+    "hex": "#27867E",
+    "isTransparent": false,
+    "numParts": 16,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1033,
+    "name": "Modulex Teal Blue",
+    "hex": "#467083",
+    "isTransparent": false,
+    "numParts": 1104,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1034,
+    "name": "Modulex Tile Blue",
+    "hex": "#0057A6",
+    "isTransparent": false,
+    "numParts": 80,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1035,
+    "name": "Modulex Medium Blue",
+    "hex": "#61AFFF",
+    "isTransparent": false,
+    "numParts": 8,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1036,
+    "name": "Modulex Pastel Blue",
+    "hex": "#68AECE",
+    "isTransparent": false,
+    "numParts": 19,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1037,
+    "name": "Modulex Violet",
+    "hex": "#BD7D85",
+    "isTransparent": false,
+    "numParts": 7,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1038,
+    "name": "Modulex Pink",
+    "hex": "#F785B1",
+    "isTransparent": false,
+    "numParts": 20,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1039,
+    "name": "Modulex Clear",
+    "hex": "#FFFFFF",
+    "isTransparent": false,
+    "numParts": 1394,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1040,
+    "name": "Modulex Foil Dark Gray",
+    "hex": "#595D60",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1041,
+    "name": "Modulex Foil Light Gray",
+    "hex": "#9C9C9C",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1042,
+    "name": "Modulex Foil Dark Green",
+    "hex": "#006400",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1043,
+    "name": "Modulex Foil Light Green",
+    "hex": "#7DB538",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1044,
+    "name": "Modulex Foil Dark Blue",
+    "hex": "#0057A6",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1045,
+    "name": "Modulex Foil Light Blue",
+    "hex": "#68AECE",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1046,
+    "name": "Modulex Foil Violet",
+    "hex": "#4B0082",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1047,
+    "name": "Modulex Foil Red",
+    "hex": "#8B0000",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1048,
+    "name": "Modulex Foil Yellow",
+    "hex": "#FED557",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1049,
+    "name": "Modulex Foil Orange",
+    "hex": "#F7AD63",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1050,
+    "name": "Coral",
+    "hex": "#FF698F",
+    "isTransparent": false,
+    "numParts": 7374,
+    "yearFrom": 2019,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 1051,
+    "name": "Pastel Blue",
+    "hex": "#5AC4DA",
+    "isTransparent": false,
+    "numParts": 734,
+    "yearFrom": 2000,
+    "yearTo": 2011
+  },
+  {
+    "rebrickableId": 1052,
+    "name": "Glitter Trans-Orange",
+    "hex": "#F08F1C",
+    "isTransparent": true,
+    "numParts": 1,
+    "yearFrom": 2020,
+    "yearTo": 2020
+  },
+  {
+    "rebrickableId": 1053,
+    "name": "Opal Trans-Light Blue",
+    "hex": "#68BCC5",
+    "isTransparent": true,
+    "numParts": 911,
+    "yearFrom": 2020,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 1054,
+    "name": "Opal Trans-Dark Pink",
+    "hex": "#CE1D9B",
+    "isTransparent": true,
+    "numParts": 200,
+    "yearFrom": 2020,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 1055,
+    "name": "Opal Trans-Clear",
+    "hex": "#FCFCFC",
+    "isTransparent": true,
+    "numParts": 859,
+    "yearFrom": 2020,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 1056,
+    "name": "Opal Trans-Brown",
+    "hex": "#583927",
+    "isTransparent": true,
+    "numParts": 140,
+    "yearFrom": 2020,
+    "yearTo": 2023
+  },
+  {
+    "rebrickableId": 1057,
+    "name": "Trans-Light Bright Green",
+    "hex": "#C9E788",
+    "isTransparent": true,
+    "numParts": 119,
+    "yearFrom": 2003,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 1058,
+    "name": "Trans-Light Green",
+    "hex": "#94E5AB",
+    "isTransparent": true,
+    "numParts": 42,
+    "yearFrom": 2005,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 1059,
+    "name": "Opal Trans-Purple",
+    "hex": "#8320B7",
+    "isTransparent": true,
+    "numParts": 285,
+    "yearFrom": 2020,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 1060,
+    "name": "Opal Trans-Bright Green",
+    "hex": "#84B68D",
+    "isTransparent": true,
+    "numParts": 173,
+    "yearFrom": 2021,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 1061,
+    "name": "Opal Trans-Dark Blue",
+    "hex": "#0020A0",
+    "isTransparent": true,
+    "numParts": 211,
+    "yearFrom": 2021,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 1062,
+    "name": "Vibrant Yellow",
+    "hex": "#EBD800",
+    "isTransparent": false,
+    "numParts": 2029,
+    "yearFrom": 2022,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 1063,
+    "name": "Pearl Copper",
+    "hex": "#B46A00",
+    "isTransparent": false,
+    "numParts": 72,
+    "yearFrom": 2017,
+    "yearTo": 2020
+  },
+  {
+    "rebrickableId": 1064,
+    "name": "Fabuland Red",
+    "hex": "#FF8014",
+    "isTransparent": false,
+    "numParts": 23,
+    "yearFrom": 1979,
+    "yearTo": 1994
+  },
+  {
+    "rebrickableId": 1065,
+    "name": "Reddish Gold",
+    "hex": "#AC8247",
+    "isTransparent": false,
+    "numParts": 79,
+    "yearFrom": 2002,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 1066,
+    "name": "Curry",
+    "hex": "#DD982E",
+    "isTransparent": false,
+    "numParts": 10,
+    "yearFrom": 2004,
+    "yearTo": 2005
+  },
+  {
+    "rebrickableId": 1067,
+    "name": "Dark Nougat",
+    "hex": "#AD6140",
+    "isTransparent": false,
+    "numParts": 10,
+    "yearFrom": 2001,
+    "yearTo": 2004
+  },
+  {
+    "rebrickableId": 1068,
+    "name": "Bright Reddish Orange",
+    "hex": "#EE5434",
+    "isTransparent": false,
+    "numParts": 16,
+    "yearFrom": 2003,
+    "yearTo": 2004
+  },
+  {
+    "rebrickableId": 1069,
+    "name": "Pearl Red",
+    "hex": "#D60026",
+    "isTransparent": false,
+    "numParts": 24,
+    "yearFrom": 2003,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 1070,
+    "name": "Pearl Blue",
+    "hex": "#0059A3",
+    "isTransparent": false,
+    "numParts": 21,
+    "yearFrom": 2003,
+    "yearTo": 2009
+  },
+  {
+    "rebrickableId": 1071,
+    "name": "Pearl Green",
+    "hex": "#008E3C",
+    "isTransparent": false,
+    "numParts": 21,
+    "yearFrom": 2003,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 1072,
+    "name": "Pearl Brown",
+    "hex": "#57392C",
+    "isTransparent": false,
+    "numParts": 35,
+    "yearFrom": 2003,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 1073,
+    "name": "Pearl Black",
+    "hex": "#0A1327",
+    "isTransparent": false,
+    "numParts": 35,
+    "yearFrom": 2000,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 1074,
+    "name": "Duplo Blue",
+    "hex": "#009ECE",
+    "isTransparent": false,
+    "numParts": 6,
+    "yearFrom": 2003,
+    "yearTo": 2004
+  },
+  {
+    "rebrickableId": 1075,
+    "name": "Duplo Medium Blue",
+    "hex": "#3E95B6",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 2004,
+    "yearTo": 2004
+  },
+  {
+    "rebrickableId": 1076,
+    "name": "Duplo Lime",
+    "hex": "#FFF230",
+    "isTransparent": false,
+    "numParts": 5,
+    "yearFrom": 1992,
+    "yearTo": 1992
+  },
+  {
+    "rebrickableId": 1077,
+    "name": "Fabuland Lime",
+    "hex": "#78FC78",
+    "isTransparent": false,
+    "numParts": 16,
+    "yearFrom": 1982,
+    "yearTo": 1986
+  },
+  {
+    "rebrickableId": 1078,
+    "name": "Duplo Medium Green",
+    "hex": "#468A5F",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 2003,
+    "yearTo": 2003
+  },
+  {
+    "rebrickableId": 1079,
+    "name": "Duplo Light Green",
+    "hex": "#60BA76",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 2004,
+    "yearTo": 2004
+  },
+  {
+    "rebrickableId": 1080,
+    "name": "Light Tan",
+    "hex": "#F3C988",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 2006,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 1081,
+    "name": "Rust Orange",
+    "hex": "#872B17",
+    "isTransparent": false,
+    "numParts": 3,
+    "yearFrom": 2004,
+    "yearTo": 2005
+  },
+  {
+    "rebrickableId": 1082,
+    "name": "Clikits Pink",
+    "hex": "#FE78B0",
+    "isTransparent": false,
+    "numParts": 32,
+    "yearFrom": 2006,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 1083,
+    "name": "Two-tone Copper",
+    "hex": "#945148",
+    "isTransparent": false,
+    "numParts": 2,
+    "yearFrom": 2001,
+    "yearTo": 2001
+  },
+  {
+    "rebrickableId": 1084,
+    "name": "Two-tone Gold",
+    "hex": "#AB673A",
+    "isTransparent": false,
+    "numParts": 6,
+    "yearFrom": 2002,
+    "yearTo": 2002
+  },
+  {
+    "rebrickableId": 1085,
+    "name": "Two-tone Silver",
+    "hex": "#737271",
+    "isTransparent": false,
+    "numParts": 6,
+    "yearFrom": 2002,
+    "yearTo": 2002
+  },
+  {
+    "rebrickableId": 1086,
+    "name": "Pearl Lime",
+    "hex": "#6A7944",
+    "isTransparent": false,
+    "numParts": 41,
+    "yearFrom": 2002,
+    "yearTo": 2004
+  },
+  {
+    "rebrickableId": 1087,
+    "name": "Duplo Pink",
+    "hex": "#FF879C",
+    "isTransparent": false,
+    "numParts": 47,
+    "yearFrom": 1992,
+    "yearTo": 1993
+  },
+  {
+    "rebrickableId": 1088,
+    "name": "Medium Brown",
+    "hex": "#755945",
+    "isTransparent": false,
+    "numParts": 205,
+    "yearFrom": 2022,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 1089,
+    "name": "Warm Tan",
+    "hex": "#CCA373",
+    "isTransparent": false,
+    "numParts": 417,
+    "yearFrom": 2022,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 1090,
+    "name": "Duplo Turquoise",
+    "hex": "#3FB69E",
+    "isTransparent": false,
+    "numParts": 2,
+    "yearFrom": 2003,
+    "yearTo": 2003
+  },
+  {
+    "rebrickableId": 1091,
+    "name": "Warm Yellowish Orange",
+    "hex": "#FFCB78",
+    "isTransparent": false,
+    "numParts": 19,
+    "yearFrom": 2004,
+    "yearTo": 2004
+  },
+  {
+    "rebrickableId": 1092,
+    "name": "Metallic Copper",
+    "hex": "#764D3B",
+    "isTransparent": false,
+    "numParts": 52,
+    "yearFrom": 2008,
+    "yearTo": 2012
+  },
+  {
+    "rebrickableId": 1093,
+    "name": "Light Lilac",
+    "hex": "#9195CA",
+    "isTransparent": false,
+    "numParts": 51,
+    "yearFrom": 2003,
+    "yearTo": 2011
+  },
+  {
+    "rebrickableId": 1094,
+    "name": "Trans-Medium Purple",
+    "hex": "#8D73B3",
+    "isTransparent": false,
+    "numParts": 258,
+    "yearFrom": 2003,
+    "yearTo": 2006
+  },
+  {
+    "rebrickableId": 1095,
+    "name": "Trans-Black",
+    "hex": "#635F52",
+    "isTransparent": true,
+    "numParts": 845,
+    "yearFrom": 2023,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 1096,
+    "name": "Glitter Trans-Bright Green",
+    "hex": "#D9E4A7",
+    "isTransparent": true,
+    "numParts": 0,
+    "yearFrom": null,
+    "yearTo": null
+  },
+  {
+    "rebrickableId": 1097,
+    "name": "Glitter Trans-Medium Purple",
+    "hex": "#8D73B3",
+    "isTransparent": true,
+    "numParts": 6,
+    "yearFrom": 2005,
+    "yearTo": 2005
+  },
+  {
+    "rebrickableId": 1098,
+    "name": "Glitter Trans-Green",
+    "hex": "#84B68D",
+    "isTransparent": true,
+    "numParts": 1,
+    "yearFrom": 2000,
+    "yearTo": 2000
+  },
+  {
+    "rebrickableId": 1099,
+    "name": "Glitter Trans-Pink",
+    "hex": "#E4ADC8",
+    "isTransparent": true,
+    "numParts": 2,
+    "yearFrom": 2005,
+    "yearTo": 2005
+  },
+  {
+    "rebrickableId": 1100,
+    "name": "Clikits Yellow",
+    "hex": "#FFCF0B",
+    "isTransparent": false,
+    "numParts": 22,
+    "yearFrom": 2003,
+    "yearTo": 2004
+  },
+  {
+    "rebrickableId": 1101,
+    "name": "Duplo Dark Purple",
+    "hex": "#5F27AA",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 2003,
+    "yearTo": 2003
+  },
+  {
+    "rebrickableId": 1102,
+    "name": "Trans-Neon Red",
+    "hex": "#FF0040",
+    "isTransparent": true,
+    "numParts": 22,
+    "yearFrom": 2001,
+    "yearTo": 2004
+  },
+  {
+    "rebrickableId": 1103,
+    "name": "Pearl Titanium",
+    "hex": "#3E3C39",
+    "isTransparent": false,
+    "numParts": 7364,
+    "yearFrom": 2010,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 1104,
+    "name": "HO Aqua",
+    "hex": "#B3D7D1",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 1958,
+    "yearTo": 1958
+  },
+  {
+    "rebrickableId": 1105,
+    "name": "HO Azure",
+    "hex": "#1591CB",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 1963,
+    "yearTo": 1963
+  },
+  {
+    "rebrickableId": 1106,
+    "name": "HO Blue-gray",
+    "hex": "#354E5A",
+    "isTransparent": false,
+    "numParts": 3,
+    "yearFrom": 1958,
+    "yearTo": 1970
+  },
+  {
+    "rebrickableId": 1107,
+    "name": "HO Cyan",
+    "hex": "#5B98B3",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 1958,
+    "yearTo": 1958
+  },
+  {
+    "rebrickableId": 1108,
+    "name": "HO Dark Aqua",
+    "hex": "#A7DCCF",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 1958,
+    "yearTo": 1958
+  },
+  {
+    "rebrickableId": 1109,
+    "name": "HO Dark Blue",
+    "hex": "#0A3463",
+    "isTransparent": false,
+    "numParts": 9,
+    "yearFrom": 1958,
+    "yearTo": 1965
+  },
+  {
+    "rebrickableId": 1110,
+    "name": "HO Dark Gray",
+    "hex": "#6D6E5C",
+    "isTransparent": false,
+    "numParts": 11,
+    "yearFrom": 1961,
+    "yearTo": 1964
+  },
+  {
+    "rebrickableId": 1111,
+    "name": "HO Dark Green",
+    "hex": "#184632",
+    "isTransparent": false,
+    "numParts": 4,
+    "yearFrom": 1958,
+    "yearTo": 1964
+  },
+  {
+    "rebrickableId": 1112,
+    "name": "HO Dark Lime",
+    "hex": "#B2B955",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 1958,
+    "yearTo": 1958
+  },
+  {
+    "rebrickableId": 1113,
+    "name": "HO Dark Red",
+    "hex": "#631314",
+    "isTransparent": false,
+    "numParts": 10,
+    "yearFrom": 1958,
+    "yearTo": 1964
+  },
+  {
+    "rebrickableId": 1114,
+    "name": "HO Dark Sand Green",
+    "hex": "#627A62",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 1958,
+    "yearTo": 1958
+  },
+  {
+    "rebrickableId": 1115,
+    "name": "HO Dark Turquoise",
+    "hex": "#10929D",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 1965,
+    "yearTo": 1965
+  },
+  {
+    "rebrickableId": 1116,
+    "name": "HO Earth Orange",
+    "hex": "#BB771B",
+    "isTransparent": false,
+    "numParts": 2,
+    "yearFrom": 1957,
+    "yearTo": 1958
+  },
+  {
+    "rebrickableId": 1117,
+    "name": "HO Gold",
+    "hex": "#B4A774",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 1958,
+    "yearTo": 1958
+  },
+  {
+    "rebrickableId": 1118,
+    "name": "HO Light Aqua",
+    "hex": "#A3D1C0",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 1958,
+    "yearTo": 1958
+  },
+  {
+    "rebrickableId": 1119,
+    "name": "HO Light Brown",
+    "hex": "#965336",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 1957,
+    "yearTo": 1957
+  },
+  {
+    "rebrickableId": 1120,
+    "name": "HO Light Gold",
+    "hex": "#CDC298",
+    "isTransparent": false,
+    "numParts": 2,
+    "yearFrom": 1957,
+    "yearTo": 1958
+  },
+  {
+    "rebrickableId": 1121,
+    "name": "HO Light Tan",
+    "hex": "#F9F1C7",
+    "isTransparent": false,
+    "numParts": 4,
+    "yearFrom": 1958,
+    "yearTo": 1964
+  },
+  {
+    "rebrickableId": 1122,
+    "name": "HO Light Yellow",
+    "hex": "#F5FAB7",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 1958,
+    "yearTo": 1958
+  },
+  {
+    "rebrickableId": 1123,
+    "name": "HO Medium Blue",
+    "hex": "#7396C8",
+    "isTransparent": false,
+    "numParts": 2,
+    "yearFrom": 1958,
+    "yearTo": 1958
+  },
+  {
+    "rebrickableId": 1124,
+    "name": "HO Medium Red",
+    "hex": "#C01111",
+    "isTransparent": false,
+    "numParts": 4,
+    "yearFrom": 1957,
+    "yearTo": 1958
+  },
+  {
+    "rebrickableId": 1125,
+    "name": "HO Metallic Blue",
+    "hex": "#0D4763",
+    "isTransparent": false,
+    "numParts": 3,
+    "yearFrom": 1958,
+    "yearTo": 1961
+  },
+  {
+    "rebrickableId": 1126,
+    "name": "HO Metallic Dark Gray",
+    "hex": "#5E5E5E",
+    "isTransparent": false,
+    "numParts": 2,
+    "yearFrom": 1958,
+    "yearTo": 1959
+  },
+  {
+    "rebrickableId": 1127,
+    "name": "HO Metallic Green",
+    "hex": "#879867",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 1958,
+    "yearTo": 1958
+  },
+  {
+    "rebrickableId": 1128,
+    "name": "HO Metallic Sand Blue",
+    "hex": "#5F7D8C",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 1958,
+    "yearTo": 1958
+  },
+  {
+    "rebrickableId": 1129,
+    "name": "HO Olive Green",
+    "hex": "#9B9A5A",
+    "isTransparent": false,
+    "numParts": 12,
+    "yearFrom": 1957,
+    "yearTo": 1965
+  },
+  {
+    "rebrickableId": 1130,
+    "name": "HO Rose",
+    "hex": "#D06262",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 1958,
+    "yearTo": 1958
+  },
+  {
+    "rebrickableId": 1131,
+    "name": "HO Sand Blue",
+    "hex": "#6E8AA6",
+    "isTransparent": false,
+    "numParts": 3,
+    "yearFrom": 1957,
+    "yearTo": 1965
+  },
+  {
+    "rebrickableId": 1132,
+    "name": "HO Sand Green",
+    "hex": "#A0BCAC",
+    "isTransparent": false,
+    "numParts": 3,
+    "yearFrom": 1958,
+    "yearTo": 1964
+  },
+  {
+    "rebrickableId": 1133,
+    "name": "HO Tan",
+    "hex": "#E4CD9E",
+    "isTransparent": false,
+    "numParts": 3,
+    "yearFrom": 1957,
+    "yearTo": 1964
+  },
+  {
+    "rebrickableId": 1134,
+    "name": "HO Titanium",
+    "hex": "#616161",
+    "isTransparent": false,
+    "numParts": 1,
+    "yearFrom": 1958,
+    "yearTo": 1958
+  },
+  {
+    "rebrickableId": 1135,
+    "name": "Metal",
+    "hex": "#A5ADB4",
+    "isTransparent": false,
+    "numParts": 55,
+    "yearFrom": 1957,
+    "yearTo": 2021
+  },
+  {
+    "rebrickableId": 1136,
+    "name": "Reddish Orange",
+    "hex": "#CA4C0B",
+    "isTransparent": false,
+    "numParts": 3110,
+    "yearFrom": 2024,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 1137,
+    "name": "Sienna Brown",
+    "hex": "#915C3C",
+    "isTransparent": false,
+    "numParts": 50,
+    "yearFrom": 2024,
+    "yearTo": 2025
+  },
+  {
+    "rebrickableId": 1138,
+    "name": "Umber Brown",
+    "hex": "#5E3F33",
+    "isTransparent": false,
+    "numParts": 14,
+    "yearFrom": 2024,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 1139,
+    "name": "Opal Trans-Yellow",
+    "hex": "#F5CD2F",
+    "isTransparent": true,
+    "numParts": 19,
+    "yearFrom": 2024,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 1140,
+    "name": "Neon Orange",
+    "hex": "#EC4612",
+    "isTransparent": false,
+    "numParts": 8,
+    "yearFrom": 1999,
+    "yearTo": 1999
+  },
+  {
+    "rebrickableId": 1141,
+    "name": "Neon Green",
+    "hex": "#D2FC43",
+    "isTransparent": false,
+    "numParts": 13,
+    "yearFrom": 1999,
+    "yearTo": 1999
+  },
+  {
+    "rebrickableId": 1142,
+    "name": "Dark Olive Green",
+    "hex": "#5D5C36",
+    "isTransparent": false,
+    "numParts": 11,
+    "yearFrom": 2000,
+    "yearTo": 2001
+  },
+  {
+    "rebrickableId": 1143,
+    "name": "Glitter Milky White",
+    "hex": "#FFFFFF",
+    "isTransparent": false,
+    "numParts": 4,
+    "yearFrom": 1999,
+    "yearTo": 2005
+  },
+  {
+    "rebrickableId": 1144,
+    "name": "Chrome Red",
+    "hex": "#CE3021",
+    "isTransparent": false,
+    "numParts": 4,
+    "yearFrom": 2003,
+    "yearTo": 2009
+  },
+  {
+    "rebrickableId": 1145,
+    "name": "Ochre Yellow",
+    "hex": "#DD9E47",
+    "isTransparent": false,
+    "numParts": 11,
+    "yearFrom": 2025,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 1146,
+    "name": "Warm Pink",
+    "hex": "#F6B7BF",
+    "isTransparent": false,
+    "numParts": 320,
+    "yearFrom": 2026,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 1147,
+    "name": "Blue Violet",
+    "hex": "#A3A9FF",
+    "isTransparent": false,
+    "numParts": 93,
+    "yearFrom": 2026,
+    "yearTo": 2026
+  },
+  {
+    "rebrickableId": 9999,
+    "name": "[No Color/Any Color]",
+    "hex": "#05131D",
+    "isTransparent": false,
+    "numParts": 9905,
+    "yearFrom": 1955,
+    "yearTo": 2026
+  }
+]

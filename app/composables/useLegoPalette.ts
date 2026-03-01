@@ -1,170 +1,104 @@
+import colorsData from "~/assets/colors.json";
+
 export interface LegoColor {
   id: string;
   name: string;
   hex: string;
   platePartNumber: string; // BrickLink design number for 1×1 plate
+  rebrickableId: number;
 }
 
-// Official LEGO color palette — common colors available as 1×1 plates (Part 3024)
-// Hex values are close approximations of real LEGO plastic colors
-export const LEGO_COLORS: readonly LegoColor[] = [
-  { id: "white", name: "White", hex: "#F2F3F2", platePartNumber: "3024" },
-  {
-    id: "light-bluish-gray",
-    name: "Light Bluish Gray",
-    hex: "#A0A5A9",
-    platePartNumber: "3024",
+// Lookup map: Rebrickable color ID → color entry from colors.json
+const colorByRebrickableId = new Map(
+  colorsData.map((c) => [c.rebrickableId, c]),
+);
+
+/**
+ * Curated list of LEGO solid colors available as 1×1 plates (Part 3024).
+ * Hex values sourced from Rebrickable's colors.csv (colors.json).
+ * Add a color by adding its Rebrickable ID + a slug below.
+ */
+const PALETTE_ENTRIES: ReadonlyArray<{ rebrickableId: number; slug: string }> =
+  [
+    // Neutrals
+    { rebrickableId: 15, slug: "white" },
+    { rebrickableId: 71, slug: "light-bluish-gray" },
+    { rebrickableId: 72, slug: "dark-bluish-gray" },
+    { rebrickableId: 0, slug: "black" },
+    // Reds
+    { rebrickableId: 320, slug: "dark-red" },
+    { rebrickableId: 4, slug: "red" },
+    { rebrickableId: 1136, slug: "reddish-orange" },
+    { rebrickableId: 1050, slug: "coral" },
+    // Oranges
+    { rebrickableId: 484, slug: "dark-orange" },
+    { rebrickableId: 25, slug: "orange" },
+    { rebrickableId: 462, slug: "medium-orange" },
+    { rebrickableId: 191, slug: "bright-light-orange" },
+    // Yellows
+    { rebrickableId: 14, slug: "yellow" },
+    { rebrickableId: 226, slug: "bright-light-yellow" },
+    { rebrickableId: 1062, slug: "neon-yellow" }, // "Vibrant Yellow" in Rebrickable
+    // Yellow-greens
+    { rebrickableId: 158, slug: "yellowish-green" },
+    { rebrickableId: 27, slug: "lime" },
+    { rebrickableId: 326, slug: "olive-green" },
+    // Greens
+    { rebrickableId: 10, slug: "bright-green" },
+    { rebrickableId: 2, slug: "green" },
+    { rebrickableId: 288, slug: "dark-green" },
+    { rebrickableId: 378, slug: "sand-green" },
+    { rebrickableId: 3, slug: "dark-turquoise" },
+    { rebrickableId: 323, slug: "light-aqua" },
+    // Blues
+    { rebrickableId: 272, slug: "dark-blue" },
+    { rebrickableId: 1, slug: "blue" },
+    { rebrickableId: 321, slug: "dark-azure" },
+    { rebrickableId: 322, slug: "medium-azure" },
+    { rebrickableId: 73, slug: "medium-blue" },
+    { rebrickableId: 212, slug: "bright-light-blue" },
+    { rebrickableId: 9, slug: "light-blue" },
+    { rebrickableId: 379, slug: "sand-blue" },
+    { rebrickableId: 1147, slug: "blue-violet" },
+    // Purples / Lavenders
+    { rebrickableId: 85, slug: "dark-purple" },
+    { rebrickableId: 22, slug: "purple" },
+    { rebrickableId: 30, slug: "medium-lavender" },
+    { rebrickableId: 31, slug: "lavender" },
+    // Pinks / Magentas
+    { rebrickableId: 26, slug: "magenta" },
+    { rebrickableId: 5, slug: "dark-pink" },
+    { rebrickableId: 29, slug: "bright-pink" },
+    { rebrickableId: 1146, slug: "warm-pink" },
+    { rebrickableId: 12, slug: "salmon" },
+    // Skin tones / Nougats
+    { rebrickableId: 78, slug: "light-nougat" },
+    { rebrickableId: 92, slug: "nougat" },
+    { rebrickableId: 84, slug: "medium-nougat" },
+    // Tans / Browns
+    { rebrickableId: 19, slug: "tan" },
+    { rebrickableId: 28, slug: "dark-tan" },
+    { rebrickableId: 70, slug: "reddish-brown" },
+    { rebrickableId: 6, slug: "brown" },
+    { rebrickableId: 308, slug: "dark-brown" },
+  ] as const;
+
+export const LEGO_COLORS: readonly LegoColor[] = PALETTE_ENTRIES.map(
+  ({ rebrickableId, slug }) => {
+    const entry = colorByRebrickableId.get(rebrickableId);
+    if (!entry)
+      throw new Error(
+        `Rebrickable color ID ${rebrickableId} not found in colors.json`,
+      );
+    return {
+      id: slug,
+      name: entry.name,
+      hex: entry.hex,
+      platePartNumber: "3024",
+      rebrickableId,
+    };
   },
-  {
-    id: "dark-bluish-gray",
-    name: "Dark Bluish Gray",
-    hex: "#6C6E68",
-    platePartNumber: "3024",
-  },
-  { id: "black", name: "Black", hex: "#1B2A34", platePartNumber: "3024" },
-  { id: "dark-red", name: "Dark Red", hex: "#720E0F", platePartNumber: "3024" },
-  { id: "red", name: "Red", hex: "#C91A09", platePartNumber: "3024" },
-  { id: "coral", name: "Coral", hex: "#FF698F", platePartNumber: "3024" },
-  {
-    id: "dark-orange",
-    name: "Dark Orange",
-    hex: "#A95500",
-    platePartNumber: "3024",
-  },
-  { id: "orange", name: "Orange", hex: "#FE8A18", platePartNumber: "3024" },
-  {
-    id: "medium-orange",
-    name: "Medium Orange",
-    hex: "#FFB24D",
-    platePartNumber: "3024",
-  },
-  { id: "yellow", name: "Yellow", hex: "#F2CD37", platePartNumber: "3024" },
-  {
-    id: "bright-light-yellow",
-    name: "Bright Light Yellow",
-    hex: "#FFE001",
-    platePartNumber: "3024",
-  },
-  { id: "lime", name: "Lime", hex: "#BBE90B", platePartNumber: "3024" },
-  {
-    id: "bright-green",
-    name: "Bright Green",
-    hex: "#4B9F4A",
-    platePartNumber: "3024",
-  },
-  { id: "green", name: "Green", hex: "#237841", platePartNumber: "3024" },
-  {
-    id: "dark-green",
-    name: "Dark Green",
-    hex: "#184632",
-    platePartNumber: "3024",
-  },
-  {
-    id: "sand-green",
-    name: "Sand Green",
-    hex: "#A0BCAC",
-    platePartNumber: "3024",
-  },
-  {
-    id: "dark-turquoise",
-    name: "Dark Turquoise",
-    hex: "#008F9B",
-    platePartNumber: "3024",
-  },
-  {
-    id: "medium-azure",
-    name: "Medium Azure",
-    hex: "#36AEBF",
-    platePartNumber: "3024",
-  },
-  {
-    id: "medium-blue",
-    name: "Medium Blue",
-    hex: "#5A93DB",
-    platePartNumber: "3024",
-  },
-  { id: "blue", name: "Blue", hex: "#0055BF", platePartNumber: "3024" },
-  {
-    id: "dark-blue",
-    name: "Dark Blue",
-    hex: "#003580",
-    platePartNumber: "3024",
-  },
-  {
-    id: "dark-azure",
-    name: "Dark Azure",
-    hex: "#078BC9",
-    platePartNumber: "3024",
-  },
-  {
-    id: "light-blue",
-    name: "Light Blue",
-    hex: "#9FC3E9",
-    platePartNumber: "3024",
-  },
-  {
-    id: "sand-blue",
-    name: "Sand Blue",
-    hex: "#7988A1",
-    platePartNumber: "3024",
-  },
-  {
-    id: "dark-purple",
-    name: "Dark Purple",
-    hex: "#2E1A47",
-    platePartNumber: "3024",
-  },
-  { id: "purple", name: "Purple", hex: "#81007F", platePartNumber: "3024" },
-  {
-    id: "medium-lavender",
-    name: "Medium Lavender",
-    hex: "#AC78BA",
-    platePartNumber: "3024",
-  },
-  { id: "lavender", name: "Lavender", hex: "#E1D5ED", platePartNumber: "3024" },
-  {
-    id: "dark-pink",
-    name: "Dark Pink",
-    hex: "#C870A0",
-    platePartNumber: "3024",
-  },
-  {
-    id: "bright-pink",
-    name: "Bright Pink",
-    hex: "#F9A7B0",
-    platePartNumber: "3024",
-  },
-  { id: "magenta", name: "Magenta", hex: "#C870A0", platePartNumber: "3024" },
-  { id: "salmon", name: "Salmon", hex: "#F2A58E", platePartNumber: "3024" },
-  {
-    id: "light-nougat",
-    name: "Light Nougat",
-    hex: "#F6D7B3",
-    platePartNumber: "3024",
-  },
-  { id: "nougat", name: "Nougat", hex: "#D09168", platePartNumber: "3024" },
-  {
-    id: "medium-nougat",
-    name: "Medium Nougat",
-    hex: "#AA7D55",
-    platePartNumber: "3024",
-  },
-  { id: "tan", name: "Tan", hex: "#E4CD9E", platePartNumber: "3024" },
-  { id: "dark-tan", name: "Dark Tan", hex: "#958A73", platePartNumber: "3024" },
-  {
-    id: "reddish-brown",
-    name: "Reddish Brown",
-    hex: "#82422A",
-    platePartNumber: "3024",
-  },
-  { id: "brown", name: "Brown", hex: "#583927", platePartNumber: "3024" },
-  {
-    id: "dark-brown",
-    name: "Dark Brown",
-    hex: "#352100",
-    platePartNumber: "3024",
-  },
-] as const;
+);
 
 // --- CIE Lab color space conversion ---
 // Used for perceptually accurate nearest-color matching
