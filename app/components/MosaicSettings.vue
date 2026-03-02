@@ -44,7 +44,8 @@ const isActive = (opt: PanelOption) => opt.cols === panelCols.value && opt.rows 
 
       <!-- Panel layout -->
       <div>
-        <p class="text-sm font-medium text-gray-700 mb-2">Panel Layout <span class="font-normal text-gray-400">(48×48 studs each)</span></p>
+        <p class="text-sm font-medium text-gray-700 mb-2">Panel Layout <span class="font-normal text-gray-400">(48×48
+            studs each)</span></p>
         <div class="flex flex-wrap gap-2">
           <button v-for="opt in panelOptions" :key="`${opt.cols}x${opt.rows}`" type="button" :class="[
             'px-3 py-2 rounded-lg border-2 text-sm font-medium transition-colors',
@@ -63,7 +64,8 @@ const isActive = (opt: PanelOption) => opt.cols === panelCols.value && opt.rows 
           </button>
         </div>
         <p class="mt-1 text-xs text-gray-500">
-          {{ panelCols * 48 }}×{{ panelRows * 48 }} studs total across {{ panelCols * panelRows }} panel{{ panelCols * panelRows > 1 ? 's' : '' }}
+          {{ panelCols * 48 }}×{{ panelRows * 48 }} studs total across {{ panelCols * panelRows }} panel{{ panelCols *
+            panelRows > 1 ? 's' : '' }}
         </p>
       </div>
 

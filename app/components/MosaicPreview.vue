@@ -82,11 +82,9 @@ const horizontalLines = computed(() =>
 
         <!-- Panel boundary lines -->
         <div v-for="pct in verticalLines" :key="`v-${pct}`"
-          class="absolute top-0 bottom-0 w-px bg-white/70 pointer-events-none z-10"
-          :style="{ left: `${pct}%` }" />
+          class="absolute top-0 bottom-0 w-px bg-white/70 pointer-events-none z-10" :style="{ left: `${pct}%` }" />
         <div v-for="pct in horizontalLines" :key="`h-${pct}`"
-          class="absolute left-0 right-0 h-px bg-white/70 pointer-events-none z-10"
-          :style="{ top: `${pct}%` }" />
+          class="absolute left-0 right-0 h-px bg-white/70 pointer-events-none z-10" :style="{ top: `${pct}%` }" />
       </div>
     </div>
   </div>

@@ -16,13 +16,13 @@ export const MOSAIC_SIZE = PANEL_SIZE;
 export interface MosaicColorGroup {
   colorId: string;
   color: LegoColor;
-  bricks: BrickTypeCount[];    // aggregate counts across all panels
-  positionedBricks: Brick[];   // positioned within their respective panel
+  bricks: BrickTypeCount[]; // aggregate counts across all panels
+  positionedBricks: Brick[]; // positioned within their respective panel
   total: number;
 }
 
 export interface MosaicResult {
-  colorGrid: string[][];       // (panelRows*48) × (panelCols*48) grid of LegoColor.id
+  colorGrid: string[][]; // (panelRows*48) × (panelCols*48) grid of LegoColor.id
   colorGroups: MosaicColorGroup[];
   totalPieces: number;
 }
@@ -201,7 +201,13 @@ const buildPartsList = ({
   for (const colorId of colorIds) {
     const color = getColorById(colorId);
     if (color === null) continue;
-    groupMap.set(colorId, { colorId, color, bricks: [], positionedBricks: [], total: 0 });
+    groupMap.set(colorId, {
+      colorId,
+      color,
+      bricks: [],
+      positionedBricks: [],
+      total: 0,
+    });
   }
 
   // Process each 48×48 panel independently — bricks cannot span panel boundaries

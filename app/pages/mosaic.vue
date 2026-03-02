@@ -52,8 +52,8 @@
           :panel-rows="panelRows" />
         <MosaicPartsList :color-groups="mosaicResult.colorGroups" :total-pieces="mosaicResult.totalPieces"
           :piece-type="pieceType" />
-        <BuildingInstructions :bricks="allMosaicBricks" :show-studs="pieceType === 'Plate'"
-          :piece-type="pieceType" :panel-cols="panelCols" :panel-rows="panelRows" />
+        <BuildingInstructions :bricks="allMosaicBricks" :show-studs="pieceType === 'Plate'" :piece-type="pieceType"
+          :panel-cols="panelCols" :panel-rows="panelRows" />
       </template>
     </main>
   </UContainer>
