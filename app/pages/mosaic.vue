@@ -5,7 +5,7 @@
         🧱 Brick Mosaic Builder
       </h1>
       <p class="text-lg md:text-xl opacity-95">
-        Upload a photo and get brick building instructions for a {{ MOSAIC_SIZE }}×{{ MOSAIC_SIZE }} stud mosaic
+        Upload a photo and get brick building instructions for your LEGO mosaic
       </p>
     </header>
 
@@ -14,7 +14,8 @@
       <MosaicUpload @upload="onImageUpload" />
 
       <!-- Step 2: Settings (always visible once image selected) -->
-      <MosaicSettings v-if="imageFile !== null" v-model:use-dithering="useDithering" v-model:piece-type="pieceType" />
+      <MosaicSettings v-if="imageFile !== null" v-model:use-dithering="useDithering" v-model:piece-type="pieceType"
+        v-model:panel-cols="panelCols" v-model:panel-rows="panelRows" />
 
       <!-- Step 3: Generate button -->
       <div v-if="imageFile !== null && isProcessing === false && colorGrid === null">
@@ -47,11 +48,12 @@
 
       <!-- Results -->
       <template v-if="colorGrid !== null && mosaicResult !== null">
-        <MosaicPreview :color-grid="colorGrid" :show-studs="pieceType === 'Plate'" />
+        <MosaicPreview :color-grid="colorGrid" :show-studs="pieceType === 'Plate'" :panel-cols="panelCols"
+          :panel-rows="panelRows" />
         <MosaicPartsList :color-groups="mosaicResult.colorGroups" :total-pieces="mosaicResult.totalPieces"
           :piece-type="pieceType" />
-        <BuildingInstructions :bricks="allMosaicBricks" :grid-size="MOSAIC_SIZE" :show-studs="pieceType === 'Plate'"
-          :piece-type="pieceType" />
+        <BuildingInstructions :bricks="allMosaicBricks" :show-studs="pieceType === 'Plate'"
+          :piece-type="pieceType" :panel-cols="panelCols" :panel-rows="panelRows" />
       </template>
     </main>
   </UContainer>
@@ -59,7 +61,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useMosaicConverter, MOSAIC_SIZE } from '~/composables/useMosaicConverter'
+import { useMosaicConverter } from '~/composables/useMosaicConverter'
 import { useBrickConverter } from '~/composables/useBrickConverter'
 import type { MosaicResult } from '~/composables/useMosaicConverter'
 import MosaicUpload from '~/components/MosaicUpload.vue'
@@ -74,6 +76,8 @@ const { defaultBrickSizes } = useBrickConverter()
 const imageFile = ref<File | null>(null)
 const useDithering = ref(false)
 const pieceType = ref<'Plate' | 'Tile'>('Plate')
+const panelCols = ref(1)
+const panelRows = ref(1)
 const colorGrid = ref<string[][] | null>(null)
 const isProcessing = ref(false)
 const error = ref<string | null>(null)
@@ -83,6 +87,8 @@ const mosaicResult = computed<MosaicResult | null>(() => {
   const colorGroups = generateMosaicPartsList({
     colorGrid: colorGrid.value,
     brickSizes: defaultBrickSizes,
+    panelCols: panelCols.value,
+    panelRows: panelRows.value,
   })
   const totalPieces = colorGroups.reduce((sum, g) => sum + g.total, 0)
   return { colorGrid: colorGrid.value, colorGroups, totalPieces }
@@ -107,6 +113,8 @@ const generate = async (): Promise<void> => {
     colorGrid.value = await convertImageToColorGrid({
       imageFile: imageFile.value,
       useDithering: useDithering.value,
+      panelCols: panelCols.value,
+      panelRows: panelRows.value,
     })
   } catch (err) {
     error.value = 'Failed to process image. Please try a different file.'

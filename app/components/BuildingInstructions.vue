@@ -1,27 +1,59 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { PANEL_SIZE } from '~/composables/useMosaicConverter'
 import type { Brick } from '~/composables/useBrickConverter'
 
 const props = withDefaults(defineProps<{
   bricks: Brick[]
-  gridSize: number
+  gridSize?: number
   foreground?: string
   background?: string
   showStuds?: boolean
   pieceType?: 'Plate' | 'Tile'
   rowBandSize?: number
+  panelCols?: number
+  panelRows?: number
 }>(), {
+  gridSize: PANEL_SIZE,
   foreground: '#000000',
   background: '#FFFFFF',
   showStuds: true,
   pieceType: 'Plate',
   rowBandSize: 4,
+  panelCols: 1,
+  panelRows: 1,
 })
+
+// --- Panel selection ---
+const activePanelCol = ref(0)
+const activePanelRow = ref(0)
+
+const totalPanels = computed(() => props.panelCols * props.panelRows)
+
+// Bricks belonging to the currently active panel
+const panelBricks = computed(() =>
+  props.bricks.filter(
+    (b) => b.panelCol === activePanelCol.value && b.panelRow === activePanelRow.value,
+  ),
+)
+
+const selectPanel = (col: number, row: number): void => {
+  activePanelCol.value = col
+  activePanelRow.value = row
+  currentStep.value = 0
+}
+
+const panelLabel = (col: number, row: number): string =>
+  props.panelRows > 1 && props.panelCols > 1
+    ? `R${row + 1}C${col + 1}`
+    : props.panelCols > 1
+      ? `Panel ${col + 1}`
+      : `Panel ${row + 1}`
 
 const currentStep = ref(0)
 
 // How many row-band steps cover the full grid
-const totalSteps = computed(() => Math.ceil(props.gridSize / props.rowBandSize))
+const totalSteps = computed(() => Math.ceil(PANEL_SIZE / props.rowBandSize))
 
 // Which step a given brick belongs to (keyed by its top row)
 const stepIndexOf = (brick: Brick): number =>
@@ -29,10 +61,10 @@ const stepIndexOf = (brick: Brick): number =>
 
 // Bricks visible in the current step view
 const pastBricks = computed(() =>
-  props.bricks.filter((b) => stepIndexOf(b) < currentStep.value),
+  panelBricks.value.filter((b) => stepIndexOf(b) < currentStep.value),
 )
 const currentBricks = computed(() =>
-  props.bricks.filter((b) => stepIndexOf(b) === currentStep.value),
+  panelBricks.value.filter((b) => stepIndexOf(b) === currentStep.value),
 )
 
 const goTo = (step: number): void => {
@@ -61,25 +93,25 @@ const getStudColor = (hex: string): string => {
 // --- Sizing ---
 
 const cellSize = computed(() => {
-  if (props.gridSize <= 32) return 14
-  if (props.gridSize <= 48) return 10
+  if (PANEL_SIZE <= 32) return 14
+  if (PANEL_SIZE <= 48) return 10
   return 7
 })
 
-const containerPx = computed(() => props.gridSize * cellSize.value)
+const containerPx = computed(() => PANEL_SIZE * cellSize.value)
 
 const brickStyle = (brick: Brick) => ({
-  left: `${(brick.x / props.gridSize) * 100}%`,
-  top: `${(brick.y / props.gridSize) * 100}%`,
-  width: `${(brick.width / props.gridSize) * 100}%`,
-  height: `${(brick.height / props.gridSize) * 100}%`,
+  left: `${(brick.x / PANEL_SIZE) * 100}%`,
+  top: `${(brick.y / PANEL_SIZE) * 100}%`,
+  width: `${(brick.width / PANEL_SIZE) * 100}%`,
+  height: `${(brick.height / PANEL_SIZE) * 100}%`,
   background: resolveColor(brick),
 })
 
 // Highlight band for current step
 const bandStyle = computed(() => ({
-  top: `${(currentStep.value * props.rowBandSize / props.gridSize) * 100}%`,
-  height: `${(props.rowBandSize / props.gridSize) * 100}%`,
+  top: `${(currentStep.value * props.rowBandSize / PANEL_SIZE) * 100}%`,
+  height: `${(props.rowBandSize / PANEL_SIZE) * 100}%`,
 }))
 
 // --- Per-step mini parts list ---
@@ -119,7 +151,7 @@ const textColorForHex = (hex: string): 'white' | 'black' => {
 }
 
 const rowStart = computed(() => currentStep.value * props.rowBandSize + 1)
-const rowEnd = computed(() => Math.min((currentStep.value + 1) * props.rowBandSize, props.gridSize))
+const rowEnd = computed(() => Math.min((currentStep.value + 1) * props.rowBandSize, PANEL_SIZE))
 </script>
 
 <template>
@@ -127,11 +159,31 @@ const rowEnd = computed(() => Math.min((currentStep.value + 1) * props.rowBandSi
     <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between gap-4 flex-wrap">
       <h2 class="text-2xl font-semibold text-gray-900">📖 Building Instructions</h2>
       <span class="text-sm text-gray-500">
-        Rows {{ rowStart }}–{{ rowEnd }} of {{ gridSize }}
+        <template v-if="totalPanels > 1">
+          Panel {{ panelLabel(activePanelCol, activePanelRow) }} &mdash;
+        </template>
+        Rows {{ rowStart }}–{{ rowEnd }} of {{ PANEL_SIZE }}
       </span>
     </div>
 
     <div class="p-6 space-y-5">
+      <!-- Panel selector (only shown for multi-panel mosaics) -->
+      <div v-if="totalPanels > 1">
+        <p class="text-sm font-medium text-gray-700 mb-2">Select Panel</p>
+        <div class="flex flex-col gap-1">
+          <div v-for="pr in panelRows" :key="pr" class="flex gap-1">
+            <button v-for="pc in panelCols" :key="pc" type="button" :class="[
+              'px-3 py-1.5 rounded-lg border-2 text-xs font-medium transition-colors',
+              activePanelCol === pc - 1 && activePanelRow === pr - 1
+                ? 'border-blue-500 bg-blue-50 text-blue-900'
+                : 'border-gray-200 text-gray-600 hover:border-blue-300',
+            ]" @click="selectPanel(pc - 1, pr - 1)">
+              {{ panelLabel(pc - 1, pr - 1) }}
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Step navigation -->
       <div class="flex items-center gap-3">
         <button type="button" :disabled="currentStep === 0"
@@ -209,7 +261,7 @@ const rowEnd = computed(() => Math.min((currentStep.value + 1) * props.rowBandSi
       </div>
 
       <!-- Done state -->
-      <div v-if="currentStep === totalSteps - 1 && pastBricks.length + currentBricks.length === bricks.length"
+      <div v-if="currentStep === totalSteps - 1 && pastBricks.length + currentBricks.length === panelBricks.length"
         class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg text-sm font-medium">
         ✅ All steps complete! Refer to the parts list above for a full summary.
       </div>

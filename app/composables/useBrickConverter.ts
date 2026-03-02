@@ -15,6 +15,10 @@ export interface Brick {
   height: number;
   x: number;
   y: number;
+  /** Which column panel this brick belongs to (0-based) */
+  panelCol: number;
+  /** Which row panel this brick belongs to (0-based) */
+  panelRow: number;
   isForeground: boolean;
   colorHex?: string | null;
 }
@@ -293,6 +297,8 @@ export const useBrickConverter = () => {
                 height: h,
                 x,
                 y,
+                panelCol: 0,
+                panelRow: 0,
                 isForeground,
               });
               placed = true;
