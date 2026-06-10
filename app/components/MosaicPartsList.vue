@@ -1,12 +1,22 @@
 <script setup lang="ts">
+import BrickCard from '~/components/BrickCard.vue'
+import BrickButton from '~/components/BrickButton.vue'
 import { ref, computed } from 'vue'
 import type { MosaicColorGroup } from '~/composables/useMosaicConverter'
+import type { BrickColor } from '~/composables/useBrickPalette'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   colorGroups: MosaicColorGroup[]
   totalPieces: number
   pieceType: 'Plate' | 'Tile'
-}>()
+  /** Color provided by the baseplate instead of placed pieces, if any */
+  baseplateColor?: BrickColor | null
+  /** How many pieces the baseplate color saves */
+  baseplateSavings?: number
+}>(), {
+  baseplateColor: null,
+  baseplateSavings: 0,
+})
 
 // BrickLink 1×1 part numbers by piece type
 const PART_1X1_PLATE = '3024'
@@ -46,13 +56,17 @@ const isExpanded = (colorId: string): boolean => expandedColorId.value === color
 // --- Print ---
 const printPartsList = (): void => {
   const lines: string[] = [
-    'Brick Mosaic — Parts List',
-    '=========================',
+    'Brick Mosaic Parts List',
+    '=======================',
     '',
   ]
 
+  if (props.baseplateColor !== null) {
+    lines.push(`Baseplate: ${props.baseplateColor.name} (${props.baseplateColor.hex}), provides this color in place of ${props.baseplateSavings} pieces`, '')
+  }
+
   for (const group of props.colorGroups) {
-    lines.push(`${group.color.name} (${group.color.hex}) — ${group.total} pieces`)
+    lines.push(`${group.color.name} (${group.color.hex}): ${group.total} pieces`)
     for (const brick of group.bricks) {
       const part = getPartNumber({ width: brick.width, height: brick.height })
       lines.push(`  ${brick.width}×${brick.height} ${props.pieceType}${part !== null ? ` (Part ${part})` : ''}: ${brick.count} pcs`)
@@ -75,7 +89,11 @@ const printPartsList = (): void => {
 
 // --- Copy ---
 const copyPartsList = async (): Promise<void> => {
-  const lines: string[] = ['Brick Mosaic — Parts List', '']
+  const lines: string[] = ['Brick Mosaic Parts List', '']
+
+  if (props.baseplateColor !== null) {
+    lines.push(`Baseplate: ${props.baseplateColor.name} (${props.baseplateColor.hex})`)
+  }
 
   for (const group of props.colorGroups) {
     const brickSummary = group.bricks
@@ -92,7 +110,7 @@ const copyPartsList = async (): Promise<void> => {
   try {
     await navigator.clipboard.writeText(lines.join('\n'))
   } catch {
-    // clipboard unavailable — silent fail
+    // clipboard unavailable, fail silently
   }
 }
 
@@ -108,17 +126,25 @@ const textColorForHex = (hex: string): 'white' | 'black' => {
 </script>
 
 <template>
-  <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-    <div class="px-6 py-4 border-b border-gray-200">
-      <h2 class="text-2xl font-semibold text-gray-900">📋 Parts List</h2>
-    </div>
+  <BrickCard color="green" title="Parts List">
 
-    <div class="p-6 space-y-4">
+    <div class="p-5 space-y-4">
       <!-- Total summary -->
       <div class="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg">
         <strong>Total pieces: {{ totalPieces }}</strong>
         &nbsp;·&nbsp;
         {{ colorGroups.length }} colors
+      </div>
+
+      <!-- Baseplate savings -->
+      <div v-if="baseplateColor !== null"
+        class="flex items-center gap-3 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg text-sm">
+        <div class="w-6 h-6 rounded border border-gray-300 shrink-0"
+          :style="{ backgroundColor: baseplateColor.hex }" />
+        <span>
+          <strong>{{ baseplateColor.name }}</strong> comes from the baseplate, saving
+          {{ baseplateSavings }} pieces
+        </span>
       </div>
 
       <!-- Per-color accordion -->
@@ -172,17 +198,13 @@ const textColorForHex = (hex: string): 'white' | 'black' => {
 
       <!-- Action buttons -->
       <div class="flex gap-3 flex-wrap pt-2">
-        <button
-          class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow transition-colors flex items-center gap-2"
-          @click="printPartsList">
+        <BrickButton color="green" @click="printPartsList">
           🖨️ Print Parts List
-        </button>
-        <button
-          class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-lg shadow transition-colors flex items-center gap-2"
-          @click="copyPartsList">
+        </BrickButton>
+        <BrickButton color="gray" @click="copyPartsList">
           📋 Copy to Clipboard
-        </button>
+        </BrickButton>
       </div>
     </div>
-  </div>
+  </BrickCard>
 </template>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BrickCard from '~/components/BrickCard.vue'
 import { computed, watch } from 'vue'
 import type { WifiConfig } from '~/composables/useQrPayloads'
 
@@ -27,10 +28,7 @@ watch(isValid, (valid) => {
 </script>
 
 <template>
-  <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-    <div class="px-6 py-4 border-b border-gray-200">
-      <h2 class="text-2xl font-semibold text-gray-900">📶 WiFi Credentials</h2>
-    </div>
+  <BrickCard color="yellow" title="📶 WiFi Credentials">
 
     <div class="p-6 space-y-4">
       <div>
@@ -71,5 +69,5 @@ watch(isValid, (valid) => {
         Please fill in all required fields
       </div>
     </div>
-  </div>
+  </BrickCard>
 </template>

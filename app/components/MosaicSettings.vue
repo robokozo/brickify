@@ -1,8 +1,34 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import BrickCard from '~/components/BrickCard.vue'
+
+interface BaseplateOption {
+  id: string
+  name: string
+  hex: string
+  total: number
+}
+
+const props = withDefaults(defineProps<{
+  baseplateOptions?: BaseplateOption[]
+}>(), {
+  baseplateOptions: () => [],
+})
+
 const useDithering = defineModel<boolean>('useDithering', { required: true })
 const pieceType = defineModel<'Plate' | 'Tile'>('pieceType', { required: true })
 const panelCols = defineModel<number>('panelCols', { default: 1 })
 const panelRows = defineModel<number>('panelRows', { default: 1 })
+const baseplateColorId = defineModel<string | null>('baseplateColorId', { default: null })
+
+const selectedBaseplate = computed(() =>
+  props.baseplateOptions.find((o) => o.id === baseplateColorId.value) ?? null,
+)
+
+const onBaseplateChange = (event: Event): void => {
+  const value = (event.target as HTMLSelectElement).value
+  baseplateColorId.value = value.length > 0 ? value : null
+}
 
 interface PanelOption { cols: number; rows: number; label: string }
 const panelOptions: PanelOption[] = [
@@ -18,11 +44,8 @@ const isActive = (opt: PanelOption) => opt.cols === panelCols.value && opt.rows 
 </script>
 
 <template>
-  <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-    <div class="px-6 py-4 border-b border-gray-200">
-      <h2 class="text-2xl font-semibold text-gray-900">⚙️ Settings</h2>
-    </div>
-    <div class="p-6 space-y-5">
+  <BrickCard color="yellow" title="Settings">
+    <div class="p-5 space-y-5">
 
       <!-- Piece type -->
       <div>
@@ -31,8 +54,8 @@ const isActive = (opt: PanelOption) => opt.cols === panelCols.value && opt.rows 
           <button v-for="type in (['Plate', 'Tile'] as const)" :key="type" type="button" :class="[
             'flex-1 py-2.5 px-4 rounded-lg border-2 text-sm font-medium transition-colors',
             pieceType === type
-              ? 'border-blue-500 bg-blue-50 text-blue-900'
-              : 'border-gray-200 text-gray-700 hover:border-blue-300',
+              ? 'border-brick-blue bg-blue-50 text-brick-blue'
+              : 'border-gray-200 text-gray-700 hover:border-brick-blue/50',
           ]" @click="pieceType = type">
             {{ type === 'Plate' ? '🧱 Plate (studs)' : '🟦 Tile (smooth)' }}
           </button>
@@ -50,14 +73,14 @@ const isActive = (opt: PanelOption) => opt.cols === panelCols.value && opt.rows 
           <button v-for="opt in panelOptions" :key="`${opt.cols}x${opt.rows}`" type="button" :class="[
             'px-3 py-2 rounded-lg border-2 text-sm font-medium transition-colors',
             isActive(opt)
-              ? 'border-blue-500 bg-blue-50 text-blue-900'
-              : 'border-gray-200 text-gray-700 hover:border-blue-300',
+              ? 'border-brick-blue bg-blue-50 text-brick-blue'
+              : 'border-gray-200 text-gray-700 hover:border-brick-blue/50',
           ]" @click="panelCols = opt.cols; panelRows = opt.rows">
             <div class="flex flex-col items-center gap-1">
               <!-- Mini grid icon -->
               <div class="grid gap-px" :style="{ gridTemplateColumns: `repeat(${opt.cols}, 8px)` }">
                 <div v-for="n in opt.cols * opt.rows" :key="n" class="w-2 h-2 rounded-sm"
-                  :class="isActive(opt) ? 'bg-blue-500' : 'bg-gray-300'" />
+                  :class="isActive(opt) ? 'bg-brick-blue' : 'bg-gray-300'" />
               </div>
               <span>{{ opt.label }}</span>
             </div>
@@ -76,16 +99,16 @@ const isActive = (opt: PanelOption) => opt.cols === panelCols.value && opt.rows 
           <button type="button" :class="[
             'flex-1 py-2.5 px-4 rounded-lg border-2 text-sm font-medium transition-colors',
             useDithering === false
-              ? 'border-blue-500 bg-blue-50 text-blue-900'
-              : 'border-gray-200 text-gray-700 hover:border-blue-300',
+              ? 'border-brick-blue bg-blue-50 text-brick-blue'
+              : 'border-gray-200 text-gray-700 hover:border-brick-blue/50',
           ]" @click="useDithering = false">
             📌 Nearest Color
           </button>
           <button type="button" :class="[
             'flex-1 py-2.5 px-4 rounded-lg border-2 text-sm font-medium transition-colors',
             useDithering === true
-              ? 'border-blue-500 bg-blue-50 text-blue-900'
-              : 'border-gray-200 text-gray-700 hover:border-blue-300',
+              ? 'border-brick-blue bg-blue-50 text-brick-blue'
+              : 'border-gray-200 text-gray-700 hover:border-brick-blue/50',
           ]" @click="useDithering = true">
             🎨 Dithering
           </button>
@@ -95,6 +118,28 @@ const isActive = (opt: PanelOption) => opt.cols === panelCols.value && opt.rows 
         </p>
       </div>
 
+      <!-- Baseplate color -->
+      <div v-if="baseplateOptions.length > 0">
+        <p class="text-sm font-medium text-gray-700 mb-2">Baseplate Color</p>
+        <div class="flex items-center gap-2">
+          <div class="w-9 h-9 rounded-lg border-2 shrink-0"
+            :class="selectedBaseplate !== null ? 'border-gray-300' : 'border-dashed border-gray-300'"
+            :style="{ backgroundColor: selectedBaseplate?.hex ?? 'transparent' }" />
+          <select :value="baseplateColorId ?? ''"
+            class="flex-1 py-2.5 px-3 rounded-lg border-2 border-gray-200 text-sm font-medium text-gray-700 bg-white focus:border-brick-blue focus:outline-none"
+            @change="onBaseplateChange">
+            <option value="">None (place every piece)</option>
+            <option v-for="option in baseplateOptions" :key="option.id" :value="option.id">
+              {{ option.name }} (skips {{ option.total }} pieces)
+            </option>
+          </select>
+        </div>
+        <p class="mt-1 text-xs text-gray-500">
+          Pieces matching the baseplate color are left off and the baseplate shows through,
+          lowering the piece count
+        </p>
+      </div>
+
     </div>
-  </div>
+  </BrickCard>
 </template>

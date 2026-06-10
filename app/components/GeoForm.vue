@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BrickCard from '~/components/BrickCard.vue'
 import { computed, watch } from 'vue'
 import type { GeoConfig } from '~/composables/useQrPayloads'
 
@@ -25,10 +26,7 @@ watch(isValid, (valid) => { emit('valid', valid) }, { immediate: true })
 </script>
 
 <template>
-  <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-    <div class="px-6 py-4 border-b border-gray-200">
-      <h2 class="text-2xl font-semibold text-gray-900">📍 Location</h2>
-    </div>
+  <BrickCard color="yellow" title="📍 Location">
     <div class="p-6 space-y-4">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
@@ -63,5 +61,5 @@ watch(isValid, (valid) => { emit('valid', valid) }, { immediate: true })
         Latitude and longitude are required
       </div>
     </div>
-  </div>
+  </BrickCard>
 </template>

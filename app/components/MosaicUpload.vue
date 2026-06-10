@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BrickCard from '~/components/BrickCard.vue'
 import { ref, onMounted, onUnmounted } from 'vue'
 
 const emit = defineEmits<{
@@ -59,20 +60,20 @@ const onPaste = (event: ClipboardEvent): void => {
 }
 
 onMounted(() => { window.addEventListener('paste', onPaste) })
-onUnmounted(() => { window.removeEventListener('paste', onPaste) })
+onUnmounted(() => {
+  window.removeEventListener('paste', onPaste)
+  if (previewUrl.value !== null) URL.revokeObjectURL(previewUrl.value)
+})
 </script>
 
 <template>
-  <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-    <div class="px-6 py-4 border-b border-gray-200">
-      <h2 class="text-2xl font-semibold text-gray-900">🖼️ Upload Image</h2>
-    </div>
-    <div class="p-6">
+  <BrickCard color="red" title="Image">
+    <div class="p-5">
       <label :class="[
         'flex flex-col items-center justify-center gap-3 border-2 border-dashed rounded-xl p-8 cursor-pointer transition-colors',
         isDragging === true
-          ? 'border-blue-500 bg-blue-50'
-          : 'border-gray-300 hover:border-blue-400 hover:bg-blue-50',
+          ? 'border-brick-blue bg-blue-50'
+          : 'border-gray-300 hover:border-brick-blue/60 hover:bg-blue-50',
       ]" @dragover.prevent="onDragOver" @dragleave="onDragLeave" @drop.prevent="onDrop">
         <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" class="sr-only" @change="onFileInput" />
 
@@ -80,7 +81,7 @@ onUnmounted(() => { window.removeEventListener('paste', onPaste) })
           <img :src="previewUrl" alt="Uploaded preview"
             class="w-40 h-40 object-cover rounded-lg border border-gray-300 shadow" />
           <p class="text-sm text-gray-600 font-medium">{{ fileName }}</p>
-          <p class="text-xs text-blue-600">Click or drop a new image to replace</p>
+          <p class="text-xs text-brick-blue">Click or drop a new image to replace</p>
         </div>
 
         <div v-else class="flex flex-col items-center gap-2 text-gray-500">
@@ -90,5 +91,5 @@ onUnmounted(() => { window.removeEventListener('paste', onPaste) })
         </div>
       </label>
     </div>
-  </div>
+  </BrickCard>
 </template>

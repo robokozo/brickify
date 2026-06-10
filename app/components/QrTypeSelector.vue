@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BrickCard from '~/components/BrickCard.vue'
 import { computed } from 'vue'
 import { QR_TYPE_LIST } from '~/composables/useQrPayloads'
 import type { QrContentType } from '~/composables/useQrPayloads'
@@ -9,17 +10,14 @@ const isSelected = computed(() => (type: QrContentType) => modelValue.value === 
 </script>
 
 <template>
-  <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-    <div class="px-6 py-4 border-b border-gray-200">
-      <h2 class="text-2xl font-semibold text-gray-900">🔲 QR Code Type</h2>
-    </div>
+  <BrickCard color="red" title="🔲 QR Code Type">
     <div class="p-6">
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 gap-3">
         <button v-for="info in QR_TYPE_LIST" :key="info.type" type="button" :class="[
           'flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-colors text-left',
           isSelected(info.type)
-            ? 'border-blue-500 bg-blue-50 text-blue-900'
-            : 'border-gray-200 bg-white text-gray-700 hover:border-blue-300 hover:bg-blue-50',
+            ? 'border-brick-blue bg-blue-50 text-brick-blue'
+            : 'border-gray-200 bg-white text-gray-700 hover:border-brick-blue/50 hover:bg-blue-50',
         ]" @click="modelValue = info.type">
           <span class="text-2xl">{{ info.icon }}</span>
           <span class="font-semibold text-sm">{{ info.label }}</span>
@@ -27,5 +25,5 @@ const isSelected = computed(() => (type: QrContentType) => modelValue.value === 
         </button>
       </div>
     </div>
-  </div>
+  </BrickCard>
 </template>

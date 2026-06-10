@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import type { Brick } from '~/composables/useBrickConverter'
+import Brick3DPreview from '~/components/Brick3DPreview.vue'
+import BrickCard from '~/components/BrickCard.vue'
+import ViewToggle from '~/components/ViewToggle.vue'
 
 const props = withDefaults(defineProps<{
   grid: boolean[][]
@@ -22,6 +25,21 @@ const props = withDefaults(defineProps<{
 })
 
 const totalSize = computed(() => props.grid.length)
+
+const VIEW_OPTIONS = [
+  { value: '3d', label: '3D' },
+  { value: 'flat', label: 'Flat' },
+]
+const viewMode = ref('3d')
+
+// In 3D, background bricks are omitted when a baseplate provides the
+// background color (they are not physically placed)
+const bricks3d = computed<Array<Brick>>(() => {
+  const bricks = props.bricks ?? []
+  return props.useBaseplate === true
+    ? bricks.filter((b) => b.isForeground === true)
+    : bricks
+})
 
 const fitsOnBaseplate = computed(() => {
   return totalSize.value <= props.baseplateWidth &&
@@ -86,8 +104,11 @@ const rulerMarkers = computed(() => {
 </script>
 
 <template>
-  <div class="bg-white p-6 rounded-lg shadow-md">
-    <h2 class="m-0 mb-6 text-gray-800 text-2xl font-semibold">🧱 Brick Arrangement</h2>
+  <BrickCard color="green" title="Brick Arrangement">
+    <template #header-extra>
+      <ViewToggle v-model="viewMode" :options="VIEW_OPTIONS" />
+    </template>
+    <div class="p-6">
 
     <div v-if="!fitsOnBaseplate"
       class="p-3 mb-4 bg-amber-100 border-l-4 border-amber-500 rounded text-amber-800 text-sm">
@@ -95,8 +116,20 @@ const rulerMarkers = computed(() => {
         baseplateHeight }})
     </div>
 
+    <!-- 3D view. Horizontal margin on mobile leaves room for fingers to
+         scroll the page past the canvas (which captures touch drags) -->
+    <div v-if="viewMode === '3d'" class="relative h-90 md:h-130 mb-6 mx-4 md:mx-0 rounded-md overflow-hidden">
+      <Brick3DPreview :bricks="bricks3d" :panel-size="baseplateWidth" :foreground="foreground"
+        :background="background" :studs-foreground="showForegroundStuds" :studs-background="showBackgroundStuds"
+        :baseplate-color="displayBaseplateColor" :offset-x="offsetX" :offset-y="offsetY" />
+      <p
+        class="absolute bottom-2 left-1/2 -translate-x-1/2 text-[11px] text-gray-500 bg-white/70 backdrop-blur px-2.5 py-1 rounded-full pointer-events-none whitespace-nowrap">
+        Drag to rotate · Pinch or scroll to zoom
+      </p>
+    </div>
+
     <!-- Baseplate visualization with QR positioned on it -->
-    <div class="flex justify-center mb-6 overflow-auto p-4 bg-gray-100 rounded-md">
+    <div v-else class="flex justify-center mb-6 overflow-auto p-4 bg-gray-100 rounded-md">
       <div class="relative">
         <!-- Top ruler -->
         <div class="relative mb-1"
@@ -191,7 +224,7 @@ const rulerMarkers = computed(() => {
           <button v-for="pos in (['tl', 't', 'tr', 'l', 'c', 'r', 'bl', 'b', 'br'] as Alignment[])" :key="pos"
             @click="alignment = pos"
             class="w-8 h-8 rounded flex items-center justify-center text-sm font-bold transition-colors"
-            :class="alignment === pos ? 'bg-blue-500 text-white' : 'bg-white text-gray-600 hover:bg-gray-100'">
+            :class="alignment === pos ? 'bg-brick-blue text-white' : 'bg-white text-gray-600 hover:bg-gray-100'">
             {{ alignmentLabels[pos] }}
           </button>
         </div>
@@ -209,5 +242,6 @@ const rulerMarkers = computed(() => {
         </p>
       </div>
     </div>
-  </div>
+    </div>
+  </BrickCard>
 </template>

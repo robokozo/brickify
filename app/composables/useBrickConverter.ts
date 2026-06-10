@@ -21,6 +21,8 @@ export interface Brick {
   panelRow: number;
   isForeground: boolean;
   colorHex?: string | null;
+  /** Round 1×1 piece (round plate/tile) instead of a square one */
+  isRound?: boolean;
 }
 
 export interface BrickTypeCount {

@@ -7,9 +7,12 @@ const props = withDefaults(defineProps<{
   color: string
   showStuds?: boolean
   cellSize?: number
+  /** Render as a round 1×1 piece */
+  round?: boolean
 }>(), {
   showStuds: true,
-  cellSize: 12
+  cellSize: 12,
+  round: false
 })
 
 // Normalize: always display with larger dimension as width (horizontal)
@@ -49,8 +52,8 @@ const rows = computed(() => {
 </script>
 
 <template>
-  <div class="inline-flex flex-col rounded border border-black/20 shadow-sm overflow-hidden"
-    :style="{ backgroundColor: color }">
+  <div class="inline-flex flex-col border border-black/20 shadow-sm overflow-hidden"
+    :class="round ? 'rounded-full' : 'rounded'" :style="{ backgroundColor: color }">
     <div v-for="(row, rowIdx) in rows" :key="rowIdx" class="flex">
       <div v-for="stud in row" :key="`${stud.row}-${stud.col}`" class="flex items-center justify-center"
         :style="{ width: `${cellSize}px`, height: `${cellSize}px` }">

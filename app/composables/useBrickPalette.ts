@@ -1,6 +1,6 @@
 import colorsData from "~/assets/colors.json";
 
-export interface LegoColor {
+export interface BrickColor {
   id: string;
   name: string;
   hex: string;
@@ -14,7 +14,7 @@ const colorByRebrickableId = new Map(
 );
 
 /**
- * Curated list of LEGO solid colors available as 1×1 plates (Part 3024).
+ * Curated list of solid brick colors available as 1×1 plates (Part 3024).
  * Hex values sourced from Rebrickable's colors.csv (colors.json).
  * Add a color by adding its Rebrickable ID + a slug below.
  */
@@ -83,7 +83,7 @@ const PALETTE_ENTRIES: ReadonlyArray<{ rebrickableId: number; slug: string }> =
     { rebrickableId: 308, slug: "dark-brown" },
   ] as const;
 
-export const LEGO_COLORS: readonly LegoColor[] = PALETTE_ENTRIES.map(
+export const BRICK_COLORS: readonly BrickColor[] = PALETTE_ENTRIES.map(
   ({ rebrickableId, slug }) => {
     const entry = colorByRebrickableId.get(rebrickableId);
     if (!entry)
@@ -159,8 +159,8 @@ const labDistance = (a: Lab, b: Lab): number => {
 };
 
 // Pre-compute Lab values for the whole palette once
-const PALETTE_LAB: ReadonlyArray<{ color: LegoColor; lab: Lab }> =
-  LEGO_COLORS.map((color) => {
+const PALETTE_LAB: ReadonlyArray<{ color: BrickColor; lab: Lab }> =
+  BRICK_COLORS.map((color) => {
     const hex = color.hex.slice(1);
     const r = parseInt(hex.slice(0, 2), 16);
     const g = parseInt(hex.slice(2, 4), 16);
@@ -170,12 +170,12 @@ const PALETTE_LAB: ReadonlyArray<{ color: LegoColor; lab: Lab }> =
 
 // --- Public composable ---
 
-export const useLegoPalette = () => {
-  const findNearestColor = ({ r, g, b }: Rgb): LegoColor => {
+export const useBrickPalette = () => {
+  const findNearestColor = ({ r, g, b }: Rgb): BrickColor => {
     const target = rgbToLab({ r, g, b });
 
-    // LEGO_COLORS is non-empty (compile-time const) so this is always defined
-    let bestColor: LegoColor = LEGO_COLORS[0] as LegoColor;
+    // BRICK_COLORS is non-empty (compile-time const) so this is always defined
+    let bestColor: BrickColor = BRICK_COLORS[0] as BrickColor;
     let bestDist = Infinity;
 
     for (const entry of PALETTE_LAB) {
@@ -189,8 +189,8 @@ export const useLegoPalette = () => {
     return bestColor;
   };
 
-  const getColorById = (id: string): LegoColor | null =>
-    LEGO_COLORS.find((c) => c.id === id) ?? null;
+  const getColorById = (id: string): BrickColor | null =>
+    BRICK_COLORS.find((c) => c.id === id) ?? null;
 
   const hexToRgb = (hex: string): Rgb => {
     const h = hex.replace("#", "");

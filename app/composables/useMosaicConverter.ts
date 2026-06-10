@@ -1,6 +1,6 @@
-import { useLegoPalette } from "~/composables/useLegoPalette";
+import { useBrickPalette } from "~/composables/useBrickPalette";
 import { useBrickConverter } from "~/composables/useBrickConverter";
-import type { LegoColor } from "~/composables/useLegoPalette";
+import type { BrickColor } from "~/composables/useBrickPalette";
 import type {
   Brick,
   BrickTypeCount,
@@ -15,14 +15,14 @@ export const MOSAIC_SIZE = PANEL_SIZE;
 
 export interface MosaicColorGroup {
   colorId: string;
-  color: LegoColor;
+  color: BrickColor;
   bricks: BrickTypeCount[]; // aggregate counts across all panels
   positionedBricks: Brick[]; // positioned within their respective panel
   total: number;
 }
 
 export interface MosaicResult {
-  colorGrid: string[][]; // (panelRows*48) × (panelCols*48) grid of LegoColor.id
+  colorGrid: string[][]; // (panelRows*48) × (panelCols*48) grid of BrickColor.id
   colorGroups: MosaicColorGroup[];
   totalPieces: number;
 }
@@ -69,11 +69,11 @@ const sampleImageToGrid = ({
       let sh = img.naturalHeight;
 
       if (srcAspect > targetAspect) {
-        // Source is wider — crop sides
+        // Source is wider, crop sides
         sw = Math.round(img.naturalHeight * targetAspect);
         sx = Math.floor((img.naturalWidth - sw) / 2);
       } else if (srcAspect < targetAspect) {
-        // Source is taller — crop top/bottom
+        // Source is taller, crop top/bottom
         sh = Math.round(img.naturalWidth / targetAspect);
         sy = Math.floor((img.naturalHeight - sh) / 2);
       }
@@ -83,7 +83,7 @@ const sampleImageToGrid = ({
       ctx.drawImage(img, sx, sy, sw, sh, 0, 0, totalW, totalH);
 
       const { data } = ctx.getImageData(0, 0, totalW, totalH);
-      const { findNearestColor } = useLegoPalette();
+      const { findNearestColor } = useBrickPalette();
 
       if (useDithering === true) {
         // Work with a mutable float copy of RGB channels (ignore alpha)
@@ -142,7 +142,7 @@ const sampleImageToGrid = ({
 
         resolve(grid);
       } else {
-        // Nearest color only — no dithering
+        // Nearest color only, no dithering
         const grid: string[][] = Array.from({ length: totalH }, () =>
           Array(totalW).fill(""),
         );
@@ -186,7 +186,7 @@ const buildPartsList = ({
   panelRows?: number;
 }): MosaicColorGroup[] => {
   const { optimizeBrickLayout } = useBrickConverter();
-  const { getColorById } = useLegoPalette();
+  const { getColorById } = useBrickPalette();
 
   // Collect all unique color IDs across the entire grid
   const colorIds = new Set<string>();
@@ -210,7 +210,7 @@ const buildPartsList = ({
     });
   }
 
-  // Process each 48×48 panel independently — bricks cannot span panel boundaries
+  // Process each 48×48 panel independently since bricks cannot span panel boundaries
   for (let pr = 0; pr < panelRows; pr++) {
     for (let pc = 0; pc < panelCols; pc++) {
       // Extract this panel's PANEL_SIZE×PANEL_SIZE sub-grid
@@ -249,13 +249,17 @@ const buildPartsList = ({
 
         const optimized = optimizeBrickLayout(layout, brickSizes, []);
 
-        // Stamp each brick with its panel coordinates and color
-        const panelBricks: Brick[] = optimized.bricks.map((b) => ({
-          ...b,
-          panelCol: pc,
-          panelRow: pr,
-          colorHex: group.color.hex,
-        }));
+        // Keep only this color's bricks: optimizeBrickLayout also returns
+        // background filler bricks covering every other cell, which would
+        // stack one overlapping layer per color across the whole panel
+        const panelBricks: Brick[] = optimized.bricks
+          .filter((b) => b.isForeground === true)
+          .map((b) => ({
+            ...b,
+            panelCol: pc,
+            panelRow: pr,
+            colorHex: group.color.hex,
+          }));
 
         group.positionedBricks.push(...panelBricks);
         group.total += optimized.foregroundTotal;

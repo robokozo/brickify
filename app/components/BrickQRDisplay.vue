@@ -54,7 +54,10 @@ const getStudColor = (color: string) => {
   }
 }
 
-const foregroundStudColor = computed(() => getStudColor(props.foreground))
+// Styled bricks carry their own color; plain ones fall back to fg/bg
+const resolveBrickColor = (brick: Brick): string =>
+  brick.colorHex ?? (brick.isForeground ? props.foreground : props.background)
+
 const backgroundStudColor = computed(() => getStudColor(props.background))
 
 // Generate stud positions for a brick
@@ -88,13 +91,16 @@ const getStudsForBrick = (brick: Brick) => {
       </div>
     </div>
     <div v-for="(brick, index) in displayBricks" :key="`brick-${index}`"
-      class="absolute rounded-sm box-border transition-opacity hover:opacity-80 hover:z-10 hover:outline-2 hover:outline-blue-500"
-      :class="{ 'border border-black/30': brick.isForeground || !useBaseplate }" :style="{
+      class="absolute box-border transition-opacity hover:opacity-80 hover:z-10 hover:outline-2 hover:outline-blue-500"
+      :class="[
+        brick.isRound === true ? 'rounded-full' : 'rounded-sm',
+        { 'border border-black/30': brick.isForeground || !useBaseplate },
+      ]" :style="{
         left: `${(brick.x / gridSize) * 100}%`,
         top: `${(brick.y / gridSize) * 100}%`,
         width: `${(brick.width / gridSize) * 100}%`,
         height: `${(brick.height / gridSize) * 100}%`,
-        background: brick.isForeground ? foreground : background,
+        background: resolveBrickColor(brick),
       }" :title="`${brick.width}×${brick.height} at (${brick.x + 1}, ${brick.y + 1})`">
       <!-- Studs grid inside brick -->
       <div v-if="(brick.isForeground && showForegroundStuds) || (!brick.isForeground && showBackgroundStuds)"
@@ -105,7 +111,7 @@ const getStudsForBrick = (brick: Brick) => {
         <div v-for="stud in getStudsForBrick(brick)" :key="`${stud.row}-${stud.col}`"
           class="flex items-center justify-center">
           <div class="w-1/2 h-1/2 rounded-full border border-black/10" :style="{
-            backgroundColor: brick.isForeground ? foregroundStudColor : backgroundStudColor,
+            backgroundColor: getStudColor(resolveBrickColor(brick)),
             boxShadow: 'inset 0 1px 2px rgba(255,255,255,0.3), inset 0 -1px 1px rgba(0,0,0,0.2)'
           }" />
         </div>
