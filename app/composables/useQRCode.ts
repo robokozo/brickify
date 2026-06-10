@@ -1,4 +1,12 @@
-import QRCode from "qrcode";
+import QRCodeStyling from "qr-code-styling";
+
+// qr-code-styling builds the QR model synchronously in its constructor but
+// only exposes rendered images publicly. The brick pipeline needs the raw
+// module matrix, so we read the underlying qrcode-generator instance.
+interface QrModel {
+  getModuleCount: () => number;
+  isDark: (row: number, col: number) => boolean;
+}
 
 export const useQRCode = () => {
   const generateQRMatrix = async ({
@@ -9,20 +17,22 @@ export const useQRCode = () => {
     errorCorrectionLevel?: "L" | "M" | "Q" | "H";
   }): Promise<boolean[][]> => {
     try {
-      // Generate QR code with high error correction
-      const qrData = await QRCode.create(payload, {
-        errorCorrectionLevel,
+      const qr = new QRCodeStyling({
+        data: payload,
+        qrOptions: { errorCorrectionLevel },
       });
 
-      const modules = qrData.modules;
-      const size = modules.size;
-      const matrix: boolean[][] = [];
+      const model = (qr as unknown as { _qr?: QrModel })._qr;
+      if (model === undefined) {
+        throw new Error("QR model was not generated");
+      }
 
-      // Convert QR modules to 2D boolean array
+      const size = model.getModuleCount();
+      const matrix: boolean[][] = [];
       for (let y = 0; y < size; y++) {
         const row: boolean[] = [];
         for (let x = 0; x < size; x++) {
-          row.push(modules.get(x, y) === 1);
+          row.push(model.isDark(y, x));
         }
         matrix.push(row);
       }
