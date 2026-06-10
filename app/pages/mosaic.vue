@@ -2,6 +2,7 @@
 import { ref, computed, watch, onUnmounted } from 'vue'
 import { useMosaicConverter } from '~/composables/useMosaicConverter'
 import { useBrickConverter } from '~/composables/useBrickConverter'
+import { BRICK_COLORS } from '~/composables/useBrickPalette'
 import type { MosaicColorGroup, MosaicResult } from '~/composables/useMosaicConverter'
 import MosaicUpload from '~/components/MosaicUpload.vue'
 import MosaicImageEditor from '~/components/MosaicImageEditor.vue'
@@ -24,6 +25,9 @@ const pieceType = ref<'Plate' | 'Tile'>('Plate')
 const panelCols = ref(1)
 const panelRows = ref(1)
 const baseplateColorId = ref<string | null>(null)
+// Palette restrictions: cap on distinct colors, and colors the user excluded
+const maxColors = ref<number | null>(null)
+const excludedColorIds = ref<string[]>([])
 const colorGrid = ref<string[][] | null>(null)
 // Panel layout the current colorGrid was generated with, which keeps the preview
 // consistent while a regeneration with new settings is still in flight
@@ -82,13 +86,43 @@ const generate = async (): Promise<void> => {
   error.value = null
   const cols = panelCols.value
   const rows = panelRows.value
+  const allowed = excludedColorIds.value.length > 0
+    ? new Set(
+      BRICK_COLORS.filter((c) => excludedColorIds.value.includes(c.id) === false).map((c) => c.id),
+    )
+    : undefined
   try {
-    colorGrid.value = await convertImageToColorGrid({
+    let grid = await convertImageToColorGrid({
       imageFile: imageFile.value,
       useDithering: useDithering.value,
       panelCols: cols,
       panelRows: rows,
+      allowedColorIds: allowed,
     })
+
+    // Cap the palette: keep the most-used colors, then resample against
+    // just those so every cell maps to a kept color
+    const cap = maxColors.value
+    if (cap !== null) {
+      const freq = new Map<string, number>()
+      for (const row of grid) {
+        for (const id of row) freq.set(id, (freq.get(id) ?? 0) + 1)
+      }
+      if (freq.size > cap) {
+        const top = new Set(
+          [...freq.entries()].sort((a, b) => b[1] - a[1]).slice(0, cap).map(([id]) => id),
+        )
+        grid = await convertImageToColorGrid({
+          imageFile: imageFile.value,
+          useDithering: useDithering.value,
+          panelCols: cols,
+          panelRows: rows,
+          allowedColorIds: top,
+        })
+      }
+    }
+
+    colorGrid.value = grid
     generatedPanelCols.value = cols
     generatedPanelRows.value = rows
   } catch (err) {
@@ -104,7 +138,7 @@ const generate = async (): Promise<void> => {
 // sampling changes (pieceType only affects display, not sampling)
 let regenTimer: ReturnType<typeof setTimeout> | null = null
 
-watch([imageFile, useDithering, panelCols, panelRows], () => {
+watch([imageFile, useDithering, panelCols, panelRows, maxColors, excludedColorIds], () => {
   if (imageFile.value === null) return
   if (regenTimer !== null) clearTimeout(regenTimer)
   regenTimer = setTimeout(() => {
@@ -149,7 +183,8 @@ const onImageProcessed = (file: File): void => {
           :panel-rows="panelRows" @processed="onImageProcessed" />
         <MosaicSettings v-if="originalFile !== null" v-model:use-dithering="useDithering" v-model:piece-type="pieceType"
           v-model:panel-cols="panelCols" v-model:panel-rows="panelRows"
-          v-model:baseplate-color-id="baseplateColorId" :baseplate-options="baseplateOptions" />
+          v-model:baseplate-color-id="baseplateColorId" v-model:max-colors="maxColors"
+          v-model:excluded-color-ids="excludedColorIds" :baseplate-options="baseplateOptions" />
       </div>
 
       <!-- Right column: results -->

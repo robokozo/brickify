@@ -7,7 +7,8 @@ export type QrContentType =
   | "email"
   | "phone"
   | "sms"
-  | "geo";
+  | "geo"
+  | "vcard";
 
 // --- Model interfaces ---
 
@@ -47,6 +48,16 @@ export interface GeoConfig {
   query: string;
 }
 
+export interface VcardConfig {
+  firstName: string;
+  lastName: string;
+  organization: string;
+  title: string;
+  phone: string;
+  email: string;
+  website: string;
+}
+
 export type QrConfig =
   | WifiConfig
   | UrlConfig
@@ -54,7 +65,8 @@ export type QrConfig =
   | EmailConfig
   | PhoneConfig
   | SmsConfig
-  | GeoConfig;
+  | GeoConfig
+  | VcardConfig;
 
 // --- Zod schemas ---
 
@@ -112,6 +124,24 @@ const geoSchema = z.object({
   query: z.string(),
 });
 
+const optionalOrValid = (schema: z.ZodType<string>): z.ZodType<string> =>
+  z.union([z.literal(""), schema]) as unknown as z.ZodType<string>;
+
+const vcardSchema = z
+  .object({
+    firstName: z.string(),
+    lastName: z.string(),
+    organization: z.string(),
+    title: z.string(),
+    phone: optionalOrValid(z.string().regex(phoneRegex, "Invalid phone number")),
+    email: optionalOrValid(z.string().email("Invalid email address")),
+    website: optionalOrValid(z.string().url("Invalid URL")),
+  })
+  .refine((d) => (d.firstName + d.lastName).trim().length > 0, {
+    message: "A first or last name is required",
+    path: ["firstName"],
+  });
+
 // --- QR type registry ---
 
 export interface QrTypeInfo {
@@ -153,6 +183,12 @@ export const QR_TYPE_LIST: readonly QrTypeInfo[] = [
     label: "Location",
     icon: "📍",
     description: "Geographic coordinates",
+  },
+  {
+    type: "vcard",
+    label: "Contact",
+    icon: "👤",
+    description: "Save a contact card",
   },
 ] as const;
 
@@ -210,6 +246,43 @@ const buildGeoPayload = (config: GeoConfig): string => {
     : base;
 };
 
+const escapeVcard = (str: string): string =>
+  str
+    .replace(/\\/g, "\\\\")
+    .replace(/;/g, "\\;")
+    .replace(/,/g, "\\,")
+    .replace(/\n/g, "\\n");
+
+const buildVcardPayload = (config: VcardConfig): string => {
+  const first = config.firstName.trim();
+  const last = config.lastName.trim();
+  const fullName = `${first} ${last}`.trim();
+
+  const lines = [
+    "BEGIN:VCARD",
+    "VERSION:3.0",
+    `N:${escapeVcard(last)};${escapeVcard(first)};;;`,
+    `FN:${escapeVcard(fullName)}`,
+  ];
+  if (config.organization.trim().length > 0) {
+    lines.push(`ORG:${escapeVcard(config.organization.trim())}`);
+  }
+  if (config.title.trim().length > 0) {
+    lines.push(`TITLE:${escapeVcard(config.title.trim())}`);
+  }
+  if (config.phone.trim().length > 0) {
+    lines.push(`TEL:${escapeVcard(config.phone.trim())}`);
+  }
+  if (config.email.trim().length > 0) {
+    lines.push(`EMAIL:${escapeVcard(config.email.trim())}`);
+  }
+  if (config.website.trim().length > 0) {
+    lines.push(`URL:${escapeVcard(config.website.trim())}`);
+  }
+  lines.push("END:VCARD");
+  return lines.join("\n");
+};
+
 // --- Public composable ---
 
 export const useQrPayloads = () => {
@@ -235,6 +308,8 @@ export const useQrPayloads = () => {
         return smsSchema.safeParse(config).success;
       case "geo":
         return geoSchema.safeParse(config).success;
+      case "vcard":
+        return vcardSchema.safeParse(config).success;
     }
   };
 
@@ -260,6 +335,8 @@ export const useQrPayloads = () => {
         return buildSmsPayload(config as SmsConfig);
       case "geo":
         return buildGeoPayload(config as GeoConfig);
+      case "vcard":
+        return buildVcardPayload(config as VcardConfig);
     }
   };
 

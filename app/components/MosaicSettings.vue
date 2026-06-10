@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import BrickCard from '~/components/BrickCard.vue'
+import { BRICK_COLORS } from '~/composables/useBrickPalette'
 
 interface BaseplateOption {
   id: string
@@ -20,6 +21,8 @@ const pieceType = defineModel<'Plate' | 'Tile'>('pieceType', { required: true })
 const panelCols = defineModel<number>('panelCols', { default: 1 })
 const panelRows = defineModel<number>('panelRows', { default: 1 })
 const baseplateColorId = defineModel<string | null>('baseplateColorId', { default: null })
+const maxColors = defineModel<number | null>('maxColors', { default: null })
+const excludedColorIds = defineModel<string[]>('excludedColorIds', { default: () => [] })
 
 const selectedBaseplate = computed(() =>
   props.baseplateOptions.find((o) => o.id === baseplateColorId.value) ?? null,
@@ -28,6 +31,34 @@ const selectedBaseplate = computed(() =>
 const onBaseplateChange = (event: Event): void => {
   const value = (event.target as HTMLSelectElement).value
   baseplateColorId.value = value.length > 0 ? value : null
+}
+
+// --- Palette controls ---
+const MAX_COLOR_OPTIONS = [16, 12, 8, 6, 4]
+const MIN_ALLOWED_COLORS = 2
+
+const onMaxColorsChange = (event: Event): void => {
+  const value = (event.target as HTMLSelectElement).value
+  maxColors.value = value.length > 0 ? Number(value) : null
+}
+
+const showColorList = ref(false)
+const allowedCount = computed(() => BRICK_COLORS.length - excludedColorIds.value.length)
+
+const isExcluded = (id: string): boolean => excludedColorIds.value.includes(id)
+
+const toggleColor = (id: string): void => {
+  if (isExcluded(id)) {
+    excludedColorIds.value = excludedColorIds.value.filter((c) => c !== id)
+  } else {
+    // Keep at least a couple of colors to map the image onto
+    if (allowedCount.value <= MIN_ALLOWED_COLORS) return
+    excludedColorIds.value = [...excludedColorIds.value, id]
+  }
+}
+
+const useAllColors = (): void => {
+  excludedColorIds.value = []
 }
 
 interface PanelOption { cols: number; rows: number; label: string }
@@ -116,6 +147,45 @@ const isActive = (opt: PanelOption) => opt.cols === panelCols.value && opt.rows 
         <p class="mt-1 text-xs text-gray-500">
           Nearest color is sharp and blocky; dithering blends colors for smoother gradients
         </p>
+      </div>
+
+      <!-- Palette -->
+      <div>
+        <p class="text-sm font-medium text-gray-700 mb-2">Colors</p>
+        <div class="flex items-center gap-2">
+          <label for="max-colors" class="text-sm text-gray-600 shrink-0">Max colors</label>
+          <select id="max-colors" :value="maxColors ?? ''"
+            class="flex-1 py-2.5 px-3 rounded-lg border-2 border-gray-200 text-sm font-medium text-gray-700 bg-white focus:border-brick-blue focus:outline-none"
+            @change="onMaxColorsChange">
+            <option value="">No limit</option>
+            <option v-for="n in MAX_COLOR_OPTIONS" :key="n" :value="n">{{ n }} colors</option>
+          </select>
+        </div>
+        <p class="mt-1 text-xs text-gray-500">
+          Fewer colors means fewer kinds of pieces to order; the most-used colors are kept
+        </p>
+
+        <button type="button" class="mt-2 text-sm font-semibold text-brick-blue hover:underline"
+          @click="showColorList = !showColorList">
+          {{ showColorList ? 'Hide' : 'Choose' }} available colors ({{ allowedCount }} of {{ BRICK_COLORS.length }})
+        </button>
+        <div v-if="showColorList" class="mt-2 space-y-2">
+          <div class="flex flex-wrap gap-1.5">
+            <button v-for="color in BRICK_COLORS" :key="color.id" type="button" :title="color.name" :class="[
+              'w-7 h-7 rounded-md border-2 transition-all',
+              isExcluded(color.id)
+                ? 'border-gray-200 opacity-25 grayscale'
+                : 'border-gray-400 hover:scale-110',
+            ]" :style="{ backgroundColor: color.hex }" @click="toggleColor(color.id)" />
+          </div>
+          <p class="text-xs text-gray-500">
+            Click a color to exclude it (for example, colors you do not own). Faded colors are not used.
+          </p>
+          <button v-if="excludedColorIds.length > 0" type="button"
+            class="text-xs font-semibold text-brick-blue hover:underline" @click="useAllColors">
+            Use all colors
+          </button>
+        </div>
       </div>
 
       <!-- Baseplate color -->

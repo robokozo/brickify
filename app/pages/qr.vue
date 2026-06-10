@@ -71,7 +71,7 @@ import type { Component } from 'vue'
 import type { BrickLayout, BrickCount, OptimizedBrickCount, BrickSize } from '~/composables/useBrickConverter'
 import type { ScanCheckResult } from '~/composables/useScanCheck'
 import { useScanCheck } from '~/composables/useScanCheck'
-import type { QrContentType, QrConfig, WifiConfig, UrlConfig, TextConfig, EmailConfig, PhoneConfig, SmsConfig, GeoConfig } from '~/composables/useQrPayloads'
+import type { QrContentType, QrConfig, WifiConfig, UrlConfig, TextConfig, EmailConfig, PhoneConfig, SmsConfig, GeoConfig, VcardConfig } from '~/composables/useQrPayloads'
 import { useQrPayloads, QR_TYPE_LIST } from '~/composables/useQrPayloads'
 import WifiForm from '~/components/WifiForm.vue'
 import UrlForm from '~/components/UrlForm.vue'
@@ -80,6 +80,7 @@ import EmailForm from '~/components/EmailForm.vue'
 import PhoneForm from '~/components/PhoneForm.vue'
 import SmsForm from '~/components/SmsForm.vue'
 import GeoForm from '~/components/GeoForm.vue'
+import VcardForm from '~/components/VcardForm.vue'
 import QrTypeSelector from '~/components/QrTypeSelector.vue'
 import BuildingInstructions from '~/components/BuildingInstructions.vue'
 
@@ -100,6 +101,7 @@ interface QrModels {
   phone: PhoneConfig
   sms: SmsConfig
   geo: GeoConfig
+  vcard: VcardConfig
 }
 
 const models = reactive<QrModels>({
@@ -110,6 +112,7 @@ const models = reactive<QrModels>({
   phone: { phone: '' },
   sms: { phone: '', message: '' },
   geo: { latitude: '', longitude: '', query: '' },
+  vcard: { firstName: '', lastName: '', organization: '', title: '', phone: '', email: '', website: '' },
 })
 
 const formComponents: Record<QrContentType, Component> = {
@@ -120,6 +123,7 @@ const formComponents: Record<QrContentType, Component> = {
   phone: PhoneForm,
   sms: SmsForm,
   geo: GeoForm,
+  vcard: VcardForm,
 }
 
 const currentModel = computed(() => models[selectedType.value] as QrConfig)

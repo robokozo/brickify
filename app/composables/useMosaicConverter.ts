@@ -34,11 +34,14 @@ const sampleImageToGrid = ({
   useDithering,
   panelCols = 1,
   panelRows = 1,
+  allowedColorIds,
 }: {
   imageFile: File;
   useDithering: boolean;
   panelCols?: number;
   panelRows?: number;
+  /** Restrict color matching to these palette ids (undefined = full palette) */
+  allowedColorIds?: ReadonlySet<string>;
 }): Promise<string[][]> => {
   return new Promise((resolve, reject) => {
     const totalW = panelCols * PANEL_SIZE;
@@ -105,7 +108,7 @@ const sampleImageToGrid = ({
             const g = Math.max(0, Math.min(255, floats[idx + 1] ?? 0));
             const b = Math.max(0, Math.min(255, floats[idx + 2] ?? 0));
 
-            const nearest = findNearestColor({ r, g, b });
+            const nearest = findNearestColor({ r, g, b, allowedIds: allowedColorIds });
             const row = grid[y];
             if (row !== undefined) row[x] = nearest.id;
 
@@ -153,7 +156,7 @@ const sampleImageToGrid = ({
             const r = data[i + 0] ?? 0;
             const g = data[i + 1] ?? 0;
             const b = data[i + 2] ?? 0;
-            const nearest = findNearestColor({ r, g, b });
+            const nearest = findNearestColor({ r, g, b, allowedIds: allowedColorIds });
             const row = grid[y];
             if (row !== undefined) row[x] = nearest.id;
           }
@@ -293,13 +296,15 @@ export const useMosaicConverter = () => {
     useDithering,
     panelCols = 1,
     panelRows = 1,
+    allowedColorIds,
   }: {
     imageFile: File;
     useDithering: boolean;
     panelCols?: number;
     panelRows?: number;
+    allowedColorIds?: ReadonlySet<string>;
   }): Promise<string[][]> =>
-    sampleImageToGrid({ imageFile, useDithering, panelCols, panelRows });
+    sampleImageToGrid({ imageFile, useDithering, panelCols, panelRows, allowedColorIds });
 
   const generateMosaicPartsList = ({
     colorGrid,

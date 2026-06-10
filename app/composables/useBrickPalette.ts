@@ -171,14 +171,24 @@ const PALETTE_LAB: ReadonlyArray<{ color: BrickColor; lab: Lab }> =
 // --- Public composable ---
 
 export const useBrickPalette = () => {
-  const findNearestColor = ({ r, g, b }: Rgb): BrickColor => {
+  const findNearestColor = ({
+    r,
+    g,
+    b,
+    allowedIds,
+  }: Rgb & {
+    /** Restrict matching to these color ids (undefined/empty = full palette) */
+    allowedIds?: ReadonlySet<string>;
+  }): BrickColor => {
     const target = rgbToLab({ r, g, b });
+    const restrict = allowedIds !== undefined && allowedIds.size > 0;
 
     // BRICK_COLORS is non-empty (compile-time const) so this is always defined
     let bestColor: BrickColor = BRICK_COLORS[0] as BrickColor;
     let bestDist = Infinity;
 
     for (const entry of PALETTE_LAB) {
+      if (restrict && !allowedIds.has(entry.color.id)) continue;
       const dist = labDistance(target, entry.lab);
       if (dist < bestDist) {
         bestDist = dist;
