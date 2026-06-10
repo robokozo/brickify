@@ -1,5 +1,4 @@
 import jsQR from "jsqr";
-import type { ModuleCell } from "./useQrStyling";
 
 export interface ScanCheckResult {
   scannable: boolean;
@@ -14,19 +13,20 @@ const QUIET_ZONE_MODULES = 4;
 export const useScanCheck = () => {
   /**
    * Simulates scanning the build with a phone camera: draws every module in
-   * its final color and shape (including gradients and round corner pieces)
-   * and runs a real QR decoder on the result.
+   * its configured color and runs a real QR decoder on the result.
    */
   const checkScannability = ({
-    moduleGrid,
+    matrix,
+    foreground,
     background,
     payload,
   }: {
-    moduleGrid: Array<Array<ModuleCell | null>>;
+    matrix: Array<Array<boolean>>;
+    foreground: string;
     background: string;
     payload: string;
   }): ScanCheckResult => {
-    const size = moduleGrid.length;
+    const size = matrix.length;
     if (size === 0) {
       return { scannable: false, message: "No QR code to check." };
     }
@@ -45,29 +45,19 @@ export const useScanCheck = () => {
 
     ctx.fillStyle = background;
     ctx.fillRect(0, 0, px, px);
+    ctx.fillStyle = foreground;
 
     for (let y = 0; y < size; y++) {
-      const row = moduleGrid[y];
+      const row = matrix[y];
       if (row === undefined) continue;
       for (let x = 0; x < size; x++) {
-        const cell = row[x];
-        if (cell === null || cell === undefined) continue;
-        const left = (QUIET_ZONE_MODULES + x) * MODULE_PX;
-        const top = (QUIET_ZONE_MODULES + y) * MODULE_PX;
-        ctx.fillStyle = cell.hex;
-        if (cell.round === true) {
-          ctx.beginPath();
-          ctx.arc(
-            left + MODULE_PX / 2,
-            top + MODULE_PX / 2,
-            MODULE_PX / 2,
-            0,
-            Math.PI * 2,
-          );
-          ctx.fill();
-        } else {
-          ctx.fillRect(left, top, MODULE_PX, MODULE_PX);
-        }
+        if (row[x] !== true) continue;
+        ctx.fillRect(
+          (QUIET_ZONE_MODULES + x) * MODULE_PX,
+          (QUIET_ZONE_MODULES + y) * MODULE_PX,
+          MODULE_PX,
+          MODULE_PX,
+        );
       }
     }
 
@@ -88,7 +78,7 @@ export const useScanCheck = () => {
         message:
           inverted !== null
             ? "This build only decodes inverted (light on dark). Most phone cameras expect dark modules on a light background, so swap or darken your colors."
-            : "A simulated phone scan could not read this build. Increase the contrast between the foreground colors and the background.",
+            : "A simulated phone scan could not read this build. Increase the contrast between the foreground and background colors.",
       };
     }
 
@@ -103,7 +93,7 @@ export const useScanCheck = () => {
     return {
       scannable: true,
       message:
-        "A simulated phone scan read this build correctly with the current colors and style.",
+        "A simulated phone scan read this build correctly with the current colors.",
     };
   };
 

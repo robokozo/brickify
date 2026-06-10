@@ -2,12 +2,11 @@
 import BrickCard from '~/components/BrickCard.vue'
 import BrickButton from '~/components/BrickButton.vue'
 import { ref, computed } from 'vue'
-import type { BrickCount, BrickTypeCount } from '~/composables/useBrickConverter'
-import type { StyledQrBuild, StyledColorGroup } from '~/composables/useQrStyling'
+import type { BrickCount, OptimizedBrickCount, BrickTypeCount } from '~/composables/useBrickConverter'
 
 const props = withDefaults(defineProps<{
   brickCount: BrickCount
-  styledBuild: StyledQrBuild | null
+  optimizedBrickCount: OptimizedBrickCount | null
   foreground: string
   background: string
   foregroundPieceType?: 'Plate' | 'Tile'
@@ -40,19 +39,7 @@ const tilePartNumbers: Record<string, string> = {
   '4×4': '1751', '6×6': '10202', '8×16': '90498',
 }
 
-// Round 1×1 pieces have their own part numbers
-const ROUND_PLATE_1X1 = '4073'
-const ROUND_TILE_1X1 = '98138'
-
-const getPartNumber = (
-  width: number,
-  height: number,
-  pieceType: 'Plate' | 'Tile',
-  round = false,
-): string | null => {
-  if (round) {
-    return pieceType === 'Plate' ? ROUND_PLATE_1X1 : ROUND_TILE_1X1
-  }
+const getPartNumber = (width: number, height: number, pieceType: 'Plate' | 'Tile'): string | null => {
   // Try both orientations (width×height and height×width)
   const key1 = `${width}×${height}`
   const key2 = `${height}×${width}`
@@ -60,14 +47,9 @@ const getPartNumber = (
   return lookup[key1] || lookup[key2] || null
 }
 
-const getPartDisplay = (
-  width: number,
-  height: number,
-  pieceType: 'Plate' | 'Tile',
-  round = false,
-): string => {
-  const partNumber = getPartNumber(width, height, pieceType, round)
-  const baseName = `${width}×${height}${round ? ' Round' : ''} ${pieceType}`
+const getPartDisplay = (width: number, height: number, pieceType: 'Plate' | 'Tile'): string => {
+  const partNumber = getPartNumber(width, height, pieceType)
+  const baseName = `${width}×${height} ${pieceType}`
   return partNumber ? `${baseName} (Part ${partNumber})` : baseName
 }
 
@@ -102,69 +84,56 @@ const sortBricks = (bricks: BrickTypeCount[]): BrickTypeCount[] => {
   })
 }
 
-const sortedGroups = computed(() => {
-  if (!props.styledBuild) return []
-  return props.styledBuild.foregroundGroups.map((group) => ({
-    ...group,
-    counts: sortBricks(group.counts),
-  }))
+const sortedForeground = computed(() => {
+  if (!props.optimizedBrickCount) return []
+  return sortBricks(props.optimizedBrickCount.foreground)
 })
 
 const sortedBackground = computed(() => {
-  if (!props.styledBuild) return []
-  return sortBricks(props.styledBuild.backgroundCounts)
+  if (!props.optimizedBrickCount) return []
+  return sortBricks(props.optimizedBrickCount.background)
 })
-
-// Single solid-color builds keep the original section heading
-const groupHeading = (group: StyledColorGroup): string =>
-  sortedGroups.value.length === 1 ? 'Foreground (Dark modules)' : group.label
 
 const showForegroundStuds = computed(() => props.foregroundPieceType === 'Plate')
 const showBackgroundStuds = computed(() => props.backgroundPieceType === 'Plate')
 
 const displayTotal = computed(() => {
-  if (!props.styledBuild) return 0
+  if (!props.optimizedBrickCount) return 0
   if (props.useBaseplate) {
-    return props.styledBuild.foregroundTotal
+    return props.optimizedBrickCount.foregroundTotal
   }
-  return props.styledBuild.total
+  return props.optimizedBrickCount.total
 })
 
-const buildForegroundLines = (): string => {
-  if (!props.styledBuild) return ''
-  return props.styledBuild.foregroundGroups
-    .map((group) => {
-      const rows = group.counts
-        .map((b) => `- ${getPartDisplay(b.width, b.height, props.foregroundPieceType, group.round)}: ${b.count} pieces`)
-        .join('\n')
-      return `${group.label.toUpperCase()} - Color: ${group.colorHex}\n${rows}\nSubtotal: ${group.total} pieces`
-    })
-    .join('\n\n')
-}
-
 const printPartsList = () => {
-  if (!props.styledBuild) return
+  if (!props.optimizedBrickCount) return
+
+  const foregroundList = props.optimizedBrickCount.foreground
+    .map(b => `- ${getPartDisplay(b.width, b.height, props.foregroundPieceType)}: ${b.count} pieces`)
+    .join('\n')
 
   const backgroundSection = props.useBaseplate
     ? `BACKGROUND: Using baseplate (${props.background})`
-    : `BACKGROUND (Light modules) - Color: ${props.background}\n${props.styledBuild.backgroundCounts.map(b => `- ${getPartDisplay(b.width, b.height, props.backgroundPieceType)}: ${b.count} pieces`).join('\n')}\nSubtotal: ${props.styledBuild.backgroundTotal} pieces`
+    : `BACKGROUND (Light modules) - Color: ${props.background}\n${props.optimizedBrickCount.background.map(b => `- ${getPartDisplay(b.width, b.height, props.backgroundPieceType)}: ${b.count} pieces`).join('\n')}\nSubtotal: ${props.optimizedBrickCount.backgroundTotal} pieces`
 
   const printContent = `
 Brick ${props.qrTypeLabel} - Optimized Parts List
 ${'='.repeat((`Brick ${props.qrTypeLabel} - Optimized Parts List`).length)}
 
-${buildForegroundLines()}
+FOREGROUND (Dark modules) - Color: ${props.foreground}
+${foregroundList}
+Subtotal: ${props.optimizedBrickCount.foregroundTotal} pieces
 
 ${backgroundSection}
 
 TOTAL PIECES NEEDED: ${displayTotal.value}
 
-Optimization: Saved ${props.styledBuild.savingsPercent}%
-(${props.brickCount.total - props.styledBuild.total} fewer pieces than using only 1×1 bricks)
+Optimization: Saved ${props.optimizedBrickCount.savingsPercent}%
+(${props.brickCount.total - props.optimizedBrickCount.total} fewer pieces than using only 1×1 bricks)
 
 Shopping Tips:
 - Order 5-10% extra pieces for any mistakes
-- All colors should be opaque for best scanning
+- Both colors should be opaque for best scanning
 - Foreground: ${props.foregroundPieceType}s ${showForegroundStuds.value ? '(with studs)' : '(smooth top)'}
 - Background: ${props.backgroundPieceType}s ${showBackgroundStuds.value ? '(with studs)' : '(smooth top)'}
 - Tiles give a cleaner finished look, plates are easier to adjust
@@ -207,36 +176,31 @@ Shopping Tips:
 }
 
 const copyPartsList = async () => {
-  if (!props.styledBuild) return
+  if (!props.optimizedBrickCount) return
 
-  const foregroundSection = props.styledBuild.foregroundGroups
-    .map((group) => {
-      const rows = group.counts
-        .map(b => {
-          const partNum = getPartNumber(b.width, b.height, props.foregroundPieceType, group.round)
-          return `${b.count}× ${b.width}×${b.height}${group.round ? ' round' : ''}${partNum ? ` (${partNum})` : ''}`
-        })
-        .join(', ')
-      return `${group.label} (${group.colorHex}): ${rows}`
+  const foregroundList = props.optimizedBrickCount.foreground
+    .map(b => {
+      const partNum = getPartNumber(b.width, b.height, props.foregroundPieceType)
+      return `${b.count}× ${b.width}×${b.height}${partNum ? ` (${partNum})` : ''}`
     })
-    .join('\n')
+    .join(', ')
 
   const backgroundSection = props.useBaseplate
     ? `Background: Using baseplate (${props.background})`
-    : `Background (${props.background}): ${props.styledBuild.backgroundCounts.map(b => {
+    : `Background (${props.background}): ${props.optimizedBrickCount.background.map(b => {
       const partNum = getPartNumber(b.width, b.height, props.backgroundPieceType)
       return `${b.count}× ${b.width}×${b.height}${partNum ? ` (${partNum})` : ''}`
-    }).join(', ')}\nTotal: ${props.styledBuild.backgroundTotal} pieces`
+    }).join(', ')}\nTotal: ${props.optimizedBrickCount.backgroundTotal} pieces`
 
   const text = `Brick ${props.qrTypeLabel} - Optimized Parts List
 
-${foregroundSection}
-Total: ${props.styledBuild.foregroundTotal} pieces
+Foreground (${props.foreground}): ${foregroundList}
+Total: ${props.optimizedBrickCount.foregroundTotal} pieces
 
 ${backgroundSection}
 
 TOTAL: ${displayTotal.value} pieces
-Savings: ${props.styledBuild.savingsPercent}% (${props.brickCount.total - props.styledBuild.total} fewer pieces)`
+Savings: ${props.optimizedBrickCount.savingsPercent}% (${props.brickCount.total - props.optimizedBrickCount.total} fewer pieces)`
 
   try {
     await navigator.clipboard.writeText(text)
@@ -249,13 +213,13 @@ Savings: ${props.styledBuild.savingsPercent}% (${props.brickCount.total - props.
 <template>
   <BrickCard color="yellow" title="📋 Parts List">
 
-    <div v-if="styledBuild" class="p-6 space-y-6">
+    <div v-if="optimizedBrickCount" class="p-6 space-y-6">
       <!-- Optimization Summary -->
-      <div v-if="styledBuild.savingsPercent > 0"
+      <div v-if="optimizedBrickCount.savingsPercent > 0"
         class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
         <div class="font-semibold">Optimized Build!</div>
-        <div class="text-sm">Using larger bricks saves {{ styledBuild.savingsPercent }}% pieces ({{
-          brickCount.total - styledBuild.total }} fewer pieces)</div>
+        <div class="text-sm">Using larger bricks saves {{ optimizedBrickCount.savingsPercent }}% pieces ({{
+          brickCount.total - optimizedBrickCount.total }} fewer pieces)</div>
       </div>
 
       <!-- Sort Control -->
@@ -269,26 +233,19 @@ Savings: ${props.styledBuild.savingsPercent}% (${props.brickCount.total - props.
         </select>
       </div>
 
-      <!-- Foreground color groups -->
-      <div v-for="group in sortedGroups" :key="`${group.colorHex}-${group.round}`">
-        <h3 class="text-lg font-medium text-gray-900 mb-3 flex items-center gap-2">
-          <span class="w-5 h-5 rounded border border-gray-300 inline-block shrink-0"
-            :class="group.round ? 'rounded-full' : ''" :style="{ backgroundColor: group.colorHex }" />
-          {{ groupHeading(group) }}
-          <span class="text-xs text-gray-400 font-mono font-normal">{{ group.colorHex }}</span>
-        </h3>
+      <!-- Foreground Bricks -->
+      <div>
+        <h3 class="text-lg font-medium text-gray-900 mb-3">Foreground (Dark modules)</h3>
         <div class="space-y-2">
-          <div v-for="brick in group.counts" :key="`${group.colorHex}-${brick.width}x${brick.height}`"
+          <div v-for="brick in sortedForeground" :key="`fg-${brick.width}x${brick.height}`"
             class="flex items-center flex-wrap gap-x-4 gap-y-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
-            <BrickPreview :width="brick.width" :height="brick.height" :color="group.colorHex"
-              :show-studs="showForegroundStuds" :round="group.round" />
+            <BrickPreview :width="brick.width" :height="brick.height" :color="foreground"
+              :show-studs="showForegroundStuds" />
             <div class="flex-1">
-              <div class="font-semibold text-gray-900">
-                {{ brick.width }}×{{ brick.height }}{{ group.round ? ' Round' : '' }} {{ foregroundPieceType }}
+              <div class="font-semibold text-gray-900">{{ brick.width }}×{{ brick.height }} {{ foregroundPieceType }}
               </div>
-              <div v-if="getPartNumber(brick.width, brick.height, foregroundPieceType, group.round)"
-                class="text-xs text-gray-500">
-                Part {{ getPartNumber(brick.width, brick.height, foregroundPieceType, group.round) }}
+              <div v-if="getPartNumber(brick.width, brick.height, foregroundPieceType)" class="text-xs text-gray-500">
+                Part {{ getPartNumber(brick.width, brick.height, foregroundPieceType) }}
               </div>
             </div>
             <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
@@ -297,17 +254,13 @@ Savings: ${props.styledBuild.savingsPercent}% (${props.brickCount.total - props.
           </div>
         </div>
         <div class="mt-2 text-right text-sm font-medium text-gray-600">
-          Subtotal: {{ group.total }} pieces
+          Subtotal: {{ optimizedBrickCount.foregroundTotal }} pieces
         </div>
       </div>
 
       <!-- Background Bricks -->
       <div v-if="!useBaseplate">
-        <h3 class="text-lg font-medium text-gray-900 mb-3 flex items-center gap-2">
-          <span class="w-5 h-5 rounded border border-gray-300 inline-block shrink-0"
-            :style="{ backgroundColor: background }" />
-          Background (Light modules)
-        </h3>
+        <h3 class="text-lg font-medium text-gray-900 mb-3">Background (Light modules)</h3>
         <div class="space-y-2">
           <div v-for="brick in sortedBackground" :key="`bg-${brick.width}x${brick.height}`"
             class="flex items-center flex-wrap gap-x-4 gap-y-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
@@ -326,7 +279,7 @@ Savings: ${props.styledBuild.savingsPercent}% (${props.brickCount.total - props.
           </div>
         </div>
         <div class="mt-2 text-right text-sm font-medium text-gray-600">
-          Subtotal: {{ styledBuild.backgroundTotal }} pieces
+          Subtotal: {{ optimizedBrickCount.backgroundTotal }} pieces
         </div>
       </div>
 

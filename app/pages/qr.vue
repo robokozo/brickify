@@ -21,10 +21,6 @@
           v-model:foreground-brick-sizes="foregroundBrickSizes" v-model:background-brick-sizes="backgroundBrickSizes"
           v-model:use-baseplate="useBaseplate" v-model:baseplate-size="baseplateSize"
           v-model:baseplate-color="baseplateColor" />
-        <QrStyleSettings v-if="qrMatrix !== null" v-model:eye-shape="eyeShape" v-model:eye-color="eyeColor"
-          v-model:gradient-enabled="gradientEnabled" v-model:gradient-color="gradientColor"
-          v-model:gradient-direction="gradientDirection" :foreground="foregroundColor"
-          :background="backgroundColor" />
       </div>
 
       <!-- Right column: results -->
@@ -52,14 +48,14 @@
 
           <BrickArrangement :grid="brickLayout.grid" :qr-size="qrSize" :foreground="foregroundColor"
             :background="backgroundColor" :baseplate-width="baseplateSize" :baseplate-height="baseplateSize"
-            :bricks="styledBuild?.bricks" :foreground-piece-type="foregroundPieceType"
+            :bricks="optimizedBrickCount?.bricks" :foreground-piece-type="foregroundPieceType"
             :background-piece-type="backgroundPieceType" :use-baseplate="useBaseplate"
             :baseplate-color="baseplateColor" />
-          <BrickList :brick-count="brickCount" :styled-build="styledBuild"
+          <BrickList :brick-count="brickCount" :optimized-brick-count="optimizedBrickCount"
             :foreground="foregroundColor" :background="backgroundColor"
             :foreground-piece-type="foregroundPieceType" :background-piece-type="backgroundPieceType"
             :use-baseplate="useBaseplate" :qr-type-label="qrTypeLabel" />
-          <BuildingInstructions v-if="styledBuild !== null" :bricks="styledBuild.bricks"
+          <BuildingInstructions v-if="optimizedBrickCount !== null" :bricks="optimizedBrickCount.bricks"
             :grid-size="qrSize" :foreground="foregroundColor" :background="backgroundColor"
             :show-studs="foregroundPieceType === 'Plate'" :piece-type="foregroundPieceType" />
         </template>
@@ -71,14 +67,11 @@
 <script setup lang="ts">
 import { ref, computed, reactive, watch, onUnmounted } from 'vue'
 import type { Component } from 'vue'
-import type { BrickLayout, BrickCount, BrickSize } from '~/composables/useBrickConverter'
-import type { EyeShape, GradientDirection, StyledQrBuild, QrStyleConfig } from '~/composables/useQrStyling'
-import { useQrStyling } from '~/composables/useQrStyling'
+import type { BrickLayout, BrickCount, OptimizedBrickCount, BrickSize } from '~/composables/useBrickConverter'
 import type { ScanCheckResult } from '~/composables/useScanCheck'
 import { useScanCheck } from '~/composables/useScanCheck'
 import type { QrContentType, QrConfig, WifiConfig, UrlConfig, TextConfig, EmailConfig, PhoneConfig, SmsConfig, GeoConfig } from '~/composables/useQrPayloads'
 import { useQrPayloads, QR_TYPE_LIST } from '~/composables/useQrPayloads'
-import QrStyleSettings from '~/components/QrStyleSettings.vue'
 import WifiForm from '~/components/WifiForm.vue'
 import UrlForm from '~/components/UrlForm.vue'
 import TextForm from '~/components/TextForm.vue'
@@ -90,8 +83,7 @@ import QrTypeSelector from '~/components/QrTypeSelector.vue'
 import BuildingInstructions from '~/components/BuildingInstructions.vue'
 
 const { generateQRMatrix, getQRCodeSize } = useQRCode()
-const { convertToBrickLayout, calculateBrickCount, defaultBrickSizes } = useBrickConverter()
-const { buildStyledQrBricks, buildModuleColorGrid } = useQrStyling()
+const { convertToBrickLayout, calculateBrickCount, optimizeBrickLayout, defaultBrickSizes } = useBrickConverter()
 const { checkScannability } = useScanCheck()
 const { buildPayload } = useQrPayloads()
 
@@ -156,21 +148,6 @@ const foregroundPieceType = ref<'Plate' | 'Tile'>('Plate')
 const backgroundPieceType = ref<'Plate' | 'Tile'>('Tile')
 const useBaseplate = ref(false)
 
-// --- Style options ---
-const eyeShape = ref<EyeShape>('square')
-const eyeColor = ref<string | null>(null)
-const gradientEnabled = ref(false)
-const gradientColor = ref('#0061B3')
-const gradientDirection = ref<GradientDirection>('diagonal')
-
-const styleConfig = computed<QrStyleConfig>(() => ({
-  eyeShape: eyeShape.value,
-  eyeColor: eyeColor.value,
-  gradient: gradientEnabled.value === true
-    ? { color: gradientColor.value, direction: gradientDirection.value }
-    : null,
-}))
-
 // --- QR matrix ---
 const qrMatrix = ref<boolean[][] | null>(null)
 const qrSize = computed(() => qrMatrix.value !== null ? getQRCodeSize(qrMatrix.value) : 0)
@@ -180,15 +157,9 @@ const brickLayout = computed<BrickLayout | null>(() =>
 const brickCount = computed<BrickCount>(() =>
   brickLayout.value !== null ? calculateBrickCount(brickLayout.value) : { foreground: 0, background: 0, total: 0 },
 )
-const styledBuild = computed<StyledQrBuild | null>(() =>
-  qrMatrix.value !== null
-    ? buildStyledQrBricks({
-      matrix: qrMatrix.value,
-      foreground: foregroundColor.value,
-      style: styleConfig.value,
-      foregroundSizes: foregroundBrickSizes.value,
-      backgroundSizes: backgroundBrickSizes.value,
-    })
+const optimizedBrickCount = computed<OptimizedBrickCount | null>(() =>
+  brickLayout.value !== null
+    ? optimizeBrickLayout(brickLayout.value, foregroundBrickSizes.value, backgroundBrickSizes.value)
     : null,
 )
 
@@ -211,7 +182,7 @@ const SCAN_CHECK_DEBOUNCE_MS = 350
 let scanTimer: ReturnType<typeof setTimeout> | null = null
 
 watch(
-  [qrMatrix, styleConfig, foregroundColor, backgroundColor],
+  [qrMatrix, foregroundColor, backgroundColor],
   () => {
     if (scanTimer !== null) clearTimeout(scanTimer)
     if (qrMatrix.value === null) {
@@ -221,13 +192,9 @@ watch(
     scanTimer = setTimeout(() => {
       scanTimer = null
       if (qrMatrix.value === null) return
-      const moduleGrid = buildModuleColorGrid({
+      scanCheck.value = checkScannability({
         matrix: qrMatrix.value,
         foreground: foregroundColor.value,
-        style: styleConfig.value,
-      })
-      scanCheck.value = checkScannability({
-        moduleGrid,
         background: backgroundColor.value,
         payload: lastPayload.value,
       })
