@@ -37,14 +37,15 @@
 
         <!-- Results -->
         <template v-else>
-          <!-- Scan check -->
-          <div v-if="scanCheck !== null" class="px-4 py-3 rounded-lg border text-sm font-medium flex items-start gap-2"
-            :class="scanCheck.scannable
-              ? 'bg-green-50 border-green-200 text-green-800'
-              : 'bg-red-50 border-red-200 text-red-700'">
-            <span class="text-base leading-5">{{ scanCheck.scannable ? '✅' : '🚫' }}</span>
-            <span><strong>Scan check:</strong> {{ scanCheck.message }}</span>
+          <!-- Scan check: loud only when something is wrong -->
+          <div v-if="scanCheck !== null && scanCheck.scannable === false"
+            class="px-4 py-3 rounded-lg border text-sm font-medium flex items-start gap-2 bg-red-50 border-red-200 text-red-700">
+            <span class="text-base leading-5">🚫</span>
+            <span><strong>Not scannable:</strong> {{ scanCheck.message }}</span>
           </div>
+          <p v-else-if="scanCheck !== null" class="text-xs text-green-700 flex items-center gap-1.5 px-1 my-0">
+            <span>✅</span> Scan check passed
+          </p>
 
           <BrickArrangement :grid="brickLayout.grid" :qr-size="qrSize" :foreground="foregroundColor"
             :background="backgroundColor" :baseplate-width="baseplateSize" :baseplate-height="baseplateSize"
@@ -103,7 +104,7 @@ interface QrModels {
 
 const models = reactive<QrModels>({
   wifi: { ssid: '', password: '', security: 'WPA', hidden: false },
-  url: { url: '' },
+  url: { url: 'https://' },
   text: { text: '' },
   email: { address: '', subject: '', body: '' },
   phone: { phone: '' },

@@ -11,6 +11,9 @@ import {
   CylinderGeometry,
   MeshStandardMaterial,
   Mesh,
+  EdgesGeometry,
+  LineSegments,
+  LineBasicMaterial,
   type BufferGeometry,
   type Material,
 } from 'three'
@@ -34,6 +37,8 @@ const props = withDefaults(defineProps<{
   /** Stud offset of the brick layout within the panel (QR alignment) */
   offsetX?: number
   offsetY?: number
+  /** Bricks to outline in red, booklet-style ("place these now") */
+  highlightBricks?: Array<Brick>
 }>(), {
   panelCols: 1,
   panelRows: 1,
@@ -45,6 +50,7 @@ const props = withDefaults(defineProps<{
   baseplateColor: '#a0a5a9',
   offsetX: 0,
   offsetY: 0,
+  highlightBricks: () => [],
 })
 
 // All sizes in stud units (1 unit = 8mm stud pitch)
@@ -283,6 +289,27 @@ function buildScene(): Group {
     group.add(studs)
   }
 
+  // Booklet-style highlight: red outline around the pieces placed this step
+  if (props.highlightBricks.length > 0) {
+    const outlineMaterial = new LineBasicMaterial({ color: '#e3000b' })
+    for (const brick of props.highlightBricks) {
+      const box = new BoxGeometry(
+        brick.width + 0.06,
+        PLATE_HEIGHT + STUD_HEIGHT + 0.06,
+        brick.height + 0.06,
+      )
+      const edges = new EdgesGeometry(box)
+      box.dispose()
+      const outline = new LineSegments(edges, outlineMaterial)
+      outline.position.set(
+        panelOffsetX({ panelCol: brick.panelCol }) + props.offsetX + brick.x + brick.width / 2,
+        (PLATE_HEIGHT + STUD_HEIGHT) / 2,
+        panelOffsetZ({ panelRow: brick.panelRow }) + props.offsetY + brick.y + brick.height / 2,
+      )
+      group.add(outline)
+    }
+  }
+
   return group
 }
 
@@ -290,7 +317,7 @@ function disposeGroup({ group }: { group: Group }): void {
   const geometries = new Set<BufferGeometry>()
   const materials = new Set<Material>()
   group.traverse((obj) => {
-    if (obj instanceof Mesh || obj instanceof InstancedMesh) {
+    if (obj instanceof Mesh || obj instanceof InstancedMesh || obj instanceof LineSegments) {
       geometries.add(obj.geometry)
       if (obj.material instanceof Array) {
         for (const m of obj.material) materials.add(m)
@@ -306,6 +333,14 @@ function disposeGroup({ group }: { group: Group }): void {
 
 const sceneGroup = shallowRef<Group>(markRaw(new Group()))
 
+// cientos OrbitControls exposes the raw three.js controls as `instance`;
+// reset() restores the camera pose saved when the controls were created
+const controls = shallowRef<{ instance?: { reset?: () => void } } | null>(null)
+
+const resetCamera = (): void => {
+  controls.value?.instance?.reset?.()
+}
+
 watch(
   [
     () => props.bricks,
@@ -319,6 +354,7 @@ watch(
     () => props.baseplateColor,
     () => props.offsetX,
     () => props.offsetY,
+    () => props.highlightBricks,
   ],
   () => {
     disposeGroup({ group: sceneGroup.value })
@@ -333,16 +369,23 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <TresCanvas clear-color="#e9eef5" :antialias="true">
-    <TresPerspectiveCamera :position="cameraPosition" :fov="40" />
-    <OrbitControls :enable-damping="true" :max-polar-angle="1.5" :min-distance="extent * 0.25"
-      :max-distance="extent * 3" />
-    <TresHemisphereLight :args="['#ffffff', '#c8ccd4', 0.9]" />
-    <TresDirectionalLight :position="[extent * 0.6, extent * 1.2, extent * 0.8]" :intensity="1.3" />
-    <TresDirectionalLight :position="[-extent * 0.8, extent * 0.5, -extent * 0.6]" :intensity="0.4" />
-    <!-- Overhead spotlight: a soft hotspot that makes the glossy studs pop -->
-    <TresSpotLight :position="[0, extent * 1.8, extent * 0.4]" :intensity="0.7" :angle="0.45" :penumbra="0.7"
-      :decay="0" />
-    <primitive :object="sceneGroup" />
-  </TresCanvas>
+  <div class="relative w-full h-full">
+    <TresCanvas clear-color="#e9eef5" :antialias="true">
+      <TresPerspectiveCamera :position="cameraPosition" :fov="40" />
+      <OrbitControls ref="controls" :enable-damping="true" :max-polar-angle="1.5" :min-distance="extent * 0.25"
+        :max-distance="extent * 3" />
+      <TresHemisphereLight :args="['#ffffff', '#c8ccd4', 0.9]" />
+      <TresDirectionalLight :position="[extent * 0.6, extent * 1.2, extent * 0.8]" :intensity="1.3" />
+      <TresDirectionalLight :position="[-extent * 0.8, extent * 0.5, -extent * 0.6]" :intensity="0.4" />
+      <!-- Overhead spotlight: a soft hotspot that makes the glossy studs pop -->
+      <TresSpotLight :position="[0, extent * 1.8, extent * 0.4]" :intensity="0.7" :angle="0.45" :penumbra="0.7"
+        :decay="0" />
+      <primitive :object="sceneGroup" />
+    </TresCanvas>
+    <button type="button"
+      class="absolute top-2 right-2 z-10 text-xs font-semibold text-gray-600 bg-white/80 backdrop-blur px-2.5 py-1.5 rounded-full shadow hover:bg-white hover:text-gray-900 transition-colors"
+      @click="resetCamera">
+      ⟲ Reset view
+    </button>
+  </div>
 </template>

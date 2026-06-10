@@ -4,6 +4,7 @@ import { useMosaicConverter } from '~/composables/useMosaicConverter'
 import { useBrickConverter } from '~/composables/useBrickConverter'
 import type { MosaicColorGroup, MosaicResult } from '~/composables/useMosaicConverter'
 import MosaicUpload from '~/components/MosaicUpload.vue'
+import MosaicImageEditor from '~/components/MosaicImageEditor.vue'
 import MosaicSettings from '~/components/MosaicSettings.vue'
 import MosaicPreview from '~/components/MosaicPreview.vue'
 import MosaicPartsList from '~/components/MosaicPartsList.vue'
@@ -14,6 +15,9 @@ const { defaultBrickSizes } = useBrickConverter()
 
 const REGEN_DEBOUNCE_MS = 250
 
+// What the user uploaded (drives the editor) vs the cropped/filtered result
+// the mosaic is generated from
+const originalFile = ref<File | null>(null)
 const imageFile = ref<File | null>(null)
 const useDithering = ref(false)
 const pieceType = ref<'Plate' | 'Tile'>('Plate')
@@ -114,6 +118,13 @@ onUnmounted(() => {
 })
 
 const onImageUpload = (file: File): void => {
+  originalFile.value = file
+  error.value = null
+}
+
+// The editor emits a freshly rendered crop/filter result; the mosaic always
+// generates from that
+const onImageProcessed = (file: File): void => {
   imageFile.value = file
   error.value = null
 }
@@ -134,7 +145,9 @@ const onImageUpload = (file: File): void => {
       <!-- Left column: controls -->
       <div class="space-y-6 lg:sticky lg:top-20">
         <MosaicUpload @upload="onImageUpload" />
-        <MosaicSettings v-if="imageFile !== null" v-model:use-dithering="useDithering" v-model:piece-type="pieceType"
+        <MosaicImageEditor v-if="originalFile !== null" :file="originalFile" :panel-cols="panelCols"
+          :panel-rows="panelRows" @processed="onImageProcessed" />
+        <MosaicSettings v-if="originalFile !== null" v-model:use-dithering="useDithering" v-model:piece-type="pieceType"
           v-model:panel-cols="panelCols" v-model:panel-rows="panelRows"
           v-model:baseplate-color-id="baseplateColorId" :baseplate-options="baseplateOptions" />
       </div>

@@ -14,7 +14,7 @@ import BrickCard from '~/components/BrickCard.vue'
         <ul class="list-disc list-inside text-gray-600 space-y-1">
           <li>Select a QR code type: WiFi, URL, Text, Email, Phone, SMS, or Location</li>
           <li>Fill in the required fields and the QR code and 3D brick layout build themselves as you type</li>
-          <li>Customise colours and brick sizes, then use the parts list to order pieces</li>
+          <li>Customize colors and brick sizes, then use the parts list to order pieces</li>
           <li>For mosaics: upload a photo, pick a panel layout, and follow the step-by-step instructions</li>
           <li>Tip: in any Building Instructions card, flip through steps with the ← → arrow keys</li>
         </ul>

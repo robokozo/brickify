@@ -32,7 +32,7 @@ const tools: ToolCard[] = [
           class="text-brick-red">k</span><span class="text-brick-blue">s</span>
       </h1>
       <p class="text-lg text-gray-600 max-w-xl mx-auto">
-        Pick a builder, customise your design, and get a 3D preview, a parts list, and
+        Pick a builder, customize your design, and get a 3D preview, a parts list, and
         step-by-step instructions, ready to order and build.
       </p>
     </header>

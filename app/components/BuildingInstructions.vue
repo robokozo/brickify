@@ -3,6 +3,8 @@ import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { PANEL_SIZE } from '~/composables/useMosaicConverter'
 import type { Brick } from '~/composables/useBrickConverter'
 import BrickCard from '~/components/BrickCard.vue'
+import Brick3DPreview from '~/components/Brick3DPreview.vue'
+import ViewToggle from '~/components/ViewToggle.vue'
 
 const props = withDefaults(defineProps<{
   bricks: Brick[]
@@ -11,7 +13,8 @@ const props = withDefaults(defineProps<{
   background?: string
   showStuds?: boolean
   pieceType?: 'Plate' | 'Tile'
-  rowBandSize?: number
+  /** How many pieces are placed per instruction step */
+  piecesPerStep?: number
   panelCols?: number
   panelRows?: number
   /** Color of the empty baseplate behind the bricks */
@@ -22,7 +25,7 @@ const props = withDefaults(defineProps<{
   background: '#FFFFFF',
   showStuds: true,
   pieceType: 'Plate',
-  rowBandSize: 4,
+  piecesPerStep: 10,
   panelCols: 1,
   panelRows: 1,
   baseplateColor: '#b8bdc3',
@@ -56,22 +59,45 @@ const panelLabel = (col: number, row: number): string =>
 
 const currentStep = ref(0)
 
-// How many row-band steps cover the full grid
-const totalSteps = computed(() => Math.ceil(props.gridSize / props.rowBandSize))
+// Build order: top to bottom, left to right, like laying rows of bricks
+const orderedBricks = computed(() =>
+  [...panelBricks.value].sort((a, b) => a.y - b.y || a.x - b.x),
+)
 
-// Which step a given brick belongs to (keyed by its top row)
-const stepIndexOf = (brick: Brick): number =>
-  Math.floor(brick.y / props.rowBandSize)
+// Steps place a fixed number of pieces each
+const totalSteps = computed(() =>
+  Math.max(1, Math.ceil(orderedBricks.value.length / props.piecesPerStep)),
+)
 
 // Bricks visible in the current step view
 const pastBricks = computed(() =>
-  panelBricks.value.filter((b) => stepIndexOf(b) < currentStep.value),
+  orderedBricks.value.slice(0, currentStep.value * props.piecesPerStep),
 )
 const currentBricks = computed(() =>
-  panelBricks.value.filter((b) => stepIndexOf(b) === currentStep.value),
+  orderedBricks.value.slice(
+    currentStep.value * props.piecesPerStep,
+    (currentStep.value + 1) * props.piecesPerStep,
+  ),
 )
 
 const isComplete = computed(() => currentStep.value === totalSteps.value - 1)
+
+// --- Booklet 3D view ---
+const VIEW_OPTIONS = [
+  { value: '3d', label: '3D' },
+  { value: 'flat', label: 'Flat' },
+]
+const viewMode = ref('3d')
+
+// The 3D step view renders the active panel alone, so its bricks are
+// remapped to panel (0, 0)
+const remapToSinglePanel = (bricks: Brick[]): Brick[] =>
+  bricks.map((b) => ({ ...b, panelCol: 0, panelRow: 0 }))
+
+const builtBricks3d = computed(() =>
+  remapToSinglePanel([...pastBricks.value, ...currentBricks.value]),
+)
+const highlightBricks3d = computed(() => remapToSinglePanel(currentBricks.value))
 
 // Keep step and panel selection valid when the build shrinks
 // (e.g. QR regenerated with a shorter payload, or fewer panels selected)
@@ -148,12 +174,6 @@ const brickStyle = (brick: Brick) => ({
   ...(brick.isRound === true ? { borderRadius: '9999px' } : {}),
 })
 
-// Highlight band for current step
-const bandStyle = computed(() => ({
-  top: `${(currentStep.value * props.rowBandSize / props.gridSize) * 100}%`,
-  height: `${(Math.min(props.rowBandSize, props.gridSize - currentStep.value * props.rowBandSize) / props.gridSize) * 100}%`,
-}))
-
 // --- Per-step parts callout (booklet-style "2×" box) ---
 
 interface StepEntry {
@@ -187,19 +207,24 @@ const stepEntries = computed((): StepEntry[] => {
   })
 })
 
-const rowStart = computed(() => currentStep.value * props.rowBandSize + 1)
-const rowEnd = computed(() => Math.min((currentStep.value + 1) * props.rowBandSize, props.gridSize))
+const pieceStart = computed(() => currentStep.value * props.piecesPerStep + 1)
+const pieceEnd = computed(() =>
+  Math.min((currentStep.value + 1) * props.piecesPerStep, orderedBricks.value.length),
+)
 </script>
 
 <template>
   <BrickCard color="red" title="Building Instructions">
     <template #header-extra>
-      <span class="text-sm text-gray-500">
-        <template v-if="totalPanels > 1">
-          {{ panelLabel(activePanelCol, activePanelRow) }} &mdash;
-        </template>
-        Rows {{ rowStart }}–{{ rowEnd }} of {{ gridSize }}
-      </span>
+      <div class="flex items-center gap-3">
+        <span class="text-sm text-gray-500">
+          <template v-if="totalPanels > 1">
+            {{ panelLabel(activePanelCol, activePanelRow) }} ·
+          </template>
+          Pieces {{ pieceStart }}–{{ pieceEnd }} of {{ orderedBricks.length }}
+        </span>
+        <ViewToggle v-model="viewMode" :options="VIEW_OPTIONS" />
+      </div>
     </template>
 
     <div class="p-5 space-y-5">
@@ -226,7 +251,9 @@ const rowEnd = computed(() => Math.min((currentStep.value + 1) * props.rowBandSi
           class="flex items-center justify-center min-w-16 px-3 rounded-xl bg-brick-red text-white text-3xl font-black shadow-[inset_0_-4px_0_rgba(0,0,0,0.2)]">
           {{ currentStep + 1 }}
         </div>
-        <div class="flex-1 border-2 border-gray-900 rounded-xl bg-white px-4 py-3">
+        <!-- min-height keeps the box (and everything below it) from jumping
+             when steps need one row of parts vs two -->
+        <div class="flex-1 border-2 border-gray-900 rounded-xl bg-white px-4 py-3 min-h-28 flex items-center">
           <div v-if="stepEntries.length > 0" class="flex flex-wrap items-center gap-x-6 gap-y-3">
             <div v-for="(entry, i) in stepEntries" :key="i" class="flex items-center gap-2">
               <span class="text-lg font-bold text-gray-900 tabular-nums">{{ entry.count }}×</span>
@@ -249,14 +276,21 @@ const rowEnd = computed(() => Math.min((currentStep.value + 1) * props.rowBandSi
         </div>
       </div>
 
-      <!-- Build area -->
-      <div class="flex justify-center overflow-auto">
-        <div class="relative rounded-md border-2 border-gray-300 shrink-0 shadow-inner" :style="baseplateStyle">
+      <!-- Booklet-style 3D step view: the build so far, with this step's
+           pieces outlined in red like a real instruction page -->
+      <div v-if="viewMode === '3d'" class="relative h-90 md:h-120 mx-4 md:mx-0 rounded-md overflow-hidden">
+        <Brick3DPreview :bricks="builtBricks3d" :highlight-bricks="highlightBricks3d" :panel-size="gridSize"
+          :foreground="foreground" :background="background" :studs-foreground="showStuds"
+          :studs-background="showStuds" :baseplate-color="baseplateColor" />
+        <p
+          class="absolute bottom-2 left-1/2 -translate-x-1/2 text-[11px] text-gray-500 bg-white/70 backdrop-blur px-2.5 py-1 rounded-full pointer-events-none whitespace-nowrap">
+          Place the pieces outlined in red · Drag to rotate
+        </p>
+      </div>
 
-          <!-- Current row band guide -->
-          <div
-            class="absolute left-0 right-0 border-y-2 border-dashed border-red-400/70 bg-red-400/5 pointer-events-none z-10"
-            :style="bandStyle" />
+      <!-- Flat build map -->
+      <div v-else class="flex justify-center overflow-auto">
+        <div class="relative rounded-md border-2 border-gray-300 shrink-0 shadow-inner" :style="baseplateStyle">
 
           <!-- Past bricks (already built: full color, like a printed booklet) -->
           <div v-for="(brick, i) in pastBricks" :key="`past-${i}`"
@@ -299,18 +333,14 @@ const rowEnd = computed(() => Math.min((currentStep.value + 1) * props.rowBandSi
           ← Prev
         </button>
 
-        <!-- Step pills -->
-        <div class="flex-1 flex gap-1 flex-wrap justify-center">
-          <button v-for="i in totalSteps" :key="i" type="button" :class="[
-            'w-7 h-7 rounded-md text-xs font-bold transition-colors',
-            (i - 1) === currentStep
-              ? 'bg-brick-red text-white'
-              : (i - 1) < currentStep
-                ? 'bg-gray-800 text-white'
-                : 'bg-gray-100 text-gray-500 hover:bg-gray-200',
-          ]" @click="goTo(i - 1)">
-            {{ i }}
-          </button>
+        <!-- Step scrubber -->
+        <div class="flex-1 flex items-center gap-3 min-w-0">
+          <input type="range" :min="1" :max="totalSteps" :value="currentStep + 1"
+            class="flex-1 min-w-0 accent-brick-red cursor-pointer"
+            @input="goTo(Number(($event.target as HTMLInputElement).value) - 1)" />
+          <span class="text-sm font-bold text-gray-700 tabular-nums whitespace-nowrap shrink-0">
+            {{ currentStep + 1 }} / {{ totalSteps }}
+          </span>
         </div>
 
         <button type="button" :disabled="isComplete === true"
